@@ -68,7 +68,7 @@ puts "=========================================="
 puts "Reading RTL files..."
 puts "==========================================\n"
 define_design_lib WORK -path ./WORK
-analyze -format sverilog $rtl_files
+analyze -format sverilog -define SYNTHESIS $rtl_files
 elaborate $top_module
 current_design $top_module
 link

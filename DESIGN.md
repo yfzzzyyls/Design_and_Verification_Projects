@@ -1022,3 +1022,30 @@ Next: proceed to Phase 1 P&R (15% util, M2-only halo, M9/M10 ring-only, no srout
   3. Inspect `lvs_connectivity_special.rpt` to identify the remaining VDD/VSS disconnect; add a manual tie if needed.
   4. Optionally relax M2 halo or allow limited M1 near SRAM if congestion persists.
   5. Rerun routing/DRC/LVS from the saved checkpoint to save time (`restoreDesign pd/innovus/cordic_phase1_final.enc`).
+
+#### Feb 2, 2026 — No-SRAM Baseline Achieves 0 DRC + 0 LVS (Innovus)
+- Goal: isolate SRAM-related PG/LVS issues by removing the SRAM macro and re-running the backend.
+- RTL change: `rtl/sram.sv` is now a pure RTL memory in both sim and synth (no TS1N16... macro instantiation).
+- Synthesis command:
+  ```bash
+  cd /home/fy2243/ECE9433-SoC-Design-Project
+  /eda/synopsys/syn/W-2024.09-SP5-5/bin/dc_shell -f syn_complete_with_tech.tcl 2>&1 | tee synthesis_complete.log
+  ```
+  Outputs: `mapped_with_tech/soc_top.v`, `soc_top.sdc`, `soc_top.ddc`, reports.
+- Innovus command:
+  ```bash
+  cd /home/fy2243/ECE9433-SoC-Design-Project
+  /eda/cadence/INNOVUS211/bin/innovus -no_gui -overwrite -files tcl_scripts/complete_flow_with_qrc.tcl 2>&1 | tee complete_flow.log
+  ```
+  Flow additions in `complete_flow_with_qrc.tcl`:
+  - Added a simple M9/M10 core ring for VDD/VSS.
+  - Added `sroute` corePin connections to the ring.
+  - Added LVS connectivity checks (regular + special) and antenna report.
+- Results:
+  - DRC: 0 violations (`pd/innovus/drc_complete_1.rpt`).
+  - LVS connectivity: 0 regular + 0 special errors (`pd/innovus/lvs_connectivity_regular.rpt`, `pd/innovus/lvs_connectivity_special.rpt`).
+  - Antenna: 0 violations (`pd/innovus/lvs_process_antenna.rpt`).
+  - Final checkpoint: `pd/innovus/complete_final.enc`.
+- Notes:
+  - verifyConnectivity warns about unassigned IO pins (clk/rst_n/trap). These are warnings, not errors.
+  - This is Innovus connectivity LVS, not full signoff LVS (PVS/Calibre).

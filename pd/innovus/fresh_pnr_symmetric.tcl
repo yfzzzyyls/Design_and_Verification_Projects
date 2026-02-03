@@ -80,6 +80,7 @@ if {$START_FROM <= 1} {
     set init_lef_file $lef_files
     set init_verilog $netlist_file
     set init_mmmc_file $mmmc_file
+    set init_mmmc_version 2
     set init_top_cell soc_top
     set init_pwr_net VDD
     set init_gnd_net VSS
@@ -522,6 +523,7 @@ set core_top 339
 puts "V102 Part 1: Creating M8 ring around SRAM block..."
 
 # Create a proper ring around the SRAM block on M8
+selectInst u_sram/u_sram_macro
 addRing -nets {VDD VSS} \
     -around selected \
     -layer {top M8 bottom M8 left M8 right M8} \
@@ -531,6 +533,7 @@ addRing -nets {VDD VSS} \
     -type block_rings \
     -jog_distance 0.5 \
     -threshold 0.5
+deselectAll
 
 # Connect M8 block ring to M9/M10 grid
 puts "V102: Connecting M8 block ring to M9/M10..."

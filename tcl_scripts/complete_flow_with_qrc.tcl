@@ -34,7 +34,6 @@ set init_lef_file   [list $TECH_LEF $STD_LEF $SRAM_LEF]
 set init_verilog    $NETLIST
 set init_top_cell   $TOP
 set init_mmmc_file  $MMMC_QRC_FILE
-
 puts "Initializing design with QRC tech files..."
 init_design
 
@@ -54,6 +53,17 @@ globalNetConnect VDD -type pgpin -pin VDD -all -override
 globalNetConnect VSS -type pgpin -pin VSS -all -override
 globalNetConnect VDD -type tiehi -all -override
 globalNetConnect VSS -type tielo -all -override
+
+puts "\n=========================================="
+puts "===== PG RING (M9/M10) ====="
+puts "==========================================\n"
+
+# Add a simple core ring for VDD/VSS
+addRing -nets {VDD VSS} \
+  -type core_rings \
+  -layer {top M10 bottom M10 left M9 right M9} \
+  -width 2.0 -spacing 2.0 \
+  -offset {top 5.0 bottom 5.0 left 5.0 right 5.0}
 
 puts "\n=========================================="
 puts "DRC-Optimized Routing Settings"
@@ -85,6 +95,16 @@ puts "===== PLACEMENT ====="
 puts "==========================================\n"
 place_design
 saveDesign [file join $proj_root pd/innovus/complete_place.enc]
+
+puts "\n=========================================="
+puts "===== POWER CONNECTION (sroute) ====="
+puts "==========================================\n"
+setSrouteMode -viaConnectToShape {ring stripe}
+sroute -nets {VDD VSS} -connect corePin \
+  -corePinTarget {ring} \
+  -layerChangeRange {M1 M10} \
+  -allowLayerChange 1 \
+  -allowJogging 1
 
 puts "\n=========================================="
 puts "===== CLOCK TREE ====="
@@ -180,6 +200,73 @@ if {$viol_count2 == 0} {
     if {$viol_count2 < $viol_count} {
         puts "Violations reduced from $viol_count to $viol_count2"
     }
+}
+
+puts "\n=========================================="
+puts "===== LVS CONNECTIVITY VERIFICATION ====="
+puts "==========================================\n"
+
+# Regular Net Connectivity Check
+set conn_regular_rpt [file join $proj_root pd/innovus/lvs_connectivity_regular.rpt]
+puts "Checking regular net connectivity..."
+verifyConnectivity -type regular -error 1000 -warning 100 -report $conn_regular_rpt
+
+# Parse regular net errors
+set regular_errors 0
+if {[file exists $conn_regular_rpt]} {
+    set fp [open $conn_regular_rpt r]
+    set content [read $fp]
+    close $fp
+    if {[regexp {(\d+)\s+Problem\(s\)} $content match num]} {
+        set regular_errors $num
+    }
+    if {[regexp {Total Regular Net Errors\s*:\s*(\d+)} $content match num]} {
+        set regular_errors $num
+    }
+}
+puts "Regular net errors: $regular_errors"
+
+# Special Net (Power/Ground) Connectivity Check
+set conn_special_rpt [file join $proj_root pd/innovus/lvs_connectivity_special.rpt]
+puts "Checking special net (power/ground) connectivity..."
+verifyConnectivity -type special -error 1000 -warning 100 -report $conn_special_rpt
+
+# Parse special net errors
+set special_errors 0
+if {[file exists $conn_special_rpt]} {
+    set fp [open $conn_special_rpt r]
+    set content [read $fp]
+    close $fp
+    if {[regexp {(\d+)\s+Problem\(s\)} $content match num]} {
+        set special_errors $num
+    }
+    if {[regexp {Total Special Net Errors\s*:\s*(\d+)} $content match num]} {
+        set special_errors $num
+    }
+}
+puts "Special net errors: $special_errors"
+
+# Process Antenna Check
+set antenna_rpt [file join $proj_root pd/innovus/lvs_process_antenna.rpt]
+puts "Checking process antenna violations..."
+catch {verifyProcessAntenna -report $antenna_rpt}
+
+# LVS Summary
+set total_lvs_errors [expr $regular_errors + $special_errors]
+set lvs_clean [expr {$total_lvs_errors == 0}]
+
+puts "\n=========================================="
+puts "LVS CONNECTIVITY SUMMARY"
+puts "==========================================\n"
+puts "Regular Net Errors:    $regular_errors"
+puts "Special Net Errors:    $special_errors"
+puts "Total LVS Errors:      $total_lvs_errors"
+puts ""
+
+if {$lvs_clean} {
+    puts "*** LVS STATUS: PASS (0 connectivity errors) ***"
+} else {
+    puts "*** LVS STATUS: FAIL ($total_lvs_errors errors) ***"
 }
 
 saveDesign [file join $proj_root pd/innovus/complete_final.enc]

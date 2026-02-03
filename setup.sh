@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-REPO_ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
+REPO_ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 THIRD_PARTY_DIR="${REPO_ROOT}/third_party"
 mkdir -p "${THIRD_PARTY_DIR}"
 
