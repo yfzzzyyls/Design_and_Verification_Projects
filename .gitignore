@@ -18,3 +18,28 @@ firmware/peu_test/peu_test.hex
 
 *.vcd
 *.txt
+
+# EDA/simulation generated artifacts
+simv
+simv.daidir/
+verdiLog/
+verdi_config_file
+novas.conf
+novas.rc
+work/
+alib-52/
+
+# Generated reports/databases
+*.fsdb
+*.vpd
+*.wlf
+*.mr
+*.pvl
+*.syn
+*.db.alib
+
+# Misc local temp files
+.nfs*
+.DS_Store
+
+*.fsdb.*
