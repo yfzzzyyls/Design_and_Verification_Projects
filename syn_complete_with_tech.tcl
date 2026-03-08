@@ -12,6 +12,8 @@ puts "==========================================\n"
 # Design setup
 set top_module "soc_top"
 set clock_period 10.0
+set expected_sram_ref "TS1N16ADFPCLLLVTA512X45M4SWSHOD"
+set expected_sram_inst "u_sram/u_sram_macro"
 
 # RTL sources
 set rtl_files [list \
@@ -108,6 +110,32 @@ compile_ultra -no_autoungroup
 puts "\n=========================================="
 puts "Compilation Complete"
 puts "==========================================\n"
+
+puts "Running SRAM macro preservation checks..."
+set sram_cells [get_cells -quiet $expected_sram_inst]
+if {[sizeof_collection $sram_cells] == 0} {
+    puts "ERROR: SRAM macro instance '$expected_sram_inst' not found after compile."
+    puts "       Stopping flow to prevent fallback netlist usage."
+    exit 2
+}
+
+set sram_ref [get_attribute [index_collection $sram_cells 0] ref_name]
+puts "Found SRAM instance: $expected_sram_inst"
+puts "Reference cell: $sram_ref"
+if {$sram_ref ne $expected_sram_ref} {
+    puts "ERROR: SRAM macro ref mismatch."
+    puts "       Expected: $expected_sram_ref"
+    puts "       Actual:   $sram_ref"
+    exit 3
+}
+
+set fallback_cells [get_cells -hier -quiet -filter "ref_name =~ sram_MEM_WORDS* && full_name != u_sram"]
+if {[sizeof_collection $fallback_cells] > 0} {
+    puts "ERROR: Found inferred fallback SRAM wrapper cells in mapped design."
+    puts "       Expected hard macro-only implementation."
+    exit 4
+}
+puts "SRAM macro preservation checks: PASS"
 
 # Generate comprehensive reports
 puts "Generating reports..."
