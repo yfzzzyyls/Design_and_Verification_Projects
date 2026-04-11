@@ -11,11 +11,15 @@ set sram_lib "/ip/tsmc/tsmc16adfp/sram/NLDM/N16ADFP_SRAM_tt0p8v0p8v25c_100a.lib"
 
 set golden_rtl [list \
     [file join $proj_root rtl soc_top.sv] \
+    [file join $proj_root rtl mem_router_native.sv] \
+    [file join $proj_root rtl native_periph_bridge.sv] \
+    [file join $proj_root rtl axil_interconnect_1x2.sv] \
+    [file join $proj_root rtl axil_uart.sv] \
+    [file join $proj_root rtl axil_cordic_accel.sv] \
+    [file join $proj_root rtl cordic_accel_ctrl.sv] \
     [file join $proj_root rtl sram.sv] \
     [file join $proj_root rtl cordic_core_atan2.sv] \
     [file join $proj_root rtl cordic_core_sincos.sv] \
-    [file join $proj_root rtl cordic_soc_wrapper.sv] \
-    [file join $proj_root rtl interconnect.sv] \
     [file join $proj_root third_party picorv32 picorv32.v] \
 ]
 set revised_netlist [file join $proj_root mapped_with_tech soc_top.v]

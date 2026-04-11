@@ -18,6 +18,8 @@ module sram #(
     output logic [31:0] mem_rdata
 );
 
+    localparam int unsigned MEM_ADDR_BITS = (MEM_WORDS <= 1) ? 1 : $clog2(MEM_WORDS);
+
 `ifdef SYNTHESIS
     // TS1N16ADFPCLLLVTA512X45M4SWSHOD is 512x45.
     localparam int unsigned MACRO_WORDS = 512;
@@ -117,14 +119,14 @@ module sram #(
                 word_addr = mem_addr[31:2];
 
                 if (word_addr < MEM_WORDS) begin
-                    read_word = mem[word_addr[8:0]];
+                    read_word = mem[word_addr[MEM_ADDR_BITS-1:0]];
 
                     if (|mem_wstrb) begin
                         if (mem_wstrb[0]) read_word[7:0]   = mem_wdata[7:0];
                         if (mem_wstrb[1]) read_word[15:8]  = mem_wdata[15:8];
                         if (mem_wstrb[2]) read_word[23:16] = mem_wdata[23:16];
                         if (mem_wstrb[3]) read_word[31:24] = mem_wdata[31:24];
-                        mem[word_addr[8:0]] <= read_word;
+                        mem[word_addr[MEM_ADDR_BITS-1:0]] <= read_word;
                     end
 
                     rdata_q <= read_word;

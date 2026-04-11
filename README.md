@@ -50,20 +50,20 @@ make TOOLCHAIN_PREFIX=/path/to/ECE9433-SoC-Design-Project/third_party/riscv-tool
 
 This creates `firmware/firmware.hex`, which we preload into the behavioral SRAM via `$readmemh` for the PicoRV32 bring-up tests.
 
-## PEU Sanity Test Firmware
+## CORDIC Sanity Test Firmware
 
-We keep a minimal PEU test in `firmware/peu_test/` so the third-party submodule stays untouched. Build it with:
+We keep a minimal SoC firmware image in `firmware/cordic_test/` that exercises the native-SRAM boot path, AXI4-Lite UART, and AXI4-Lite CORDIC accelerator. Build it with:
 
 ```bash
-cd /path/to/ECE9433-SoC-Design-Project/firmware/peu_test
+cd /path/to/ECE9433-SoC-Design-Project/firmware/cordic_test
 make clean && make
 ```
 
-This produces `peu_test.hex`, which writes operands to the PEU CSRs, starts the accelerator (stubbed as an add), polls DONE, compares the result to a software reference, and asserts `ebreak` only on success. A mismatch spins forever, so the testbench times out and reports FAIL.
+This produces `cordic_test.hex`, which configures the UART, checks the CORDIC ID register, runs two `sincos` transactions through the accelerator CSR interface, prints the results over UART, and asserts `ebreak` only on success. A mismatch spins forever, so the testbench times out and reports FAIL.
 
 ## CPU Heartbeat Simulation (VCS)
 
-Compile and run the minimal SoC top + testbench with VCS:
+Compile and run the SoC top + testbench with VCS:
 
 ```bash
 cd /path/to/ECE9433-SoC-Design-Project
@@ -71,13 +71,17 @@ mkdir -p build
 export VCS_HOME=/eda/synopsys/vcs/W-2024.09-SP2-7
 export PATH=$VCS_HOME/bin:$PATH
 $VCS_HOME/bin/vcs -full64 -kdb -sverilog \
-    sim/soc_top_tb.sv rtl/soc_top.sv rtl/interconnect.sv rtl/sram.sv rtl/peu.sv third_party/picorv32/picorv32.v \
+    sim/soc_top_tb.sv \
+    rtl/soc_top.sv rtl/mem_router_native.sv rtl/native_periph_bridge.sv \
+    rtl/axil_interconnect_1x2.sv rtl/axil_uart.sv rtl/axil_cordic_accel.sv \
+    rtl/cordic_accel_ctrl.sv rtl/cordic_core_atan2.sv rtl/cordic_core_sincos.sv \
+    rtl/sram.sv third_party/picorv32/picorv32.v \
     -o build/soc_top_tb
 ./build/soc_top_tb
 ```
 
 What to expect:
-- The simulator prints the firmware load message and halts when the firmware asserts `trap`. With `peu_test.hex` it reports `Firmware completed after 106 cycles. PASS`. If the firmware spins (any mismatch), the bench times out at 200 000 cycles and prints FAIL.
+- The simulator prints the firmware load message, the UART transcript (`CORDIC boot`, result summary, `PASS`), and halts when the firmware asserts `trap`. With `cordic_test.hex` it reports `Firmware completed after 6216 cycles. PASS`. If the firmware spins (any mismatch), the bench times out at 200 000 cycles and prints FAIL.
 - Point `HEX_PATH` in `sim/soc_top_tb.sv` to a different hex if you want to run other firmware images; the VCS flow stays the same.
 
 ## Synthesis (Design Compiler) — Read RTL & Elaborate
@@ -94,7 +98,19 @@ Recommended non-topo flow (fresh session):
 set_app_var sh_enable_page_mode false
 set_app_var alib_library_analysis_path /home/fy2243/ECE9433-SoC-Design-Project/alib
 source tcl_scripts/setup.tcl
-analyze -define SYNTHESIS -format sverilog {../rtl/soc_top.sv ../rtl/interconnect.sv ../rtl/sram.sv ../rtl/peu.sv ../third_party/picorv32/picorv32.v}
+analyze -define SYNTHESIS -format sverilog {
+    ../rtl/soc_top.sv
+    ../rtl/mem_router_native.sv
+    ../rtl/native_periph_bridge.sv
+    ../rtl/axil_interconnect_1x2.sv
+    ../rtl/axil_uart.sv
+    ../rtl/axil_cordic_accel.sv
+    ../rtl/cordic_accel_ctrl.sv
+    ../rtl/cordic_core_atan2.sv
+    ../rtl/cordic_core_sincos.sv
+    ../rtl/sram.sv
+    ../third_party/picorv32/picorv32.v
+}
 elaborate soc_top
 current_design soc_top
 source /home/fy2243/ECE9433-SoC-Design-Project/tcl_scripts/soc_top.con

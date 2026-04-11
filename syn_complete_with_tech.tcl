@@ -18,11 +18,15 @@ set expected_sram_inst "u_sram/u_sram_macro"
 # RTL sources
 set rtl_files [list \
     "$proj_root/rtl/soc_top.sv" \
+    "$proj_root/rtl/mem_router_native.sv" \
+    "$proj_root/rtl/native_periph_bridge.sv" \
+    "$proj_root/rtl/axil_interconnect_1x2.sv" \
+    "$proj_root/rtl/axil_uart.sv" \
+    "$proj_root/rtl/axil_cordic_accel.sv" \
+    "$proj_root/rtl/cordic_accel_ctrl.sv" \
     "$proj_root/rtl/sram.sv" \
     "$proj_root/rtl/cordic_core_atan2.sv" \
     "$proj_root/rtl/cordic_core_sincos.sv" \
-    "$proj_root/rtl/cordic_soc_wrapper.sv" \
-    "$proj_root/rtl/interconnect.sv" \
     "$proj_root/third_party/picorv32/picorv32.v" \
 ]
 
@@ -34,7 +38,7 @@ set sram_db "/ip/tsmc/tsmc16adfp/source/DAFP0203001_2_X/Executable_Package/Colla
 set starrc_tech "/ip/tsmc/tsmc16adfp/tech/RC/N16ADFP_STARRC/N16ADFP_STARRC_worst.nxtgrd"
 
 # Output directory
-set out_dir "$proj_root/mapped_with_tech"
+set out_dir [expr {[info exists ::env(SOC_MAP_OUT_DIR)] && $::env(SOC_MAP_OUT_DIR) ne "" ? [file normalize $::env(SOC_MAP_OUT_DIR)] : "$proj_root/mapped_with_tech"}]
 file mkdir $out_dir
 
 puts "Configuration:"
@@ -69,7 +73,9 @@ puts ""
 puts "=========================================="
 puts "Reading RTL files..."
 puts "==========================================\n"
-define_design_lib WORK -path ./WORK
+set dc_work_dir [expr {[info exists ::env(SOC_DC_WORK_DIR)] && $::env(SOC_DC_WORK_DIR) ne "" ? [file normalize $::env(SOC_DC_WORK_DIR)] : "./WORK"}]
+file mkdir $dc_work_dir
+define_design_lib WORK -path $dc_work_dir
 analyze -format sverilog -define SYNTHESIS $rtl_files
 elaborate $top_module
 current_design $top_module

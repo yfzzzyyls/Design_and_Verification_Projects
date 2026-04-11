@@ -1,12 +1,14 @@
-// Minimal SoC top: PicoRV32 core + behavioral SRAM preloaded from firmware hex.
+// SoC top: PicoRV32 with native SRAM and AXI4-Lite peripherals.
 module soc_top #(
     parameter int MEM_WORDS = 32'd512
 `ifndef SYNTHESIS
-    , parameter string HEX_PATH = "firmware/peu_test/peu_test.hex"
+    , parameter string HEX_PATH = "firmware/cordic_test/cordic_test.hex"
 `endif
 ) (
     input  logic clk,
     input  logic rst_n,
+    input  logic uart_rx,
+    output logic uart_tx,
     output logic trap
 );
 
@@ -28,14 +30,71 @@ module soc_top #(
     logic [ 3:0] sram_wstrb;
     logic [31:0] sram_rdata;
 
-    // To PEU slave
-    logic        peu_valid;
-    logic        peu_instr;
-    logic        peu_ready;
-    logic [31:0] peu_addr;
-    logic [31:0] peu_wdata;
-    logic [ 3:0] peu_wstrb;
-    logic [31:0] peu_rdata;
+    // To peripheral bridge
+    logic        periph_valid;
+    logic        periph_instr;
+    logic        periph_ready;
+    logic [31:0] periph_addr;
+    logic [31:0] periph_wdata;
+    logic [ 3:0] periph_wstrb;
+    logic [31:0] periph_rdata;
+
+    // AXI4-Lite master from native peripheral bridge
+    logic        m_axi_awvalid;
+    logic        m_axi_awready;
+    logic [31:0] m_axi_awaddr;
+    logic [ 2:0] m_axi_awprot;
+    logic        m_axi_wvalid;
+    logic        m_axi_wready;
+    logic [31:0] m_axi_wdata;
+    logic [ 3:0] m_axi_wstrb;
+    logic        m_axi_bvalid;
+    logic        m_axi_bready;
+    logic        m_axi_arvalid;
+    logic        m_axi_arready;
+    logic [31:0] m_axi_araddr;
+    logic [ 2:0] m_axi_arprot;
+    logic        m_axi_rvalid;
+    logic        m_axi_rready;
+    logic [31:0] m_axi_rdata;
+
+    // AXI4-Lite UART slave
+    logic        uart_axi_awvalid;
+    logic        uart_axi_awready;
+    logic [31:0] uart_axi_awaddr;
+    logic [ 2:0] uart_axi_awprot;
+    logic        uart_axi_wvalid;
+    logic        uart_axi_wready;
+    logic [31:0] uart_axi_wdata;
+    logic [ 3:0] uart_axi_wstrb;
+    logic        uart_axi_bvalid;
+    logic        uart_axi_bready;
+    logic        uart_axi_arvalid;
+    logic        uart_axi_arready;
+    logic [31:0] uart_axi_araddr;
+    logic [ 2:0] uart_axi_arprot;
+    logic        uart_axi_rvalid;
+    logic        uart_axi_rready;
+    logic [31:0] uart_axi_rdata;
+
+    // AXI4-Lite CORDIC accelerator slave
+    logic        cordic_axi_awvalid;
+    logic        cordic_axi_awready;
+    logic [31:0] cordic_axi_awaddr;
+    logic [ 2:0] cordic_axi_awprot;
+    logic        cordic_axi_wvalid;
+    logic        cordic_axi_wready;
+    logic [31:0] cordic_axi_wdata;
+    logic [ 3:0] cordic_axi_wstrb;
+    logic        cordic_axi_bvalid;
+    logic        cordic_axi_bready;
+    logic        cordic_axi_arvalid;
+    logic        cordic_axi_arready;
+    logic [31:0] cordic_axi_araddr;
+    logic [ 2:0] cordic_axi_arprot;
+    logic        cordic_axi_rvalid;
+    logic        cordic_axi_rready;
+    logic [31:0] cordic_axi_rdata;
 
     // Unused PicoRV32 ports
     logic        mem_la_read;
@@ -111,8 +170,11 @@ module soc_top #(
         .trace_data  (trace_data)
     );
 
-    // Interconnect
-    bus_interconnect u_ic (
+    mem_router_native #(
+        .SRAM_BYTES      (MEM_WORDS * 4),
+        .PERIPH_BASE_ADDR(32'h1000_0000),
+        .PERIPH_BYTES    (32'd8192)
+    ) u_mem_router (
         .m_valid   (mem_valid),
         .m_instr   (mem_instr),
         .m_ready   (mem_ready),
@@ -127,13 +189,13 @@ module soc_top #(
         .sram_wdata(sram_wdata),
         .sram_wstrb(sram_wstrb),
         .sram_rdata(sram_rdata),
-        .peu_valid (peu_valid),
-        .peu_instr (peu_instr),
-        .peu_ready (peu_ready),
-        .peu_addr  (peu_addr),
-        .peu_wdata (peu_wdata),
-        .peu_wstrb (peu_wstrb),
-        .peu_rdata (peu_rdata)
+        .periph_valid(periph_valid),
+        .periph_instr(periph_instr),
+        .periph_ready(periph_ready),
+        .periph_addr (periph_addr),
+        .periph_wdata(periph_wdata),
+        .periph_wstrb(periph_wstrb),
+        .periph_rdata(periph_rdata)
     );
 
     // SRAM slave
@@ -154,46 +216,138 @@ module soc_top #(
         .mem_rdata(sram_rdata)
     );
 
-    cordic_soc_wrapper #(
-        .WIDTH(32)
-    ) u_cordic (
-        .clk         (clk),
-        .rst_n       (rst_n),
-        
-        // Standard Bus Handshake
-        .bus_valid   (peu_valid),   // IN: Request from CPU
-        .bus_ready   (peu_ready),   // OUT: Acknowledgment from Wrapper
-        
-        // Control Signals
-        .bus_write_en(|peu_wstrb),  // Logic high if any byte write strobe is active
-        .bus_addr    (peu_addr[4:0]), // Map 32-bit byte address to 5-bit offset
-        
-        // Data Path
-        .bus_wdata   (peu_wdata),
-        .bus_rdata   (peu_rdata)
+    native_periph_bridge u_periph_bridge (
+        .clk          (clk),
+        .rst_n        (rst_n),
+        .mem_valid    (periph_valid),
+        .mem_instr    (periph_instr),
+        .mem_ready    (periph_ready),
+        .mem_addr     (periph_addr),
+        .mem_wdata    (periph_wdata),
+        .mem_wstrb    (periph_wstrb),
+        .mem_rdata    (periph_rdata),
+        .m_axi_awvalid(m_axi_awvalid),
+        .m_axi_awready(m_axi_awready),
+        .m_axi_awaddr (m_axi_awaddr),
+        .m_axi_awprot (m_axi_awprot),
+        .m_axi_wvalid (m_axi_wvalid),
+        .m_axi_wready (m_axi_wready),
+        .m_axi_wdata  (m_axi_wdata),
+        .m_axi_wstrb  (m_axi_wstrb),
+        .m_axi_bvalid (m_axi_bvalid),
+        .m_axi_bready (m_axi_bready),
+        .m_axi_arvalid(m_axi_arvalid),
+        .m_axi_arready(m_axi_arready),
+        .m_axi_araddr (m_axi_araddr),
+        .m_axi_arprot (m_axi_arprot),
+        .m_axi_rvalid (m_axi_rvalid),
+        .m_axi_rready (m_axi_rready),
+        .m_axi_rdata  (m_axi_rdata)
     );
 
-// =============================================================
-    // Simulation-Only Terminal Printer (Magic Address)
-    // =============================================================
-    // 这是一个“虚拟硬件”，综合时会被忽略，仅在 VCS 仿真时有效。
-    // 原理：Interconnect 会对未知地址自动回复 ready，所以 CPU 不会卡死。
-    // 我们只需要在这里“偷窥”总线，发现往 0x20000000 写数据，就打印出来。
-    
+    axil_interconnect_1x2 u_axil_xbar (
+        .clk              (clk),
+        .rst_n            (rst_n),
+        .s_axi_awvalid    (m_axi_awvalid),
+        .s_axi_awready    (m_axi_awready),
+        .s_axi_awaddr     (m_axi_awaddr),
+        .s_axi_awprot     (m_axi_awprot),
+        .s_axi_wvalid     (m_axi_wvalid),
+        .s_axi_wready     (m_axi_wready),
+        .s_axi_wdata      (m_axi_wdata),
+        .s_axi_wstrb      (m_axi_wstrb),
+        .s_axi_bvalid     (m_axi_bvalid),
+        .s_axi_bready     (m_axi_bready),
+        .s_axi_arvalid    (m_axi_arvalid),
+        .s_axi_arready    (m_axi_arready),
+        .s_axi_araddr     (m_axi_araddr),
+        .s_axi_arprot     (m_axi_arprot),
+        .s_axi_rvalid     (m_axi_rvalid),
+        .s_axi_rready     (m_axi_rready),
+        .s_axi_rdata      (m_axi_rdata),
+        .uart_axi_awvalid (uart_axi_awvalid),
+        .uart_axi_awready (uart_axi_awready),
+        .uart_axi_awaddr  (uart_axi_awaddr),
+        .uart_axi_awprot  (uart_axi_awprot),
+        .uart_axi_wvalid  (uart_axi_wvalid),
+        .uart_axi_wready  (uart_axi_wready),
+        .uart_axi_wdata   (uart_axi_wdata),
+        .uart_axi_wstrb   (uart_axi_wstrb),
+        .uart_axi_bvalid  (uart_axi_bvalid),
+        .uart_axi_bready  (uart_axi_bready),
+        .uart_axi_arvalid (uart_axi_arvalid),
+        .uart_axi_arready (uart_axi_arready),
+        .uart_axi_araddr  (uart_axi_araddr),
+        .uart_axi_arprot  (uart_axi_arprot),
+        .uart_axi_rvalid  (uart_axi_rvalid),
+        .uart_axi_rready  (uart_axi_rready),
+        .uart_axi_rdata   (uart_axi_rdata),
+        .cordic_axi_awvalid(cordic_axi_awvalid),
+        .cordic_axi_awready(cordic_axi_awready),
+        .cordic_axi_awaddr (cordic_axi_awaddr),
+        .cordic_axi_awprot (cordic_axi_awprot),
+        .cordic_axi_wvalid (cordic_axi_wvalid),
+        .cordic_axi_wready (cordic_axi_wready),
+        .cordic_axi_wdata  (cordic_axi_wdata),
+        .cordic_axi_wstrb  (cordic_axi_wstrb),
+        .cordic_axi_bvalid (cordic_axi_bvalid),
+        .cordic_axi_bready (cordic_axi_bready),
+        .cordic_axi_arvalid(cordic_axi_arvalid),
+        .cordic_axi_arready(cordic_axi_arready),
+        .cordic_axi_araddr (cordic_axi_araddr),
+        .cordic_axi_arprot (cordic_axi_arprot),
+        .cordic_axi_rvalid (cordic_axi_rvalid),
+        .cordic_axi_rready (cordic_axi_rready),
+        .cordic_axi_rdata  (cordic_axi_rdata)
+    );
 
-`ifndef SYNTHESIS
-    initial begin
-        // 指定输出文件名
-        $dumpfile("cordic_debug.vcd");
-        
-        // 指定要记录的层级：
-        // 0 表示记录该模块及其下所有子模块
-        // u_cordic 是我们在 soc_top 里实例化的名字
-        $dumpvars(0, soc_top);
-        
-        // 如果你也想看 CPU 的总线动作，可以把下面这行解注：
-        // $dumpvars(0, u_ic); 
-    end
-`endif
+    axil_uart u_uart (
+        .clk         (clk),
+        .rst_n       (rst_n),
+        .s_axi_awvalid(uart_axi_awvalid),
+        .s_axi_awready(uart_axi_awready),
+        .s_axi_awaddr (uart_axi_awaddr),
+        .s_axi_awprot (uart_axi_awprot),
+        .s_axi_wvalid (uart_axi_wvalid),
+        .s_axi_wready (uart_axi_wready),
+        .s_axi_wdata  (uart_axi_wdata),
+        .s_axi_wstrb  (uart_axi_wstrb),
+        .s_axi_bvalid (uart_axi_bvalid),
+        .s_axi_bready (uart_axi_bready),
+        .s_axi_arvalid(uart_axi_arvalid),
+        .s_axi_arready(uart_axi_arready),
+        .s_axi_araddr (uart_axi_araddr),
+        .s_axi_arprot (uart_axi_arprot),
+        .s_axi_rvalid (uart_axi_rvalid),
+        .s_axi_rready (uart_axi_rready),
+        .s_axi_rdata  (uart_axi_rdata),
+        .uart_rx      (uart_rx),
+        .uart_tx      (uart_tx)
+    );
+
+    axil_cordic_accel #(
+        .WIDTH(32),
+        .ITERATIONS(16)
+    ) u_cordic_accel (
+        .clk         (clk),
+        .rst_n       (rst_n),
+        .s_axi_awvalid(cordic_axi_awvalid),
+        .s_axi_awready(cordic_axi_awready),
+        .s_axi_awaddr (cordic_axi_awaddr),
+        .s_axi_awprot (cordic_axi_awprot),
+        .s_axi_wvalid (cordic_axi_wvalid),
+        .s_axi_wready (cordic_axi_wready),
+        .s_axi_wdata  (cordic_axi_wdata),
+        .s_axi_wstrb  (cordic_axi_wstrb),
+        .s_axi_bvalid (cordic_axi_bvalid),
+        .s_axi_bready (cordic_axi_bready),
+        .s_axi_arvalid(cordic_axi_arvalid),
+        .s_axi_arready(cordic_axi_arready),
+        .s_axi_araddr (cordic_axi_araddr),
+        .s_axi_arprot (cordic_axi_arprot),
+        .s_axi_rvalid (cordic_axi_rvalid),
+        .s_axi_rready (cordic_axi_rready),
+        .s_axi_rdata  (cordic_axi_rdata)
+    );
 
 endmodule
