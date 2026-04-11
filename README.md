@@ -166,3 +166,78 @@ Notes:
 - Keep PATH set to Innovus before running.
 - Antenna warnings on the SRAM LEF are expected; QRC still loads and extraction runs.
 - Routing is DRC-priority (timing-driven off). Enable timing-driven options later only if you need tighter timing after DRC is clean.
+
+## Canonical Calibre Signoff Flow
+
+The repo now keeps one canonical, cleaned Calibre signoff package:
+
+`signoff/calibre_foundrytap_lightfinal_20260410/`
+
+This is the final archived package that produced:
+- DRC clean: `signoff/calibre_foundrytap_lightfinal_20260410/05_drc/output/DRC_dmmerge_macroedge_cut1plus.rep`
+- LVS clean: `signoff/calibre_foundrytap_lightfinal_20260410/07_lvs/output/lvs.physall_supplyalias_global.rep`
+- Final layout database: `signoff/calibre_foundrytap_lightfinal_20260410/04_dummyMerge/output/soc_top.dmmerge_macroedge_cut1plus.oas.gz`
+
+Expected success conditions:
+- DRC summary contains `TOTAL DRC Results Generated: 0 (0)`
+- LVS summary contains `CORRECT`
+
+### Prerequisites
+
+- Final Innovus checkpoint available, for example `pd/innovus_fillko_20260409/with_sram_final.enc`
+- Innovus available at `/eda/cadence/INNOVUS211/bin/innovus`
+- Calibre available at `/eda/mentor/Calibre/aok_cal_2024.2_29.16/bin`
+- TSMC16ADFP decks and IP collateral available under `/ip/tsmc/tsmc16adfp/...`
+
+### One-shot execution
+
+Run the end-to-end export + Calibre flow from the repo root:
+
+```bash
+cd /home/fy2243/soc_design
+ROOT=/home/fy2243/soc_design \
+FINAL_ENC=/home/fy2243/soc_design/pd/innovus_fillko_20260409/with_sram_final.enc \
+DATE_TAG=my_signoff_run \
+CPU=8 \
+./run_calibre_signoff.sh
+```
+
+Useful environment knobs:
+- `DATE_TAG`: names the workspace as `signoff/calibre_${DATE_TAG}`
+- `FINAL_ENC`: final Innovus database to export from
+- `CPU`: Calibre parallelism
+- `LAYOUT_FORMAT`: `oasis` or `gds`
+- `RUN_DRC`: `1` or `0`
+- `RUN_LVS`: `1` or `0`
+- `EXPORT_PG_PINS`: `1` if the exported top-level netlist should expose PG pins
+
+### What the flow does
+
+The driver script [run_calibre_signoff.sh](/home/fy2243/soc_design/run_calibre_signoff.sh) executes the signoff flow in these stages:
+
+1. `00_export`
+   Exports fresh `DEF`, `LVSVG`, layout stream, and Verilog from the specified Innovus checkpoint using [export_calibre_signoff_artifacts.tcl](/home/fy2243/soc_design/tcl_scripts/export_calibre_signoff_artifacts.tcl).
+
+2. `04_dummyMerge`
+   Produces the post-dummy-merge layout database used for final signoff. The archived clean package keeps only the final fixed edit script [edit_dmmerge_macroedge_cut1plus.cmd](/home/fy2243/soc_design/signoff/calibre_foundrytap_lightfinal_20260410/04_dummyMerge/scr/edit_dmmerge_macroedge_cut1plus.cmd) and the final OASIS.
+
+3. `05_drc`
+   Runs Calibre DRC on the final dummy-merged layout using the patched deck [drc.modified](/home/fy2243/soc_design/signoff/calibre_foundrytap_lightfinal_20260410/05_drc/scr/drc.modified) and the canonical runset [runset.dmmerge_macroedge_cut1plus.cmd](/home/fy2243/soc_design/signoff/calibre_foundrytap_lightfinal_20260410/05_drc/scr/runset.dmmerge_macroedge_cut1plus.cmd).
+
+4. `06_v2lvs`
+   Converts the exported `LVSVG` to a schematic-like source netlist and rewrites the top-level subckt ordering for SRAM/standard-cell compatibility using [prepare_calibre_extract_source.py](/home/fy2243/soc_design/prepare_calibre_extract_source.py).
+
+5. `07_lvs`
+   Extracts layout connectivity to `soc_top.layspi`, applies supply alias/global fixes with [alias_layout_supply_pins.py](/home/fy2243/soc_design/signoff/calibre_foundrytap_lightfinal_20260410/07_lvs/scr/alias_layout_supply_pins.py) and [add_supply_globals.py](/home/fy2243/soc_design/signoff/calibre_foundrytap_lightfinal_20260410/07_lvs/scr/add_supply_globals.py), rewrites the source side with [prepare_calibre_lvs_source.py](/home/fy2243/soc_design/prepare_calibre_lvs_source.py), and runs the final compare through [runset.compare.physall_supplyalias_global.cmd](/home/fy2243/soc_design/signoff/calibre_foundrytap_lightfinal_20260410/07_lvs/scr/runset.compare.physall_supplyalias_global.cmd).
+
+### Canonical archived outputs
+
+The final committed milestone keeps only the files needed to prove and reproduce closure:
+
+- Exported signoff views in `00_export/`
+- Final clean layout in `04_dummyMerge/output/`
+- Final DRC deck patch, runset, and report in `05_drc/`
+- Source-prep artifacts in `06_v2lvs/`
+- Final LVS extraction, source-fix files, and compare report in `07_lvs/`
+
+All exploratory signoff directories and probe-only scripts were intentionally removed from the repo so the remaining signoff tree reflects the final deliverable rather than the debug history.
