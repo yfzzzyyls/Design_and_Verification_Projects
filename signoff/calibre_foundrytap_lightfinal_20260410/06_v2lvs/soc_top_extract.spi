@@ -1,0 +1,4 @@
+.INCLUDE /ip/tsmc/tsmc16adfp/source/DAFP0203001_2_X/Executable_Package/Collaterals/Tech/LVS/N16ADFP_LVS_Calibre/source.added
+.INCLUDE /home/fy2243/soc_design/signoff/calibre_foundrytap_lightfinal_20260410/06_v2lvs/N16ADFP_StdCell_100b.novppvbb.spi
+.INCLUDE /home/fy2243/soc_design/signoff/calibre_foundrytap_lightfinal_20260410/06_v2lvs/sram.layoutorder.spi
+.INCLUDE /home/fy2243/soc_design/signoff/calibre_foundrytap_lightfinal_20260410/06_v2lvs/soc_top_extract_rewired.spi

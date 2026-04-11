@@ -43,3 +43,39 @@ alib-52/
 .DS_Store
 
 *.fsdb.*
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Local EDA scratch and transient run files
+.metalfill_*.conf
+.mfSTA*
+innovus.cmd*
+innovus.log*
+innovus.logv*
+moduleparamid
+WORK/
+WORK_*/
+mapped_with_tech/
+mapped_with_tech_fresh_*/
+pd/innovus*.enc
+pd/innovus*.enc.dat/
+pd/innovus/*.enc
+pd/innovus/*.enc.dat/
+pd/innovus/*.rpt
+pd/innovus/*.rpt.old
+pd/innovus_*/
+pd/postroute_*/
+soc_top.antenna.lef
+soc_top.metalfill.rpt
+soc_top.metalfill.rpt.old
+
+# Calibre scratch outputs
+signoff/**/log/
+signoff/**/svdb/
+signoff/**/output/*.db
+signoff/**/output/*.sum
+signoff/**/output/*.rep.ext
+signoff/**/output/*global_probe*.layspi
+signoff/**/05_drc/*.density
