@@ -53,7 +53,7 @@ This is the current checkpoint for the `soc_design` full signoff closure work on
 native-SRAM current-RTL branch.
 
 Local git checkpoint:
-- branch: `codex/currentrtl-v48clean-milestone`
+- branch: `main`
 - tag: `currentrtl-v48clean-20260416`
 
 Final persisted signoff payload:
@@ -105,6 +105,42 @@ Conclusion:
 - broad local dummy fill was the wrong fix
 - the remaining issue was structural and had to be matched against the known-clean
   reference, not patched by trial-and-error density bands
+
+### Experiment Ladder That Actually Mattered
+
+The valuable part of the late-stage debug was not the raw `/tmp` payload. It was the
+decision sequence.
+
+Useful late candidates:
+- `v45_b10afs_cleanup`
+  - purpose: test the lower-`B10` / local-band hypothesis aggressively
+  - result: the original 6 residual checks went away, but large new `DM1/2/3.S.2`
+    and `DM1/2/3.S.2.2` regressions appeared
+  - lesson: broad local density-band edits can hide the original symptom while making
+    the real dummy-pattern state worse
+- `v46_b17_wrapperfix`
+  - purpose: restore a safe subset of missing `B17` wrapper/master geometry without
+    disturbing other regions
+  - result: no new `DM*.S.2/.2.2` regressions, but the original 6 checks remained
+  - lesson: this confirmed the general `B17` direction was safe, but the repair was
+    incomplete
+- `v47_b10local_cleanmatch`
+  - purpose: retry the local `B10` theory with a tighter clean-match patch instead of
+    a broad band
+  - result: the root 6 were not solved and one `DM2.S.7` count even worsened
+  - lesson: the residual issue was not a bottom-local `B10` mismatch
+- `v48_b17_master_complete`
+  - purpose: fully restore the missing low-layer `B17` dummy master geometry based on
+    direct comparison to the clean April 12 signoff layout
+  - result: the last 6 residual checks dropped to `0`, and the previously watched
+    `DM*.S.2/.2.2` regressions stayed at `0`
+  - lesson: the remaining blocker was missing `B17` master content, not a generic
+    density problem
+
+The critical compare/query step was:
+- stop looking only at the lower `B10` window
+- compare the full-height `B17` SRAM-edge stripe to the known-clean signoff layout
+- identify which dummy masters were empty or only partially populated
 
 ### Real Root Cause
 
@@ -173,6 +209,23 @@ For this SoC, when the design is already down to a tiny number of residual dummy
 - check for empty or partially instantiated dummy master cells first
 
 That was the shortest path from “almost clean” to full Calibre closure.
+
+### What Was Worth Keeping
+
+What needed to be preserved from the late debug loop:
+- the final clean signoff payload under
+  `signoff/calibre_axi_uartcordic_currentrtl_v48clean_20260416/`
+- the final repair provenance script
+  `signoff/calibre_axi_uartcordic_currentrtl_v48clean_20260416/04_dummyMerge/scr/patch_b17_master_complete_v48.sh`
+- this experiment summary and the root-cause notes in `PD.md`
+
+What did not need to be preserved:
+- the many `/tmp/query_*`, `/tmp/compare_*`, `/tmp/v42_*` ... `/tmp/v48_*`, and
+  `/tmp/m23_*` scratch artifacts themselves
+
+Those scratch files were useful during diagnosis, but after the closure path was
+written down and the final clean payload was checkpointed, they no longer carried
+unique information.
 
 ## Repo conventions
 - RTL in `rtl/`, scripts in `tcl_scripts/`, Innovus checkpoints/reports in `pd/innovus/`.
