@@ -20,16 +20,19 @@ set export_pg_pins [expr {![info exists ::env(SOC_EXPORT_PG_PINS)] || $::env(SOC
 
 proc soc_term_has_pin_shape {term_name} {
     set term_ptr [dbGet -p top.terms.name $term_name]
-    if {$term_ptr eq ""} {
+    if {$term_ptr eq "" || $term_ptr eq "0x0"} {
         return 0
     }
     set shapes [dbGet $term_ptr.pins.allShapes]
+    if {$shapes eq "" || $shapes eq "0x0"} {
+        return 0
+    }
     return [expr {[llength $shapes] > 0}]
 }
 
 proc soc_find_pg_ring_box {net_name target_layer target_width} {
     set net_ptr [dbGet -p top.nets.name $net_name]
-    if {$net_ptr eq ""} {
+    if {$net_ptr eq "" || $net_ptr eq "0x0"} {
         return ""
     }
     set layers [dbGet $net_ptr.sWires.layer.name]
@@ -49,7 +52,7 @@ proc soc_find_pg_ring_box {net_name target_layer target_width} {
 
 proc soc_find_signal_attach_shape {net_name} {
     set net_ptr [dbGet -p top.nets.name $net_name]
-    if {$net_ptr eq ""} {
+    if {$net_ptr eq "" || $net_ptr eq "0x0"} {
         return ""
     }
     array set best_rank {}
@@ -62,15 +65,12 @@ proc soc_find_signal_attach_shape {net_name} {
     for {set i 0} {$i < $count} {incr i} {
         set layer [lindex $layers $i]
         set box   [lindex $boxes $i]
-        if {$box eq "" || $box eq "0x0"} {
+        if {$layer eq "" || $layer eq "0x0" || $box eq "" || $box eq "0x0"} {
             continue
         }
         if {[info exists best_rank($layer)]} {
             return [list $layer $box]
         }
-    }
-    if {$count > 0} {
-        return [list [lindex $layers 0] [lindex $boxes 0]]
     }
     return ""
 }
@@ -116,8 +116,9 @@ foreach {net_name conn_type} {
 # For signoff export, always add a pin shape on real routed geometry so Calibre
 # sees the same top-level connectivity as Innovus.
 set export_pins [list]
-foreach term_name {clk rst_n trap} {
-    if {[dbGet -p top.terms.name $term_name] ne ""} {
+foreach term_name {clk rst_n trap uart_rx uart_tx} {
+    set term_ptr [dbGet -p top.terms.name $term_name]
+    if {$term_ptr ne "" && $term_ptr ne "0x0"} {
         lappend export_pins $term_name
     }
 }

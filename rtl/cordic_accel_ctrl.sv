@@ -6,6 +6,8 @@ module cordic_accel_ctrl #(
     input  logic                    rst_n,
     input  logic                    start,
     input  logic                    soft_reset,
+    input  logic                    clear_done,
+    input  logic                    clear_error,
     input  logic [31:0]             opcode,
     input  logic signed [WIDTH-1:0] x_reg,
     input  logic signed [WIDTH-1:0] y_reg,
@@ -14,11 +16,15 @@ module cordic_accel_ctrl #(
     output logic                    busy,
     output logic                    done,
     output logic                    error,
+    output logic [31:0]             error_code,
     output logic signed [WIDTH-1:0] result0,
     output logic signed [WIDTH-1:0] result1
 );
     localparam logic [31:0] OPCODE_ATAN2  = 32'd0;
     localparam logic [31:0] OPCODE_SINCOS = 32'd1;
+    localparam logic [31:0] ERR_NONE      = 32'd0;
+    localparam logic [31:0] ERR_BUSY      = 32'd1;
+    localparam logic [31:0] ERR_OPCODE    = 32'd2;
 
     logic launch_atan2;
     logic launch_sincos;
@@ -60,28 +66,41 @@ module cordic_accel_ctrl #(
 
     always_ff @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            busy    <= 1'b0;
-            done    <= 1'b0;
-            error   <= 1'b0;
-            result0 <= '0;
-            result1 <= '0;
+            busy       <= 1'b0;
+            done       <= 1'b0;
+            error      <= 1'b0;
+            error_code <= ERR_NONE;
+            result0    <= '0;
+            result1    <= '0;
         end else begin
             if (soft_reset) begin
-                busy    <= 1'b0;
-                done    <= 1'b0;
-                error   <= 1'b0;
-                result0 <= '0;
-                result1 <= '0;
+                busy       <= 1'b0;
+                done       <= 1'b0;
+                error      <= 1'b0;
+                error_code <= ERR_NONE;
+                result0    <= '0;
+                result1    <= '0;
             end else begin
+                if (clear_done) begin
+                    done <= 1'b0;
+                end
+                if (clear_error) begin
+                    error      <= 1'b0;
+                    error_code <= ERR_NONE;
+                end
+
                 if (start) begin
                     done <= 1'b0;
                     if (busy) begin
-                        error <= 1'b1;
+                        error      <= 1'b1;
+                        error_code <= ERR_BUSY;
                     end else if (!(launch_atan2 || launch_sincos)) begin
-                        error <= 1'b1;
+                        error      <= 1'b1;
+                        error_code <= ERR_OPCODE;
                     end else begin
-                        busy  <= 1'b1;
-                        error <= 1'b0;
+                        busy       <= 1'b1;
+                        error      <= 1'b0;
+                        error_code <= ERR_NONE;
                     end
                 end
 

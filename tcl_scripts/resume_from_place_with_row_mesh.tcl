@@ -8,6 +8,7 @@ set base_pnr_out_dir [expr {[info exists ::env(SOC_BASE_PNR_OUT_DIR)] && $::env(
 set pnr_out_dir [expr {[info exists ::env(SOC_PNR_OUT_DIR)] && $::env(SOC_PNR_OUT_DIR) ne "" ? [file normalize $::env(SOC_PNR_OUT_DIR)] : [file join $proj_root pd innovus_resume_from_place_with_row_mesh]}]
 set base_place_enc [file join $base_pnr_out_dir with_sram_place.enc.dat]
 set include_m1_mesh [expr {![info exists ::env(SOC_ROW_MESH_INCLUDE_M1)] || ($::env(SOC_ROW_MESH_INCLUDE_M1) ne "" && $::env(SOC_ROW_MESH_INCLUDE_M1) ne "0")}]
+set skip_metal_fill [expr {[info exists ::env(SOC_SKIP_METAL_FILL)] && $::env(SOC_SKIP_METAL_FILL) ne "" && $::env(SOC_SKIP_METAL_FILL) ne "0"}]
 file mkdir $pnr_out_dir
 
 proc read_text_file {path} {
@@ -220,26 +221,51 @@ proc createPowerStripe {region direction layer nets offset width spacing pitch {
         -uda PG_STR
 }
 
-proc soc_get_vss_m3_short_keepouts {} {
+proc soc_get_m3_short_keepouts {} {
     set core [dbget top.fplan.coreBox -e]
     set lly  [lindex $core 1]
     set ury  [lindex $core 3]
     set rects {}
 
-    foreach xc {132.614 172.934 193.094} {
-        set halfw 0.090
+    # Route-stage residuals cluster on a small set of M3 PG columns that short
+    # into local signal tracks. Widen the keepouts slightly so the row mesh
+    # skips those columns for both VDD and VSS.
+    foreach xc {112.454 132.614 145.192 152.776 169.158 172.934 193.094} {
+        set halfw 0.180
         lappend rects [list [expr {$xc - $halfw}] $lly [expr {$xc + $halfw}] $ury]
     }
     return $rects
 }
 
+proc soc_get_m2_pg_keepouts {} {
+    set rects {}
+
+    # Avoid pushing M2 PG stripes through the dense CORDIC pipeline cluster.
+    lappend rects [list 139.45 179.95 143.95 198.25]
+
+    # Avoid tiny stripe endpoints at the SRAM-side cut-row boundary.
+    lappend rects [list 61.50 163.35 61.82 166.95]
+
+    return $rects
+}
+
+proc soc_add_sram_pg_hotspot_blockages {} {
+    # Keep block-pin sroute off the two SRAM-edge M4 windows that repeatedly
+    # turn into span/minstep/minwidth residuals after row-mesh reroute.
+    createRouteBlk -name sram_pg_m4_hotspot_mid  -layer {M4} -box {104.78 118.33 105.24 118.72}
+    createRouteBlk -name sram_pg_m4_hotspot_high -layer {M4} -box {105.10 166.45 105.30 168.25}
+    createRouteBlk -name sram_pg_m4_hotspot_low  -layer {M4} -box {61.84 61.58 62.24 67.20}
+    createRouteBlk -name sram_pg_m3_hotspot_mid  -layer {M3} -box {105.00 118.34 105.18 118.54}
+}
+
 proc soc_add_row_pg_mesh {} {
     initializeRegionBKG
-    set vss_m3_keepouts [soc_get_vss_m3_short_keepouts]
-    createPowerStripe STD V M3 [list VDD 1] 0.261 0.038 0 2.520
-    createPowerStripe STD H M2 [list VDD 1] 0.544 0.064 0 1.152
-    createPowerStripe STD V M3 [list VSS 1] 1.521 0.038 0 2.520 $vss_m3_keepouts
-    createPowerStripe STD H M2 [list VSS 1] -0.032 0.064 0 1.152
+    set m3_keepouts [soc_get_m3_short_keepouts]
+    set m2_keepouts [soc_get_m2_pg_keepouts]
+    createPowerStripe STD V M3 [list VDD 1] 0.261 0.038 0 2.520 $m3_keepouts
+    createPowerStripe STD H M2 [list VDD 1] 0.544 0.064 0 1.152 $m2_keepouts
+    createPowerStripe STD V M3 [list VSS 1] 1.521 0.038 0 2.520 $m3_keepouts
+    createPowerStripe STD H M2 [list VSS 1] -0.032 0.064 0 1.152 $m2_keepouts
     if {$::include_m1_mesh} {
         createPowerStripe STD H M1 [list VDD 1] 0.531 0.090 0 1.152
         createPowerStripe STD H M1 [list VSS 1] -0.045 0.090 0 1.152
@@ -247,14 +273,54 @@ proc soc_add_row_pg_mesh {} {
     }
 }
 
+proc soc_add_sparse_pg_backbone {} {
+    initializeRegionBKG
+    createPowerStripe STD V M5 [list VDD 1] 7.560 0.080 0 30.240
+    createPowerStripe STD V M5 [list VSS 1] 22.680 0.080 0 30.240
+}
+
 proc soc_route_pg {} {
     setSrouteMode -viaConnectToShape {ring stripe}
-    sroute -nets {VDD VSS} -connect {corePin blockPin} \
+    sroute -nets {VDD VSS} -connect {corePin} \
       -corePinTarget {ring stripe} \
-      -blockPinTarget {ring stripe} \
       -layerChangeRange {M1 M10} \
+      -targetViaLayerRange {M1 M10} \
       -allowLayerChange 1 \
       -allowJogging 1
+    sroute -nets {VDD VSS} -connect {blockPin} \
+      -inst u_sram/u_sram_macro \
+      -blockPinTarget {stripe ring} \
+      -blockPinLayerRange {M4 M10} \
+      -layerChangeRange {M4 M10} \
+      -targetViaLayerRange {M4 M10} \
+      -allowLayerChange 1 \
+      -allowJogging 1
+    sroute -nets {VDD VSS} -connect {floatingStripe} \
+      -floatingStripeTarget {stripe ring} \
+      -layerChangeRange {M1 M10} \
+      -targetViaLayerRange {M1 M10} \
+      -allowLayerChange 1
+}
+
+proc soc_route_boundary_vpp_pgpins {} {
+    setNanoRouteMode -routeAllowPowerGroundPin true
+    catch {setAttribute -net VDD -skip_routing false}
+    set trunk_ndr [dbGet head.rules.name TrunkNDR -e]
+    catch {setPGPinUseSignalRoute TAPCELL*:VPP BOUNDARY_*TAP*:VPP}
+    if {$trunk_ndr ne ""} {
+        catch {
+            setAttribute -net VDD \
+                -avoid_detour true \
+                -weight 20 \
+                -non_default_rule TrunkNDR \
+                -pattern trunk \
+                -bottom_preferred_routing_layer 8 \
+                -top_preferred_routing_layer 9
+        }
+        catch {routePGPinUseSignalRoute -maxFanout 1 -nonDefaultRule TrunkNDR}
+    } else {
+        catch {routePGPinUseSignalRoute -maxFanout 1}
+    }
 }
 
 proc soc_insert_standard_cell_fillers {} {
@@ -328,6 +394,8 @@ if {![file exists $base_place_enc]} {
 restoreDesign $base_place_enc soc_top
 
 soc_refresh_pg_connectivity
+soc_add_sram_pg_hotspot_blockages
+soc_add_sparse_pg_backbone
 soc_add_row_pg_mesh
 saveDesign [file join $pnr_out_dir with_sram_place_pgmesh.enc]
 
@@ -346,19 +414,27 @@ soc_route_pg
 ccopt_design -cts
 saveDesign [file join $pnr_out_dir with_sram_cts.enc]
 
+soc_refresh_pg_connectivity
+soc_route_boundary_vpp_pgpins
+
 routeDesign
 saveDesign [file join $pnr_out_dir with_sram_route.enc]
 
 soc_insert_standard_cell_fillers
 soc_refresh_pg_connectivity
 soc_route_pg
+saveDesign [file join $pnr_out_dir with_sram_postpg.enc]
 
-set bbox [soc_get_design_bbox]
-set llx [lindex $bbox 0]
-set lly [lindex $bbox 1]
-set urx [lindex $bbox 2]
-set ury [lindex $bbox 3]
-soc_add_fill_with_trap_m4_keepout $llx $lly $urx $ury
+if {!$skip_metal_fill} {
+    set bbox [soc_get_design_bbox]
+    set llx [lindex $bbox 0]
+    set lly [lindex $bbox 1]
+    set urx [lindex $bbox 2]
+    set ury [lindex $bbox 3]
+    soc_add_fill_with_trap_m4_keepout $llx $lly $urx $ury
+} else {
+    puts "Skipping metal fill before DRC/connectivity gates"
+}
 
 set max_eco_iters 8
 set eco_iter 0

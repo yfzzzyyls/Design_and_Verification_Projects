@@ -3,10 +3,11 @@ set -euo pipefail
 
 ROOT=${ROOT:-/home/fy2243/soc_design}
 TOP=${TOP:-soc_top}
-DATE_TAG=${DATE_TAG:-fillko_20260409}
+PNR_OUT_DIR=${PNR_OUT_DIR:-${SOC_PNR_OUT_DIR:-$ROOT/pd/innovus}}
+DATE_TAG=${DATE_TAG:-$(basename "$PNR_OUT_DIR")_signoff}
 WORK_DIR=${WORK_DIR:-$ROOT/signoff/calibre_${DATE_TAG}}
 EXPORT_DIR=${EXPORT_DIR:-$WORK_DIR/00_export}
-FINAL_ENC=${FINAL_ENC:-$ROOT/pd/innovus_fillko_20260409/with_sram_final.enc}
+FINAL_ENC=${FINAL_ENC:-${SOC_FINAL_ENC:-$PNR_OUT_DIR/with_sram_final.enc}}
 CALIBRE_BIN=${CALIBRE_BIN:-/eda/mentor/Calibre/aok_cal_2024.2_29.16/bin}
 INNOVUS_BIN=${INNOVUS_BIN:-/eda/cadence/INNOVUS211/bin/innovus}
 CPU=${CPU:-8}
@@ -269,7 +270,7 @@ if {"$IPMERGE_STD_MODE" eq "used_nonphysical"} {
     }
 }
 \$top create layer 108.250
-\$top create polygon $TOP 108.250 0 0 336.420u 336.192u
+\$top create polygon $TOP 108.250 0 0 ${DIE_X_UM}u ${DIE_Y_UM}u
 \$top oasisout ./output/$TOP.oas.gz \$TopCell
 EOF
 echo "[2/6] IP merge"

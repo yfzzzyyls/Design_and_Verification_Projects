@@ -35,6 +35,9 @@ module axil_uart #(
     logic [31:0] rxdata_reg;
     logic [31:0] rdata_reg;
     logic [31:0] ctrl_reg;
+    logic        rx_valid;
+    logic        uart_rx_meta;
+    logic        uart_rx_sync;
 
     logic [ 9:0] tx_shift_reg;
     logic [ 3:0] tx_bits_remaining;
@@ -50,7 +53,7 @@ module axil_uart #(
 
     assign write_addr_word = s_axi_awaddr[5:2];
     assign read_addr_word  = s_axi_araddr[5:2];
-    assign tx_ready        = !tx_busy;
+    assign tx_ready        = ctrl_reg[0] && !tx_busy;
     assign write_ready     = !s_axi_bvalid && (!((write_addr_word == REG_TXDATA) && !tx_ready));
     assign write_fire      = s_axi_awvalid && s_axi_wvalid && write_ready;
     assign read_fire       = s_axi_arvalid && !s_axi_rvalid;
@@ -64,6 +67,9 @@ module axil_uart #(
             baud_div_reg      <= DEFAULT_BAUD_DIV;
             rxdata_reg        <= 32'h0000_0000;
             ctrl_reg          <= 32'h0000_0001;
+            rx_valid          <= 1'b0;
+            uart_rx_meta      <= 1'b1;
+            uart_rx_sync      <= 1'b1;
             s_axi_bvalid      <= 1'b0;
             s_axi_rvalid      <= 1'b0;
             rdata_reg         <= 32'h0000_0000;
@@ -83,10 +89,12 @@ module axil_uart #(
                 s_axi_bvalid <= 1'b1;
                 case (write_addr_word)
                     REG_TXDATA: begin
-                        tx_shift_reg      <= {1'b1, s_axi_wdata[7:0], 1'b0};
-                        tx_bits_remaining <= 4'd10;
-                        tx_baud_cnt       <= baud_div_reg;
-                        tx_busy           <= 1'b1;
+                        if (ctrl_reg[0]) begin
+                            tx_shift_reg      <= {1'b1, s_axi_wdata[7:0], 1'b0};
+                            tx_bits_remaining <= 4'd10;
+                            tx_baud_cnt       <= baud_div_reg;
+                            tx_busy           <= 1'b1;
+                        end
                     end
                     REG_BAUD_DIV: begin
                         if (s_axi_wstrb[0]) baud_div_reg[ 7:0] <= s_axi_wdata[ 7:0];
@@ -109,7 +117,7 @@ module axil_uart #(
                 case (read_addr_word)
                     REG_TXDATA:   rdata_reg <= 32'h0000_0000;
                     REG_RXDATA:   rdata_reg <= rxdata_reg;
-                    REG_STATUS:   rdata_reg <= {30'h0, 1'b0, tx_ready};
+                    REG_STATUS:   rdata_reg <= {27'h0, tx_busy, ctrl_reg[1], ctrl_reg[0], rx_valid, tx_ready};
                     REG_BAUD_DIV: rdata_reg <= baud_div_reg;
                     REG_CTRL:     rdata_reg <= ctrl_reg;
                     default:      rdata_reg <= 32'h0000_0000;
@@ -131,7 +139,15 @@ module axil_uart #(
                 end
             end
 
-            rxdata_reg[0] <= uart_rx;
+            uart_rx_meta <= uart_rx;
+            uart_rx_sync <= uart_rx_meta;
+            if (ctrl_reg[1]) begin
+                rxdata_reg[0] <= uart_rx_sync;
+                rx_valid      <= 1'b1;
+            end else begin
+                rxdata_reg <= 32'h0000_0000;
+                rx_valid   <= 1'b0;
+            end
         end
     end
 
