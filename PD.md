@@ -47,6 +47,133 @@ Project: ECE9433-SoC-Design-Project (pose estimation accelerator SoC)
 - IO pin assignment warnings during `verifyConnectivity` for `clk`, `rst_n`, and `trap` are expected unless pins are assigned.
 - This is Innovus in-design connectivity/antenna validation, not full signoff LVS/DRC with PVS/Calibre.
 
+## Current RTL Signoff Milestone (Apr 16, 2026, America/New_York)
+
+This is the current checkpoint for the `soc_design` full signoff closure work on the
+native-SRAM current-RTL branch.
+
+Local git checkpoint:
+- branch: `codex/currentrtl-v48clean-milestone`
+- tag: `currentrtl-v48clean-20260416`
+
+Final persisted signoff payload:
+- `signoff/calibre_axi_uartcordic_currentrtl_v48clean_20260416/`
+- DRC: `signoff/calibre_axi_uartcordic_currentrtl_v48clean_20260416/05_drc/output/DRC.rep`
+- LVS: `signoff/calibre_axi_uartcordic_currentrtl_v48clean_20260416/07_lvs/output/lvs.physall_supplyalias_global.rep`
+- patched dummy-merge layout:
+  `signoff/calibre_axi_uartcordic_currentrtl_v48clean_20260416/04_dummyMerge/output/soc_top.dmmerge.oas.gz`
+
+Final status:
+- full-chip Calibre DRC: `0`
+- final Calibre LVS: `CORRECT`
+
+### What Was Already Good
+
+Before the final DRC closure pass, the current-RTL signoff tree already had a correct
+final LVS flow in:
+- `signoff/calibre_axi_uartcordic_currentrtl_postdrc_20260412_r2/07_lvs/output/lvs.physall_supplyalias_global.rep`
+
+That alias/global LVS path had already solved the earlier source/layout naming and
+supply-fragment issues. The remaining blocker was DRC, not LVS.
+
+### Remaining Problem Before Final Closure
+
+After the earlier PG and dummy-merge iterations, the best near-clean DRC candidate was
+stuck on only 6 checks:
+- `M1.DN.1.T`
+- `M2.DN.1.T`
+- `M3.DN.1.T`
+- `DM1.S.7`
+- `DM2.S.7`
+- `DM3.S.7`
+
+Important observation:
+- these were not signal-routing or power-grid opens
+- they were lower-layer dummy-fill / dummy-pattern issues
+
+### Wrong Hypothesis That Was Rejected
+
+An early guess was that the last violations were caused by a local lower `B10` dummy
+pattern mismatch near the bottom cluster. That direction was tested by adding broader
+local dummy shapes.
+
+Result:
+- the original 6 checks could be suppressed
+- but large regressions appeared immediately in `DM1/2/3.S.2` and `DM1/2/3.S.2.2`
+
+Conclusion:
+- broad local dummy fill was the wrong fix
+- the remaining issue was structural and had to be matched against the known-clean
+  reference, not patched by trial-and-error density bands
+
+### Real Root Cause
+
+The useful comparison was not the lower `B10` area. The useful comparison was the full
+height SRAM-edge `B17` stripe against the April 12 clean signoff layout.
+
+That compare showed that the current-RTL near-clean layout still had multiple empty or
+partially populated `B17` dummy master cells where the clean reference had real
+low-layer geometry.
+
+Examples of missing or incomplete masters found in the failing layout:
+- `B17aDM2OH_CB`
+- `B17aDM1OV_CA`
+- `B17aDM1OV_CB`
+- `B17aDM3OV_CA`
+- `B17aDM3OV_CB`
+- `B17aDM1S_CB`
+- `B17aDM3S_CB`
+- `B17aDM2S_CA`
+- `B17aDM2S_CB`
+- `B17aDM1B_CA`
+- `B17aDM1B_CB`
+- `B17aDM2B_CA`
+- `B17aDM2B_CB`
+- `B17aDM3B_CA`
+- `B17aDM3B_CB`
+
+One additional master, `B17aFS_fs_1_5`, was only partially populated:
+- upper-layer polygons were present
+- 18 lower-layer polygons were missing
+
+This was the actual cause of the last 6 DRC violations.
+
+### Fix Applied
+
+The final clean patch restored the missing `B17` low-layer dummy geometry directly in
+the dummy-merge layout:
+- restored the missing low-layer polygons for the empty `B17` dummy masters listed above
+- restored the missing lower-layer polygons in `B17aFS_fs_1_5`
+
+Provenance script:
+- `signoff/calibre_axi_uartcordic_currentrtl_v48clean_20260416/04_dummyMerge/scr/patch_b17_master_complete_v48.sh`
+
+Canonical final layout:
+- `signoff/calibre_axi_uartcordic_currentrtl_v48clean_20260416/04_dummyMerge/output/soc_top.dmmerge.oas.gz`
+
+### Why LVS Did Not Need Another New Fix
+
+The final `v48` closure change was a dummy-fill repair only.
+
+It did not change:
+- functional RTL
+- signal connectivity
+- PG topology
+- extracted logical connectivity used by the already-correct alias/global LVS compare
+
+So the DRC closure required a new layout checkpoint, but not a new logical LVS
+normalization strategy. The already-correct final LVS report remained the right final
+status record for the current-RTL milestone.
+
+### Practical Lesson
+
+For this SoC, when the design is already down to a tiny number of residual dummy rules:
+- do not start with broad density-band fill experiments
+- compare against the last known-clean signoff layout at the exact failing stripe/window
+- check for empty or partially instantiated dummy master cells first
+
+That was the shortest path from “almost clean” to full Calibre closure.
+
 ## Repo conventions
 - RTL in `rtl/`, scripts in `tcl_scripts/`, Innovus checkpoints/reports in `pd/innovus/`.
 - Keep large logs/generated outputs out of git; commit RTL/scripts/docs.
