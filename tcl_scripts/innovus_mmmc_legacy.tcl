@@ -3,8 +3,9 @@
 set std_lib   "/ip/tsmc/tsmc16adfp/stdcell/NLDM/N16ADFP_StdCelltt0p8v25c.lib"
 set sram_lib  "/ip/tsmc/tsmc16adfp/sram/NLDM/N16ADFP_SRAM_tt0p8v0p8v25c_100a.lib"
 
-# SDC constraints
-set sdc_file  [file join [file dirname [file normalize [info script]]] soc_top.sdc]
+# Innovus may evaluate this file from a temporary location, so anchor the SDC to
+# the launch directory rather than [info script].
+set sdc_file [file normalize [file join [pwd] mapped_with_tech soc_top.sdc]]
 
 # Create library set
 create_library_set -name libset_typ -timing [list $std_lib $sram_lib]

@@ -888,7 +888,7 @@ Question:
 Verified repo guidance:
 - [README.md](/home/fy2243/soc_design/README.md#L89) says the project currently relies on non-topo synthesis because the delivered flow lacks complete topo collateral hookup.
 - [run_currentrtl_pd.sh](/home/fy2243/soc_design/run_currentrtl_pd.sh#L26) defaults synthesis to plain `dcnxt_shell`, not `dcnxt_shell -topo`.
-- [soc_top.sdc](/home/fy2243/soc_design/tcl_scripts/soc_top.sdc#L1) is labeled as matching non-topo synthesis.
+- [soc_top.sdc](/home/fy2243/soc_design/mapped_with_tech/soc_top.sdc#L1) is the active synthesized SDC handed to Innovus.
 
 Verified installed collateral:
 - Standard-cell physical NDM exists:

@@ -128,7 +128,7 @@ Notes / pitfalls:
 
 ## Innovus Bring-Up (batch, legacy mode)
 
-Prereqs: mapped netlist at `mapped/soc_top.v`, SDC at `tcl_scripts/soc_top.sdc`, and PDK collateral at `/ip/tsmc/tsmc16adfp/...` as referenced in the Tcl scripts.
+Prereqs: mapped netlist at `mapped/soc_top.v`, active SDC at `mapped_with_tech/soc_top.sdc`, and PDK collateral at `/ip/tsmc/tsmc16adfp/...` as referenced in the Tcl scripts.
 
 Run:
 ```bash
