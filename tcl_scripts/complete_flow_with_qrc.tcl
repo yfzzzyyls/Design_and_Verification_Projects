@@ -23,7 +23,7 @@ set NETLIST   [file join $proj_root mapped_with_tech soc_top.v]
 set TOP       "soc_top"
 
 # MMMC file with QRC
-set MMMC_QRC_FILE [file normalize [file join $script_dir innovus_mmmc_legacy_qrc.tcl]]
+set MMMC_QRC_FILE [file normalize [file join $script_dir innovus_mmmc.tcl]]
 
 # Power nets
 set init_pwr_net VDD

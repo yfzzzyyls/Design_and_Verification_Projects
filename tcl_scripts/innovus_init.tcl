@@ -18,8 +18,8 @@ set SRAM_GDS  "/ip/tsmc/tsmc16adfp/source/DAFP0203001_2_X/Executable_Package/Col
 set NETLIST   [file join $proj_root mapped soc_top.v]
 set TOP       "soc_top"
 
-# MMMC file for timing setup (legacy syntax for batch mode)
-set MMMC_LEGACY_FILE [file normalize [file join $script_dir innovus_mmmc_legacy.tcl]]
+# Canonical MMMC file for timing setup
+set MMMC_FILE [file normalize [file join $script_dir innovus_mmmc.tcl]]
 
 # Power nets (adjust if your LEF uses different names)
 set init_pwr_net VDD
@@ -29,7 +29,7 @@ set init_gnd_net VSS
 set init_lef_file   [list $TECH_LEF $STD_LEF $SRAM_LEF]
 set init_verilog    $NETLIST
 set init_top_cell   $TOP
-set init_mmmc_file  $MMMC_LEGACY_FILE
+set init_mmmc_file  $MMMC_FILE
 
 # Initialize design (timing libraries loaded via init_mmmc_file)
 init_design

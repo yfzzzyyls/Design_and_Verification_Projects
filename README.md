@@ -137,7 +137,7 @@ export PATH=/eda/cadence/INNOVUS211/bin:$PATH   # tcsh: set path = (/eda/cadence
 innovus -no_gui -overwrite -files tcl_scripts/innovus_flow.tcl
 ```
 What happens:
-- Uses legacy init with `init_mmmc_file=tcl_scripts/innovus_mmmc_legacy.tcl` so timing is active at `init_design`.
+- Uses `init_mmmc_file=tcl_scripts/innovus_mmmc.tcl` so timing is active at `init_design`.
 - Reads tech/stdcell/SRAM LEF, mapped netlist, applies SDC, creates a 60% util floorplan, places/fixes the SRAM, runs `timeDesign -prePlace`.
 - Checkpoints are written to `pd/innovus/init.enc` and `pd/innovus/init_timed.enc`; timing reports drop into `timingReports/`.
 
@@ -169,7 +169,7 @@ export PATH=/eda/cadence/INNOVUS211/bin:$PATH   # tcsh: set path = (/eda/cadence
 /eda/cadence/INNOVUS211/bin/innovus -no_gui -overwrite -files tcl_scripts/complete_flow_with_qrc.tcl 2>&1 | tee complete_flow.log
 ```
 What it does:
-- Loads QRC tech `/ip/tsmc/tsmc16adfp/tech/RC/N16ADFP_QRC/worst/qrcTechFile` (via `tcl_scripts/innovus_mmmc_legacy_qrc.tcl`)
+- Loads QRC tech `/ip/tsmc/tsmc16adfp/tech/RC/N16ADFP_QRC/worst/qrcTechFile` (via `tcl_scripts/innovus_mmmc.tcl`)
 - Reads tech/stdcell/SRAM LEFs and the synthesized netlist `mapped_with_tech/soc_top.v`
 - Floorplan: 30% utilization, 50 µm margins; SRAM placed/fixed; PG connects; process set to 16nm
 - Placement → CTS (`ccopt_design -cts`) → DRC-focused routing → metal fill (M1–M6)

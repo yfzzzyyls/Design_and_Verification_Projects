@@ -997,7 +997,7 @@ What is confirmed installed:
 
 What the project already has for STA:
 - MMMC/QRC setup file:
-  - [innovus_mmmc_legacy_qrc.tcl](/home/fy2243/soc_design/tcl_scripts/innovus_mmmc_legacy_qrc.tcl#L1)
+  - [innovus_mmmc.tcl](/home/fy2243/soc_design/tcl_scripts/innovus_mmmc.tcl#L1)
 - QRC tech file wired there:
   - `/ip/tsmc/tsmc16adfp/tech/RC/N16ADFP_QRC/worst/qrcTechFile`
 - Final `currentrtl` Innovus checkpoints already contain:
@@ -1473,7 +1473,7 @@ MMMC path pitfall encountered during fresh Innovus bring-up:
 - Innovus processes the MMMC file from a temporary location during `init_design`
 - therefore `info script` inside the MMMC file resolved under `/tmp`, which incorrectly pointed the SDC path to `/tmp/mapped_with_tech/soc_top.sdc`
 - fix:
-  - in `innovus_mmmc_legacy_qrc.tcl`, anchor the SDC to `[pwd]/mapped_with_tech/soc_top.sdc`
+  - in `innovus_mmmc.tcl`, anchor the SDC to `[pwd]/mapped_with_tech/soc_top.sdc`
   - launch Innovus from `/home/fy2243/soc_design`
 
 Required non-project collateral still comes from the PDK:

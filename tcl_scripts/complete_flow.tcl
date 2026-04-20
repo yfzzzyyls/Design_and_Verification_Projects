@@ -28,7 +28,7 @@ set SRAM_LEF "/ip/tsmc/tsmc16adfp/source/DAFP0203001_2_X/Executable_Package/Coll
 # Logical handoff from synthesis
 set NETLIST   [file join $map_out_dir soc_top.v]
 set TOP       "soc_top"
-set MMMCFILE  [file join $script_dir innovus_mmmc_legacy_qrc.tcl]
+set MMMCFILE  [file join $script_dir innovus_mmmc.tcl]
 set SRAM_PATH "u_sram/u_sram_macro"
 
 proc require_file {path} {

@@ -514,7 +514,7 @@ set SRAM_LEF  "/ip/tsmc/tsmc16adfp/source/DAFP0203001_2_X/Executable_Package/Col
 
 set NETLIST   [file join $map_out_dir soc_top.v]
 set TOP       "soc_top"
-set MMMC_QRC_FILE [file normalize [file join $script_dir innovus_mmmc_legacy_qrc.tcl]]
+set MMMC_QRC_FILE [file normalize [file join $script_dir innovus_mmmc.tcl]]
 
 set init_pwr_net VDD
 set init_gnd_net VSS
