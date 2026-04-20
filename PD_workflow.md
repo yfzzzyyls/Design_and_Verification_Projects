@@ -24,9 +24,14 @@ Current status:
 - fresh Innovus bring-up is complete
 - current learning checkpoint:
   - floorplan created
+  - top-level signal pins placed on the top edge
   - SRAM macro placed and fixed
-  - generic halo applied around the SRAM
-  - next implementation decision is whether to insert tapcells / pins first or move directly into power planning
+  - SRAM route blockage added around the macro
+  - `cutRow` applied after macro placement
+  - endcaps and well taps now insert cleanly in the fresh walkthrough flow
+  - current early-floorplan reports:
+    - `verify_endcap.rpt` -> no problem
+    - `verify_welltap.rpt` -> `0` violations
 
 Checkpoint policy for this study flow:
 - do not delete the canonical clean milestone artifacts
@@ -1628,7 +1633,44 @@ Early-stage decisions and common practice:
     - in this project, macro placement is still the next practical step because row cutting and macro-aware keepout need to happen before boundary-cell details become final
     - the known-good flow also adds top-level signal pins early, immediately after floorplan creation
 
-#### 2.3.3 Macro Placement
+#### 2.3.3 Pin Placement
+- purpose:
+  - assign physical locations to the top-level block IO ports
+- what this is:
+  - placement of the external interface pins of `soc_top`
+  - examples in this project:
+    - `clk`
+    - `rst_n`
+    - `trap`
+    - `uart_rx`
+    - `uart_tx`
+- what this is not:
+  - not placement of internal standard-cell pins
+  - not placement of SRAM macro pins
+  - not placement of every endpoint in the design
+- common practice:
+  - place top-level pins early enough that floorplan and macro decisions can respect boundary access
+  - keep related pins grouped sensibly
+  - choose a side/layer that is easy to route from the core
+- what can go wrong:
+  - poor boundary pin access
+  - long detours from the core to the block edge
+  - local congestion if many pins are stacked awkwardly on one side
+- choice in this project:
+  - the known-good flow places five top-level signal pins early, immediately after floorplan
+  - interactive command sequence used:
+    - `set signal_pins {clk rst_n trap uart_rx uart_tx}`
+    - `setPinAssignMode -pinEditInBatch true`
+    - `editPin -pin $signal_pins -side TOP -layer M8 -spreadType CENTER -spacing 40 -pinWidth 0.40 -pinDepth 0.40 -snap TRACK -fixedPin -fixOverlap`
+    - `setPinAssignMode -pinEditInBatch false`
+  - observed result:
+    - Innovus reported `Successfully spread [5] pins.`
+    - the pins appear as small boundary markers on the top edge
+  - interpretation:
+    - these are physical shapes for the top-level ports only
+    - internal library pins still come from the imported cells/macros and are not manually placed with `editPin`
+
+#### 2.3.4 Macro Placement
 - purpose:
   - decide where the large SRAM sits before PDN and standard-cell placement
 - common practice:
@@ -1652,10 +1694,43 @@ Early-stage decisions and common practice:
     - enforce `macro_margin_y = 12.0`
     - place SRAM at `core_llx + 12`, `core_lly + 12`
   - if later issues cluster around the SRAM region, this placement choice should be revisited first
+  - why SRAM macros still make routing hard:
+    - a hard macro is not just a flat blocked rectangle; it has its own internal geometry, pin-access rules, and routing obstructions from the LEF
+    - for this SRAM macro, representative LEF facts are:
+      - signal pin access is on `M1/M2/M3`
+      - power pin access is on `M4`
+      - LEF `OBS` blocks:
+        - `M1/M2/M3` across the full macro footprint
+        - `M4` partially across many internal obstruction rectangles
+    - important consequence:
+      - upper layers are not automatically "free sky" above the macro
+      - even if a signal flies over the macro on a higher layer, it still must legally come down to the macro edge on the macro's allowed pin-access layers
+    - practical routing pain points:
+      - boundary pin access congestion around the macro perimeter
+      - via-stack landing pressure outside the macro body
+      - PG straps and special routing competing with signal access near the macro
+      - LEF obstructions and route blockages reducing effective routing capacity above/around the macro
+    - clean mental model:
+      - the macro is like a sealed building with exposed doors only at legal pin-access shapes
+      - general routing goes around it or over allowed layers above it
+      - termination into the macro happens only through those legal access regions, which is why macro edges become hotspots
 
-#### 2.3.4 Halo / Keepout Around the Macro
+#### 2.3.5 Halo / Keepout Around the Macro
 - purpose:
   - reserve space around the macro so standard-cell placement and routing do not crowd the block edge
+- important distinction:
+  - a placement halo and a route blockage are not the same thing
+  - placement halo:
+    - keeps standard cells away from the macro edge
+    - current interactive command:
+      - `addHaloToBlock 10 10 10 10 u_sram/u_sram_macro`
+  - route blockage:
+    - blocks routing on selected metal layers near the macro
+    - known-good command:
+      - `createRouteBlk -name sram_sig_halo -layer {M5 M6} -box {...} -exceptpgnet`
+  - they solve different problems:
+    - halo -> cell-placement crowding
+    - route blockage -> signal-routing crowding on chosen layers
 - common practice:
   - at least some keepout is normal for SRAM-like macros
   - simple placement halos are common for early exploration
@@ -1669,7 +1744,86 @@ Early-stage decisions and common practice:
     - `addHaloToBlock 10 10 10 10 u_sram/u_sram_macro`
   - the known-good flow used a more targeted SRAM signal-route blockage on `M5/M6` with PG exempt, which is more specific than a generic halo
     - `createRouteBlk -name sram_sig_halo -layer {M5 M6} -box {...} -exceptpgnet`
+  - practical conclusion:
+    - we do not need to believe that "both are always mandatory"
+    - but in this project the route blockage is the more important reference behavior, and should be added if we want to stay close to the clean flow
+  - how to interpret the `M5/M6` blockage:
+    - it is conservative, but not arbitrary
+    - it is a flow-level routing-control choice added on top of the macro LEF
+    - intent:
+      - keep upper-layer signal through-routing from crowding the SRAM boundary
+      - preserve cleaner edge access for real SRAM connections
+      - still allow PG routing because of `-exceptpgnet`
+    - so it is better understood as a targeted congestion/DRC guardrail, not just a generic "safety margin"
   - if later route/DRC issues appear around the SRAM, replacing the generic halo with the known-good blockage strategy is the first corrective move
+
+#### 2.3.6 cutRow
+- purpose:
+  - split or remove standard-cell rows wherever the SRAM macro and its keepout now make placement illegal
+- why it exists:
+  - after floorplan, Innovus creates one regular row field
+  - after macro placement and keepout creation, that row field is no longer physically valid everywhere
+  - `cutRow` updates the row geometry so later endcaps, tapcells, and standard-cell placement operate on the real row fragments
+- what can go wrong if skipped:
+  - endcaps/tapcells may be inserted assuming rows continue through blocked regions
+  - placement rows remain visually/legally inconsistent with the macro footprint
+  - later physical-support-cell insertion and placement legalization become messy
+- choice in this project:
+  - the known-good SRAM-aware flow runs a plain:
+    - `cutRow`
+  - and it does so after SRAM blockage creation, before endcap/tapcell insertion
+  - this matches the intended sequence for the current walkthrough
+
+#### 2.3.7 Endcaps / Well Taps: Cause and Fix
+- what failed in the earlier runs:
+  - earlier `verifyWellTap` reports were not globally bad; they were concentrated row-edge misses after `cutRow`
+  - the saved run history shows a progression of:
+    - `6` violations -> `4` violations -> `2` violations -> `0` violations
+  - representative failing report:
+    - `pd/innovus_axi_uartcordic_currentrtl_20260416_r1/verify_welltap.rpt`
+  - failure pattern:
+    - missing well-tap coverage on the bottom/top boundary row fragments
+    - especially on the right-side cut-row strips after the SRAM and floorplan geometry changed the legal row segments
+- root cause:
+  - after `cutRow`, the row geometry was fragmented correctly, but some specific boundary-row sites still ended up covered by filler/boundary-row pieces instead of real tap support
+  - one additional regular tap slot near the bottom-right strip was also missing
+  - result:
+    - `verifyWellTap` reported "No tap found before reaching the row end or block edge"
+    - this was a row-edge support-cell coverage problem, not a generic tap density problem across the whole core
+- how the earlier violations were reduced:
+  - `6 -> 4`:
+    - partial boundary cleanup removed some missing-strip issues, but not the full row-edge pattern
+  - `4 -> 2`:
+    - targeted ECO scripts replaced selected boundary-row filler segments with explicit boundary tap cells
+    - see:
+      - `tcl_scripts/targeted_boundary_tap_eco.tcl`
+      - `tcl_scripts/targeted_boundary_tap_eco_20p90.tcl`
+  - `2 -> 0`:
+    - the clean walkthrough flow baked the boundary-aware insertion strategy directly into the initial boundary-cell stage instead of relying on a later ECO
+- exact solution that mattered:
+  - use boundary-aware endcap setup:
+    - `setEndCapMode ... -boundary_tap true`
+  - tell Innovus the actual boundary tap masters and regular tap master:
+    - `set_well_tap_mode -bottom_tap_cell ... -top_tap_cell ... -cell ...`
+  - insert boundary support first:
+    - `addEndCap`
+  - then insert regular taps across the cut rows:
+    - `addWellTap -checkerBoard`
+  - before verification, restore the same boundary-aware tap mode used during insertion so `verifyWellTap` evaluates the correct support-cell interpretation
+- what the targeted ECO did in plain language:
+  - swapped a few specific boundary-row filler pieces for explicit boundary tap cells on the bottom and top rows
+  - added one missing regular well tap in the bottom-right strip
+  - reran PG connectivity and routing repair afterward
+- current clean behavior in the walkthrough flow:
+  - the fresh run under `pd/innovus/` now produces:
+    - `verify_endcap.rpt` -> no problem
+    - `verify_welltap.rpt` -> `Found 0 violations in total`
+- rerun hygiene lesson:
+  - early-flow scripts that contain `init_design` should be rerun from a fresh Innovus session
+  - stale GUI/editor tabs can show old report contents even after the corresponding file has been deleted or replaced
+  - practical rule for this walkthrough:
+    - restart Innovus for import / floorplan / boundary-cell changes
+    - regenerate reports in a clean output directory before trusting any violation count
 
 ### 2.4 Power Planning
 
