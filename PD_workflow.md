@@ -1827,11 +1827,139 @@ Early-stage decisions and common practice:
 
 ### 2.4 Power Planning
 
-To be filled as the walkthrough progresses:
-- power rings
-- stripes
-- special routing (`sroute`)
-- common PG failure modes and the fixes we actually used
+What we established before adding PG commands:
+- power planning belongs to floorplanning, not only to later routing
+- the goal is low-resistance power delivery so IR drop stays under control
+- too sparse a PG network risks voltage drop and failures
+- too dense a PG network burns routing resources and can create congestion
+
+Reference slide:
+- source:
+  - `slides/ECE9433_lecture_7_floorplan_printed.pdf`
+  - printed PDF page 19, which is slide number 20 in the deck
+- image:
+  - ![Lecture 7 Slide 20: Power Grid](docs/images/lecture7_slide20.png)
+
+#### 2.4.1 Power Ring
+- what it is:
+  - a wide `VDD/VSS` loop around the core boundary
+  - it is the perimeter PG backbone, not the full internal PG solution
+- important clarification:
+  - the ring is not usually "VDD on top/bottom, VSS on left/right"
+  - each side normally carries both `VDD` and `VSS` as parallel conductors
+- in this walkthrough:
+  - the first PG command we used was:
+
+```tcl
+addRing -nets {VDD VSS} \
+  -type core_rings \
+  -layer {top M10 bottom M10 left M9 right M9} \
+  -width 4.0 -spacing 3.5 \
+  -offset {top 15.0 bottom 15.0 left 15.0 right 15.0}
+```
+
+- interpretation:
+  - top and bottom ring segments are on `M10`
+  - left and right ring segments are on `M9`
+  - both `VDD` and `VSS` exist on all four sides
+  - `-spacing` is the gap between the `VDD` and `VSS` ring conductors
+- why `M9/M10` is a reasonable first-pass choice:
+  - this process uses an `11M` tech stack
+  - upper metals are better for long-distance PG because they support wider, lower-resistance routing
+  - using adjacent upper layers in alternating preferred directions gives a clean ring geometry
+  - it also leaves lower layers more available for local routing and pin access
+
+#### 2.4.2 Stripes and Meshes
+- what stripes are:
+  - repeated PG lines through the inside of the core
+  - they distribute power from the ring into the interior of the block
+- what a mesh is:
+  - horizontal and vertical PG stripes together, forming an internal grid
+- ring vs mesh:
+  - not an either/or choice
+  - common practice is:
+    - core ring first
+    - then internal stripes / mesh
+    - then PG stitching with `sroute`
+- why `addStripe` takes more parameters than `addRing`:
+  - a ring is one perimeter structure
+  - stripes define a repeated pattern across the core
+  - the tool needs:
+    - width
+    - spacing
+    - direction
+    - pitch (`-set_to_set_distance`)
+    - starting position (`-start_offset`)
+    - number of stripe sets
+- staged stripe pattern used for learning:
+  - vertical PG stripes on `M9`
+  - horizontal PG stripes on `M8`
+  - that gives a simple coarse internal mesh under the `M10/M9` ring
+
+#### 2.4.3 PG Layers and Lower-Layer Connection
+- important clarification:
+  - using `M10/M9/M8` for ring and stripes does not mean PG exists only on those layers
+  - those layers are the global PG backbone
+  - lower layers still carry local PG through cell rails, macro PG access, and special-route drop-downs
+- practical PG path:
+  - ring on upper metals
+  - internal stripes on upper metals
+  - `sroute` down through allowed layers to:
+    - standard-cell power rails/pins
+    - SRAM macro power pins
+- routing-direction rule:
+  - each metal layer has a preferred direction
+  - long PG structures and long signal routes generally follow that preferred direction
+  - this is a preferred-direction rule, not an absolute prohibition against all exceptions
+
+#### 2.4.4 Stripe-to-Ring Alignment
+- what we checked visually:
+  - vertical stripes should pass into the top and bottom ring corridor
+  - horizontal stripes should extend into the left and right ring corridor
+- what "align" means here:
+  - geometric overlap / intersection is present
+  - the stripes do not stop short of the ring region
+- what that does not prove yet:
+  - visual alignment alone does not guarantee the whole PG network is electrically stitched
+  - warnings during `addStripe` can still indicate that some candidate vias were rejected to avoid DRC
+- practical rule:
+  - ensure stripes reach the ring region geometrically
+  - then use `sroute` to complete the actual PG connection work
+
+#### 2.4.5 `sroute`
+- role of `sroute` at this stage:
+  - connect the ring and stripes to the real PG consumers in the design
+- for this block that means:
+  - standard-cell rails / core power pins
+  - SRAM macro power pins
+- interactive command discussed for the next step:
+
+```tcl
+sroute -nets {VDD VSS} -connect {corePin blockPin} \
+  -layerChangeRange {M2 M10} \
+  -allowLayerChange 1
+```
+
+- interpretation:
+  - `corePin` targets the standard-cell/core PG side
+  - `blockPin` targets macro PG pins such as the SRAM
+  - `layerChangeRange {M2 M10}` lets special routing move between those layers while stitching the PG network
+
+#### 2.4.6 First-Pass PG Heuristics
+- without a trusted reference flow, a common conservative first pass is:
+  - add one core ring for `VDD/VSS`
+  - use two adjacent upper layers
+  - put one dominant direction on each layer
+  - keep width / spacing / offset legal and moderate
+  - add a coarse stripe pattern after the ring
+  - run `sroute`
+  - inspect visually before tuning for IR drop or congestion
+- the first goal is not an "optimal" PG network
+- the first goal is:
+  - legal
+  - simple
+  - connectable
+  - easy to inspect and refine
 
 ### 2.5 Placement, CTS, and Routing
 
