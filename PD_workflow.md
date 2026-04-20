@@ -1963,8 +1963,102 @@ sroute -nets {VDD VSS} -connect {corePin blockPin} \
 
 ### 2.5 Placement, CTS, and Routing
 
+#### 2.5.1 Placement
+- purpose:
+  - place standard cells into legal rows after floorplan, macro placement, boundary cells, and early PG are in place
+  - keep strongly-related logic in generally good neighborhoods
+  - balance wirelength, congestion, and timing pressure
+- important distinction:
+  - placement here means standard-cell placement
+  - the SRAM macro was already fixed earlier
+  - top-level pins, endcaps, well taps, and early PG structures are already part of the physical canvas that placement must respect
+
+##### Global Placement
+- what it does:
+  - decides the rough best region for each standard cell before exact legalization
+  - minimizes estimated wiring cost, commonly with HPWL as a fast proxy
+  - spreads cells away from congested regions
+  - uses timing-driven and routability-driven feedback so placement is not just pure wirelength minimization
+- clean mental model:
+  - connected cells pull toward each other like springs
+  - overcrowded regions push cells apart
+  - the solver iterates until it finds a better compromise between wirelength and congestion
+- reference slide:
+  - source:
+    - `slides/ECE9433_lecture_8_placement_printed.pdf`
+    - page 6
+  - image:
+    - ![Lecture 8 Page 6: Global Placement](docs/images/lecture8_page6.png)
+- important clarification:
+  - global placement is not yet final legal site-by-site placement
+  - it is a rough optimization stage that forms the logic cloud / cluster structure seen on the canvas
+
+##### Detailed Placement
+- what it does:
+  - snap cells onto legal rows and sites
+  - remove overlaps
+  - clean up local ordering and legalization issues
+- practical interpretation:
+  - global placement decides the neighborhood
+  - detailed placement decides the exact legal seat in the row
+
+##### What `placeDesign` Did In This Walkthrough
+- interactive command used:
+
+```tcl
+placeDesign
+```
+
+- high-level behavior:
+  - the Innovus default placement flow ran both the rough/global placement work and the later legalization/detail work
+  - the placement log showed early global-route / congestion-estimation activity before the flow finished
+- visual interpretation:
+  - the main logic clustered around the lower-middle / SRAM-adjacent region
+  - that is plausible for this block because the SRAM and local connectivity influence the placement cost
+  - the design remained fairly sparse because the floorplan utilization target was intentionally conservative (`0.30`)
+
+##### Placement Validation
+- interactive check used:
+
+```tcl
+checkPlace
+```
+
+- observed result:
+  - `Placed = 23174`
+  - `Fixed = 3378`
+  - `Unplaced = 0`
+  - `Placement Density: 24.28%`
+  - `Placement Density (including fixed std cells): 25.48%`
+  - return value `0`
+- interpretation:
+  - placement legality is clean
+  - there are no unplaced cells
+  - density is still comfortably low, which is consistent with the conservative floorplan
+
+##### GUI Interpretation Notes
+- white shapes on the canvas are not automatically errors
+- in this run, those white jagged features are more likely normal displayed objects such as low-layer PG/followpin connections or pin/access geometry
+- the reliable placement check is the report/command result, not the color alone
+- for this stage, `checkPlace = 0` is the important signal, not whether some geometry looks white
+
+##### Common Practice / What To Look For
+- use the real timing constraints from the start, but keep the physical setup conservative early
+- let the tool perform placement first, then inspect whether the result is structurally sane
+- common early placement questions:
+  - are all cells placed legally?
+  - is congestion obviously concentrating in thin macro channels?
+  - are cells staying out of macros and blockages?
+  - does the logic clustering look plausible relative to macros and pins?
+  - is there still whitespace left for CTS, hold fixing, and routing?
+- for this walkthrough, the first placement pass is behaving as expected:
+  - no placement-legality errors
+  - no unplaced cells
+  - no obvious collapse into the SRAM blockage
+
+#### 2.5.2 CTS and Routing
+
 To be filled as the walkthrough progresses:
-- standard-cell placement
 - CTS
 - routing
 - post-route cleanup and what went wrong along the way
