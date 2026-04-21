@@ -2313,6 +2313,92 @@ Debug lesson:
   - the known-good reference recipe
   - whether the issue belongs to early floorplan/tap insertion rather than post-route signal repair
 
+##### Post-Route DRC Debug: M4 Span-Length Violation
+- after the minimal PG + route walkthrough, Innovus `verify_drc` reported two real DRC violations
+- the failing report was:
+
+```text
+/home/fy2243/soc_design/pd/innovus/postroute_drc_minpg.rpt
+```
+
+- the violations were both on the same signal net:
+
+```text
+Geometric: ( Span Length Table ) Regular Wire of Net u_cpu/genblk1_pcpi_mul/n1485  ( M4 )
+Bounds : ( 184.016, 131.476 ) ( 184.096, 131.476 )
+
+Geometric: ( Span Length Table ) Regular Wire of Net u_cpu/genblk1_pcpi_mul/n1485  ( M4 )
+Bounds : ( 185.296, 131.476 ) ( 185.376, 131.476 )
+
+Total Violations : 2 Viols.
+```
+
+Interpretation:
+- this was a geometry DRC issue, not a logic connectivity issue
+- `SLTbl` means a span-length-table rule violation
+- the affected shapes were small M4 route pieces on regular signal net `u_cpu/genblk1_pcpi_mul/n1485`
+- in the GUI, the white `X` marks identify the DRC marker locations
+- the marker box is not the exact illegal polygon; it is the tool's marker/region around the problem
+- because each reported bad span was only about `0.080um` long, the actual bad geometry appears as a tiny M4 jog/stub/edge near the marker, not as an obvious large shape
+
+Useful viewing method:
+- isolate or emphasize M4 in the layer panel
+- select the failing net:
+
+```tcl
+deselectAll
+selectNet u_cpu/genblk1_pcpi_mul/n1485
+```
+
+- zoom around the reported coordinate:
+
+```tcl
+zoomBox 183.8 131.1 185.6 131.9
+```
+
+- use the report text to identify the rule, then use the GUI to understand the physical context
+
+Fix attempts:
+- `routeDesign -incremental` was tried first, but this Innovus version does not support that option:
+
+```text
+ERROR: "-incremental" is not a legal option for command "routeDesign".
+```
+
+- `routeDesign -wireOpt` was tried next; this can spread and optimize existing post-route wires, but the saved `postroute_drc_minpg_wireopt1.rpt` still showed the two M4 `SLTbl` violations
+- the clean fix was targeted rerouting of the selected failing net:
+
+```tcl
+deselectAll
+selectNet u_cpu/genblk1_pcpi_mul/n1485
+routeDesign -selected
+
+verify_drc -limit 10000 \
+  -report /home/fy2243/soc_design/pd/innovus/postroute_drc_minpg_selected1.rpt
+```
+
+Clean result:
+
+```text
+/home/fy2243/soc_design/pd/innovus/postroute_drc_minpg_selected1.rpt
+No DRC violations were found
+```
+
+Checkpoint:
+- after the DRC-clean reroute state was reached, the design was saved as:
+
+```text
+/home/fy2243/soc_design/pd/innovus/route.enc
+```
+
+Debug lesson:
+- when DRC reports a specific net and layer, debug that concrete object first instead of changing the whole flow
+- for local route-shape violations, a targeted selected-net reroute is often cleaner than manual editing or broad flow changes
+- `routeDesign` success and `0 route failures` do not prove DRC clean; always rerun `verify_drc`
+- DRC and special PG/LVS connectivity are separate problem classes:
+  - this M4 `SLTbl` problem is now fixed by routing repair
+  - the remaining `VPP` special-connectivity issue still needs separate classification against the Calibre LVS flow
+
 ## 3. PrimeTime and Calibre Signoff
 
 To be filled more cleanly as the walkthrough matures:

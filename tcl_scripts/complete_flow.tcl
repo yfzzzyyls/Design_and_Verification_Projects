@@ -8,6 +8,8 @@
 # - add reference-style SRAM route blockage
 # - cut rows
 # - insert endcaps / well taps
+# - add minimal reference-style power ring
+# - place, sroute PG, CTS, and route
 # - write checkpoints and verification reports
 
 set script_dir [file dirname [file normalize [info script]]]
@@ -134,6 +136,37 @@ proc soc_check_physical_boundary_cells {stage} {
     }
 }
 
+proc soc_configure_nanroute {} {
+    setNanoRouteMode -droutePostRouteSpreadWire true
+    setNanoRouteMode -routeWithViaInPin true
+    setNanoRouteMode -routeWithViaOnlyForStandardCellPin true
+    setNanoRouteMode -drouteUseMultiCutViaEffort high
+    setNanoRouteMode -routeWithSiDriven false
+    setNanoRouteMode -routeWithTimingDriven false
+    setNanoRouteMode -drouteFixAntenna true
+    setNanoRouteMode -routeBottomRoutingLayer 1
+    setNanoRouteMode -routeTopRoutingLayer 6
+    setNanoRouteMode -routeAllowPowerGroundPin true
+}
+
+proc soc_add_minimal_pg_ring {} {
+    addRing -nets {VDD VSS} \
+      -type core_rings \
+      -layer {top M10 bottom M10 left M9 right M9} \
+      -width 2.0 -spacing 2.0 \
+      -offset {top 5.0 bottom 5.0 left 5.0 right 5.0}
+}
+
+proc soc_route_pg_minimal {} {
+    sroute -nets {VDD VSS} \
+      -connect {corePin blockPin} \
+      -corePinTarget ring \
+      -blockPinTarget ring \
+      -layerChangeRange {M1 M10} \
+      -allowLayerChange 1 \
+      -allowJogging 1
+}
+
 foreach required_file [list $TECH_LEF $STD_LEF $SRAM_LEF $NETLIST $MMMCFILE] {
     require_file $required_file
 }
@@ -256,9 +289,42 @@ if {$enable_endcaps} {
 saveDesign [file join $pnr_out_dir boundary.enc]
 
 puts ""
-puts "Batch walkthrough complete."
+puts "=========================================="
+puts "Minimal PG + Placement + CTS + Route"
+puts "=========================================="
+puts ""
+
+soc_refresh_pg_connectivity
+soc_add_minimal_pg_ring
+soc_configure_nanroute
+
+place_design
+checkPlace
+if {$enable_endcaps} {
+    soc_check_physical_boundary_cells post_place
+}
+saveDesign [file join $pnr_out_dir place.enc]
+
+soc_refresh_pg_connectivity
+soc_route_pg_minimal
+
+ccopt_design -cts
+saveDesign [file join $pnr_out_dir cts.enc]
+
+soc_refresh_pg_connectivity
+routeDesign
+if {$enable_endcaps} {
+    soc_check_physical_boundary_cells post_route
+}
+saveDesign [file join $pnr_out_dir route.enc]
+
+puts ""
+puts "Batch walkthrough complete through routeDesign."
 puts "Import checkpoint  : [file join $pnr_out_dir import.enc]"
 puts "Boundary checkpoint: [file join $pnr_out_dir boundary.enc]"
+puts "Place checkpoint   : [file join $pnr_out_dir place.enc]"
+puts "CTS checkpoint     : [file join $pnr_out_dir cts.enc]"
+puts "Route checkpoint   : [file join $pnr_out_dir route.enc]"
 puts "Reports:"
 puts "  [file join $pnr_out_dir checkFPlan.rpt]"
 puts "  [file join $pnr_out_dir verify_endcap.rpt]"
