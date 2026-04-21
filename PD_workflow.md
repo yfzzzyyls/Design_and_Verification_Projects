@@ -1998,9 +1998,25 @@ sroute -nets {VDD VSS} -connect {corePin blockPin} \
   - snap cells onto legal rows and sites
   - remove overlaps
   - clean up local ordering and legalization issues
+- reference slide:
+  - source:
+    - `slides/ECE9433_lecture_8_placement_printed.pdf`
+    - page 8
+  - image:
+    - ![Lecture 8 Page 8: Detailed Placement](docs/images/lecture8_page8.png)
 - practical interpretation:
   - global placement decides the neighborhood
   - detailed placement decides the exact legal seat in the row
+- common detailed-placement actions:
+  - move a cell from an occupied site to a nearby legal empty site
+  - swap neighboring cells or small groups if wirelength/legality improves
+  - mirror cells when legal orientation changes improve local wirelength
+- legalization note:
+  - this is the stage that turns a mathematically good rough placement into a physically valid one on the real site grid
+  - cells must land on legal rows, legal sites, and legal orientations while staying out of macros, blockages, and cut-row gaps
+- common problem:
+  - global placement may prefer a region that is not fully legal once row/blockage details are enforced
+  - legalization can then move cells farther than expected, which may worsen local congestion or timing compared with the global-placement estimate
 
 ##### What `placeDesign` Did In This Walkthrough
 - interactive command used:
@@ -2058,10 +2074,244 @@ checkPlace
 
 #### 2.5.2 CTS and Routing
 
-To be filled as the walkthrough progresses:
-- CTS
-- routing
-- post-route cleanup and what went wrong along the way
+##### CTS
+- purpose:
+  - build the real physical clock tree after placement
+  - distribute the clock from the top-level `clk` pin to the sequential clock sinks
+  - insert clock buffers/inverters as needed
+  - control skew, insertion delay, transition, fanout, and clock-tree quality
+- command used:
+
+```tcl
+ccopt_design -cts
+```
+
+- important concept:
+  - before CTS, the clock is mostly ideal/abstract for timing purposes
+  - after CTS, the clock network has real buffers, real wire, real latency, and real skew
+- observed result in the walkthrough:
+  - CTS completed successfully
+  - no CTS constraint violations were reported
+  - reported `clk` insertion delay was roughly `0.101ns` to `0.113ns`
+  - reported skew was roughly `0.012ns` to `0.013ns`
+
+##### Routing
+- purpose:
+  - build the actual physical signal wires and vias after placement and CTS
+  - connect data/control/clock-related nets while respecting routing rules, macro obstructions, route blockages, PG metal, and pin access
+- command used:
+
+```tcl
+routeDesign
+```
+
+- important concept:
+  - route completion is not the same thing as final closure
+  - a route can finish with `0` route failures while the design still has timing, DRC, antenna, or connectivity issues
+- observed route result in the walkthrough:
+  - `routeDesign` completed
+  - reported `fails = 0`
+  - warnings were present, but no routing failure was reported
+
+##### Post-Route Decision Rule
+- do not run timing optimization blindly just because routing finished
+- first analyze the routed design:
+
+```tcl
+saveDesign /home/fy2243/soc_design/pd/innovus/route.enc
+
+verify_drc -limit 10000 -report /home/fy2243/soc_design/pd/innovus/postroute_drc.rpt
+verifyConnectivity -type regular -error 1000 -warning 100 -report /home/fy2243/soc_design/pd/innovus/postroute_conn_regular.rpt
+verifyConnectivity -type special -noAntenna -error 1000 -warning 100 -report /home/fy2243/soc_design/pd/innovus/postroute_conn_special.rpt
+catch {verifyProcessAntenna -report /home/fy2243/soc_design/pd/innovus/postroute_antenna.rpt}
+
+setAnalysisMode -analysisType onChipVariation -cppr both -checkType setup
+timeDesign -postRoute -expandedViews -pathreports -slackReports -outDir /home/fy2243/soc_design/pd/innovus/timeDesign_setup
+
+setAnalysisMode -analysisType onChipVariation -cppr both -checkType hold
+timeDesign -postRoute -hold -expandedViews -pathreports -slackReports -outDir /home/fy2243/soc_design/pd/innovus/timeDesign_hold
+```
+
+- then decide whether optimization is needed:
+  - if setup is bad, consider `optDesign -postRoute`
+  - if hold is bad, consider `optDesign -postRoute -hold`
+  - if timing is already acceptable, do not optimize just to optimize
+- practical rule:
+  - route
+  - save checkpoint
+  - check DRC/connectivity/antenna
+  - check post-route timing
+  - optimize only based on the reports
+
+##### Post-Route LVS / PG Connectivity Debug: VPP Opens
+- why this section matters:
+  - `routeDesign` can finish with `0` routing failures while PG/LVS-style connectivity is still wrong
+  - the GUI violation markers are useful for location, but the reports are the source of truth
+  - debug from the report first, then use the GUI/DB to explain the physical reason
+
+Observed reports from this walkthrough:
+- regular signal connectivity:
+
+```text
+postroute_conn_regular.rpt -> Found no problems or warnings.
+```
+
+- antenna:
+
+```text
+postroute_antenna.rpt -> 0 violations
+```
+
+- DRC:
+
+```text
+postroute_drc.rpt -> 2 M4 span-length-table violations on u_cpu/n3352
+```
+
+- special PG connectivity:
+
+```text
+postroute_conn_special.rpt -> 1000 Problem(s), error limit reached
+Net VDD, Pin Pin: u_cpu/genblk1_pcpi_mul/U603/VPP; Direction: INOUT; Use: POWER;: has an unconnected terminal ...
+```
+
+Initial interpretation:
+- the dominant issue is not regular signal routing
+- it is special-net / PG connectivity
+- the failing terminals are `VPP` pins reported under net `VDD`
+- white `X` markers in the GUI correspond to report markers/locations, but the report text tells what kind of problem they represent
+
+First check: is the logical PG mapping correct?
+
+```tcl
+dbGet [dbGet top.insts.name u_cpu/genblk1_pcpi_mul/U603 -p].cell.name
+dbGet [dbGet top.insts.name u_cpu/genblk1_pcpi_mul/U603 -p].pgInstTerms.name
+dbGet [dbGet top.insts.name u_cpu/genblk1_pcpi_mul/U603 -p].pgInstTerms.net.name
+```
+
+Observed result:
+
+```text
+cell = AOI21D1BWP20P90
+pg terms = VSS VPP VDD VBB
+mapped nets = VSS VDD VDD VSS
+```
+
+Conclusion:
+- `VPP` is already mapped to `VDD`
+- `VBB` is already mapped to `VSS`
+- this is not a missing `globalNetConnect` mapping problem
+
+Second check: what physical layer are the PG/body pins on?
+- the first attempted query through `pgInstTerm.pgCellTerms` failed because that attribute is not valid for the placed `pgInstTerm` object in this Innovus DB
+- the useful query is through the library master cell:
+
+```tcl
+dbGet [dbGet [dbGet head.libCells.name AOI21D1BWP20P90 -p].pgTerms.name VPP -p].pins.allShapes.layer.name
+dbGet [dbGet [dbGet head.libCells.name AOI21D1BWP20P90 -p].pgTerms.name VBB -p].pins.allShapes.layer.name
+```
+
+Observed result:
+
+```text
+VPP -> NW
+VBB -> PW
+```
+
+Conclusion:
+- `VPP` is an n-well/body-bias connection, not an ordinary metal routing pin
+- `VBB` is a p-well/substrate/body connection, not an ordinary metal routing pin
+- trying to solve this only with normal signal routing or generic lower-layer `sroute` is the wrong mental model
+- the real question is whether the tap/endcap/well-contact recipe matches the standard-cell library and the known-good reference flow
+
+False leads tested:
+- rerunning explicit PG mapping:
+
+```tcl
+globalNetConnect VDD -type pgpin -pin VPP -all -override
+```
+
+Result:
+- the special connectivity report still hit the 1000-error limit
+- this confirmed the mapping was already correct
+
+- trying to route PG pins with signal-style routing:
+
+```tcl
+setNanoRouteMode -routeAllowPowerGroundPin true
+catch {setPGPinUseSignalRoute TAPCELL*:VPP BOUNDARY_*TAP*:VPP}
+catch {routePGPinUseSignalRoute -maxFanout 1}
+```
+
+Result:
+- some unconnected-terminal count changed, but the database became noisier with VDD open fragments
+- after restoring the route checkpoint, the regular/special open fragments disappeared, proving this was not the clean fix
+
+- rerunning `sroute` with M1 included:
+
+```tcl
+setSrouteMode -viaConnectToShape {ring stripe}
+sroute -nets {VDD VSS} -connect {corePin} \
+  -corePinTarget {ring stripe} \
+  -layerChangeRange {M1 M10} \
+  -targetViaLayerRange {M1 M10} \
+  -allowLayerChange 1 \
+  -allowJogging 1
+```
+
+Result:
+- Innovus routed additional core ports
+- special connectivity still reported `1000 Problem(s)` on VDD/VPP terminals
+- this reinforced that the failing object is a well/body pin (`NW`), not a missing ordinary M1 followpin route
+
+Reference comparison:
+- current fresh walkthrough database used these tap cells:
+
+```text
+BOUNDARY_NTAPBWP16P90LVT_VPP_VSS
+BOUNDARY_PTAPBWP16P90LVT_VPP_VSS
+TAPCELLBWP16P90LVT_VPP_VSS
+```
+
+- known-good reference flow used these non-LVT tap cells:
+
+```text
+BOUNDARY_NTAPBWP16P90_VPP_VSS
+BOUNDARY_PTAPBWP16P90_VPP_VSS
+TAPCELLBWP16P90_VPP_VSS
+```
+
+- the non-LVT reference cells exist in the loaded library:
+
+```tcl
+puts [dbGet head.libCells.name TAPCELLBWP16P90_VPP_VSS -e]
+puts [dbGet head.libCells.name BOUNDARY_NTAPBWP16P90_VPP_VSS -e]
+puts [dbGet head.libCells.name BOUNDARY_PTAPBWP16P90_VPP_VSS -e]
+```
+
+Observed result:
+
+```text
+TAPCELLBWP16P90_VPP_VSS
+BOUNDARY_NTAPBWP16P90_VPP_VSS
+BOUNDARY_PTAPBWP16P90_VPP_VSS
+```
+
+Working conclusion:
+- the `VPP` opens are best treated as an early physical-cell recipe issue, not a late route ECO issue
+- the fresh walkthrough deviated from the Calibre-clean reference by using `LVT` tap/endcap well-contact cells
+- the next corrective experiment should be to switch the tap/endcap recipe back to the reference non-LVT cells and rerun from a clean Innovus start/checkpoint
+- do not keep trying to patch the current post-route database until the early tap recipe matches the known-good reference
+
+Debug lesson:
+- distinguish mapping from physical connection:
+  - mapping: `VPP -> VDD`, `VBB -> VSS`
+  - physical connection: the well/substrate shapes must be contacted by the correct tap/endcap/well structure
+- if mapping is correct but `verifyConnectivity -type special` still reports `VPP` terminals open, inspect:
+  - the physical layer of the pin (`NW`/`PW` versus metal)
+  - the tap/endcap master cells actually inserted
+  - the known-good reference recipe
+  - whether the issue belongs to early floorplan/tap insertion rather than post-route signal repair
 
 ## 3. PrimeTime and Calibre Signoff
 

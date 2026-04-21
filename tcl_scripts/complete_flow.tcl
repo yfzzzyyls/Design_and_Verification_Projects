@@ -78,41 +78,39 @@ proc soc_add_endcaps_and_taps {} {
     setEndCapMode -reset
     setEndCapMode \
       -prefix EC \
-      -leftEdge {BOUNDARY_LEFTBWP16P90LVT} \
-      -rightEdge {BOUNDARY_RIGHTBWP16P90LVT} \
-      -topEdge {BOUNDARY_NROW4BWP16P90LVT BOUNDARY_NROW3BWP16P90LVT BOUNDARY_NROW2BWP16P90LVT BOUNDARY_NROW1BWP16P90LVT} \
-      -bottomEdge {BOUNDARY_PROW4BWP16P90LVT BOUNDARY_PROW3BWP16P90LVT BOUNDARY_PROW2BWP16P90LVT BOUNDARY_PROW1BWP16P90LVT} \
-      -leftTopEdge {BOUNDARY_LEFTBWP16P90LVT} \
-      -rightTopEdge {BOUNDARY_RIGHTBWP16P90LVT} \
-      -leftBottomEdge {BOUNDARY_LEFTBWP16P90LVT} \
-      -rightBottomEdge {BOUNDARY_RIGHTBWP16P90LVT} \
-      -leftTopCorner {BOUNDARY_NCORNERBWP16P90LVT} \
-      -rightTopCorner {BOUNDARY_NCORNERBWP16P90LVT} \
-      -leftBottomCorner {BOUNDARY_PCORNERBWP16P90LVT} \
-      -rightBottomCorner {BOUNDARY_PCORNERBWP16P90LVT} \
+      -rightEdge {BOUNDARY_LEFTBWP16P90} \
+      -leftEdge {BOUNDARY_RIGHTBWP16P90} \
+      -leftTopCorner {BOUNDARY_PCORNERBWP16P90} \
+      -leftBottomCorner {BOUNDARY_NCORNERBWP16P90} \
+      -topEdge {BOUNDARY_PROW1BWP16P90 BOUNDARY_PROW2BWP16P90 BOUNDARY_PROW3BWP16P90 BOUNDARY_PROW4BWP16P90} \
+      -bottomEdge {BOUNDARY_NROW1BWP16P90 BOUNDARY_NROW2BWP16P90 BOUNDARY_NROW3BWP16P90 BOUNDARY_NROW4BWP16P90} \
+      -leftTopEdge {FILL3BWP16P90} \
+      -leftBottomEdge {FILL3BWP16P90} \
+      -rightTopEdge {FILL3BWP16P90} \
+      -rightBottomEdge {FILL3BWP16P90} \
       -fitGap true \
       -boundary_tap true
 
     set_well_tap_mode -reset
     set_well_tap_mode \
       -rule 50.76 \
-      -bottom_tap_cell {BOUNDARY_NTAPBWP16P90LVT_VPP_VSS} \
-      -top_tap_cell {BOUNDARY_PTAPBWP16P90LVT_VPP_VSS} \
-      -cell {TAPCELLBWP16P90LVT_VPP_VSS}
+      -bottom_tap_cell {BOUNDARY_NTAPBWP16P90_VPP_VSS} \
+      -top_tap_cell {BOUNDARY_PTAPBWP16P90_VPP_VSS} \
+      -cell {TAPCELLBWP16P90_VPP_VSS}
 
     addEndCap -prefix EC
 
     if {$::enable_welltaps} {
         set_well_tap_mode -reset
-        set_well_tap_mode -insert_cells {{TAPCELLBWP16P90LVT_VPP_VSS rule 50.76}}
+        set_well_tap_mode -insert_cells {{TAPCELLBWP16P90_VPP_VSS rule 50.76}}
         addWellTap -checkerBoard
         # verifyWellTap must see the same boundary-aware tap mode used during insertion.
         set_well_tap_mode -reset
         set_well_tap_mode \
           -rule 50.76 \
-          -bottom_tap_cell {BOUNDARY_NTAPBWP16P90LVT_VPP_VSS} \
-          -top_tap_cell {BOUNDARY_PTAPBWP16P90LVT_VPP_VSS} \
-          -cell {TAPCELLBWP16P90LVT_VPP_VSS}
+          -bottom_tap_cell {BOUNDARY_NTAPBWP16P90_VPP_VSS} \
+          -top_tap_cell {BOUNDARY_PTAPBWP16P90_VPP_VSS} \
+          -cell {TAPCELLBWP16P90_VPP_VSS}
         puts "Inserted boundary cells and well taps."
     } else {
         puts "Inserted boundary cells only."
