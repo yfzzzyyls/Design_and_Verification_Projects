@@ -2967,6 +2967,88 @@ Conclusion:
 - it improves total Calibre DRC count from 19 to 18
 - next target is the M4/VIA3 group
 
+##### Debug: VIA3.R.10 Local Via-Cut Markers
+
+The next target was:
+
+```text
+VIA3.R.10  2
+```
+
+A via is a vertical inter-layer connection, not a horizontal wire. For `VIA3`, the structure connects metal 3 to metal 4 through a via-cut layer between them. In layout it appears as small cut shapes plus the surrounding M3/M4 enclosure geometry.
+
+The Calibre result database showed two edge markers:
+
+```text
+(98.934, 206.240) to (98.934, 206.272) um
+(201.382, 156.800) to (201.382, 156.832) um
+```
+
+The nearby OASIS references were:
+
+```text
+soc_top_NR_VIA3_1x2_VH_H_M3VIA3M4_2_2_1_4
+  at 99000 206256
+  net u_cordic_accel/u_cordic_ctrl/u_core_atan2/N1419
+
+soc_top_NR_VIA3_1x2_VH_HW_M3VIA3M4_2_2_1_13
+  at 201528 156816
+  net u_cordic_accel/u_cordic_ctrl/u_core_sincos/N505
+```
+
+Interpretation:
+- this was not a missing connection or an LVS issue
+- two placed via-array references had a local left-edge via-cut geometry that Calibre rejected
+- the fix should be local to those two via refs, not a route-wide ECO
+
+Patch script:
+
+```text
+signoff/calibre_postfill_no_metalfill_drc_20260421/04_dummyMerge/scr/edit_via3_leftcut_on_m1boundarycut_ap.cmd
+```
+
+The script cloned the two VIA3 masters into `_FIXLEFT` versions, removed only the offending left-side via-cut polygon from each clone, and replaced only the two offending references.
+
+Patch command:
+
+```tcsh
+cd /home/fy2243/soc_design/signoff/calibre_postfill_no_metalfill_drc_20260421/04_dummyMerge
+
+/eda/mentor/Calibre/aok_cal_2024.2_29.16/bin/calibredrv -64 \
+  ./scr/edit_via3_leftcut_on_m1boundarycut_ap.cmd \
+  | tee log/edit_via3_leftcut_on_m1boundarycut_ap.log
+```
+
+Patched DRC run:
+
+```tcsh
+cd /home/fy2243/soc_design/signoff/calibre_postfill_no_metalfill_drc_20260421/05_drc
+
+/eda/mentor/Calibre/aok_cal_2024.2_29.16/bin/calibre \
+  -drc -hier -64 -turbo 8 -hyper ./scr/runset.m1boundarycut_ap_via3.cmd \
+  | tee -i log/runset.m1boundarycut_ap_via3.log
+```
+
+Result:
+
+```text
+output/DRC_m1boundarycut_ap_via3.rep
+TOTAL DRC Results Generated: 16 (16)
+RULECHECK VIA3.R.10 TOTAL Result Count = 0 (0)
+```
+
+Remaining rule checks:
+
+```text
+M4.EN.31.4.T    2
+M4.S.25        14
+```
+
+Conclusion:
+- the two local VIA3 markers are resolved
+- total Calibre DRC count improved from 18 to 16
+- next debug target is the remaining M4 rule group
+
 ## 3. PrimeTime and Calibre Signoff
 
 To be filled more cleanly as the walkthrough matures:
