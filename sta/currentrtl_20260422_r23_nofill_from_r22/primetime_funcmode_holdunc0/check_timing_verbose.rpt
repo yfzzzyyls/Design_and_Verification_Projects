@@ -1,0 +1,173 @@
+Information: Checking 'no_input_delay'.
+Information: Checking 'no_driving_cell'.
+Warning: There are 2 ports with parasitics but with no driving cell.
+
+Ports
+------------------------------------------------------------
+clk
+rst_n
+
+Information: Checking 'unconstrained_endpoints'.
+Warning: There are 68 endpoints which are not constrained for maximum delay.
+
+Endpoint
+--------------------------------------------------------------------------------
+u_cpu/mem_la_wdata_reg_1_/D
+u_cpu/mem_la_wdata_reg_10_/D
+u_cpu/mem_la_wdata_reg_11_/D
+u_cpu/mem_la_wstrb_reg_2_/D
+u_cpu/mem_la_wdata_reg_13_/D
+u_cpu/mem_la_wdata_reg_14_/D
+u_cpu/mem_rdata_word_reg_1_/D
+u_cpu/mem_la_wdata_reg_23_/D
+u_cpu/mem_la_wdata_reg_17_/D
+u_cpu/mem_la_wdata_reg_2_/D
+u_cpu/mem_rdata_word_reg_8_/D
+u_cpu/mem_rdata_word_reg_4_/D
+u_cpu/mem_la_wdata_reg_25_/D
+u_cpu/mem_la_wdata_reg_19_/D
+u_cpu/mem_la_wdata_reg_4_/D
+u_cpu/mem_la_wdata_reg_27_/D
+u_cpu/mem_rdata_word_reg_11_/D
+u_cpu/mem_rdata_word_reg_24_/D
+u_cpu/mem_la_wdata_reg_6_/D
+u_cpu/mem_la_wdata_reg_30_/D
+u_cpu/mem_rdata_word_reg_30_/D
+u_cpu/mem_rdata_word_reg_26_/D
+u_cpu/mem_rdata_word_reg_25_/D
+u_cpu/mem_rdata_word_reg_3_/D
+u_cpu/mem_la_wdata_reg_29_/D
+u_cpu/mem_la_wdata_reg_22_/D
+u_cpu/mem_la_wdata_reg_21_/D
+u_cpu/mem_la_wstrb_reg_3_/D
+u_cpu/mem_rdata_word_reg_23_/D
+u_cpu/mem_rdata_word_reg_27_/D
+u_cpu/mem_rdata_word_reg_29_/D
+u_cpu/mem_la_wdata_reg_12_/D
+u_cpu/mem_la_wdata_reg_24_/D
+u_cpu/mem_la_wdata_reg_16_/D
+u_cpu/mem_la_wdata_reg_3_/D
+u_cpu/mem_rdata_word_reg_5_/D
+u_cpu/mem_rdata_word_reg_2_/D
+u_cpu/mem_rdata_word_reg_22_/D
+u_cpu/mem_rdata_word_reg_9_/D
+u_cpu/mem_la_wdata_reg_28_/D
+u_cpu/mem_rdata_word_reg_12_/D
+u_cpu/mem_rdata_word_reg_13_/D
+u_cpu/mem_rdata_word_reg_15_/D
+u_cpu/mem_rdata_word_reg_16_/D
+u_cpu/mem_la_wdata_reg_8_/D
+u_cpu/mem_rdata_word_reg_17_/D
+u_cpu/mem_la_wdata_reg_9_/D
+u_cpu/mem_rdata_word_reg_18_/D
+u_cpu/mem_rdata_word_reg_19_/D
+u_cpu/mem_rdata_word_reg_20_/D
+u_cpu/mem_rdata_word_reg_14_/D
+u_cpu/mem_rdata_word_reg_10_/D
+u_cpu/mem_rdata_word_reg_28_/D
+u_cpu/mem_la_wstrb_reg_0_/D
+u_cpu/mem_la_wstrb_reg_1_/D
+u_cpu/mem_la_wdata_reg_20_/D
+u_cpu/mem_la_wdata_reg_0_/D
+u_cpu/mem_rdata_word_reg_6_/D
+u_cpu/mem_la_wdata_reg_15_/D
+u_cpu/mem_la_wdata_reg_18_/D
+u_cpu/mem_la_wdata_reg_5_/D
+u_cpu/mem_la_wdata_reg_26_/D
+u_cpu/mem_rdata_word_reg_21_/D
+u_cpu/mem_rdata_word_reg_7_/D
+u_cpu/mem_la_wdata_reg_7_/D
+u_cpu/mem_la_wdata_reg_31_/D
+u_cpu/mem_rdata_word_reg_31_/D
+u_cpu/mem_rdata_word_reg_0_/D
+
+Information: Checking 'unexpandable_clocks'.
+ Failed clocks set      Related clocks           Original Period     Expanded Period     Added Edges     Voltage Config
+-----------------------------------------------------------------------------------------------------------------------
+Information: Checking 'latch_fanout'.
+Information: Checking 'no_clock'.
+Warning: There are 68 register clock pins with no clock.
+
+Clock Pin
+------------------------------------------------------------
+u_cpu/mem_la_wdata_reg_0_/E
+u_cpu/mem_la_wdata_reg_1_/E
+u_cpu/mem_la_wdata_reg_2_/E
+u_cpu/mem_la_wdata_reg_3_/E
+u_cpu/mem_la_wdata_reg_4_/E
+u_cpu/mem_la_wdata_reg_5_/E
+u_cpu/mem_la_wdata_reg_6_/E
+u_cpu/mem_la_wdata_reg_7_/E
+u_cpu/mem_la_wdata_reg_8_/E
+u_cpu/mem_la_wdata_reg_9_/E
+u_cpu/mem_la_wdata_reg_10_/E
+u_cpu/mem_la_wdata_reg_11_/E
+u_cpu/mem_la_wdata_reg_12_/E
+u_cpu/mem_la_wdata_reg_13_/E
+u_cpu/mem_la_wdata_reg_14_/E
+u_cpu/mem_la_wdata_reg_15_/E
+u_cpu/mem_la_wdata_reg_16_/E
+u_cpu/mem_la_wdata_reg_17_/E
+u_cpu/mem_la_wdata_reg_18_/E
+u_cpu/mem_la_wdata_reg_19_/E
+u_cpu/mem_la_wdata_reg_20_/E
+u_cpu/mem_la_wdata_reg_21_/E
+u_cpu/mem_la_wdata_reg_22_/E
+u_cpu/mem_la_wdata_reg_23_/E
+u_cpu/mem_la_wdata_reg_24_/E
+u_cpu/mem_la_wdata_reg_25_/E
+u_cpu/mem_la_wdata_reg_26_/E
+u_cpu/mem_la_wdata_reg_27_/E
+u_cpu/mem_la_wdata_reg_28_/E
+u_cpu/mem_la_wdata_reg_29_/E
+u_cpu/mem_la_wdata_reg_30_/E
+u_cpu/mem_la_wdata_reg_31_/E
+u_cpu/mem_la_wstrb_reg_0_/E
+u_cpu/mem_la_wstrb_reg_1_/E
+u_cpu/mem_la_wstrb_reg_2_/E
+u_cpu/mem_la_wstrb_reg_3_/E
+u_cpu/mem_rdata_word_reg_0_/E
+u_cpu/mem_rdata_word_reg_1_/E
+u_cpu/mem_rdata_word_reg_2_/E
+u_cpu/mem_rdata_word_reg_3_/E
+u_cpu/mem_rdata_word_reg_4_/E
+u_cpu/mem_rdata_word_reg_5_/E
+u_cpu/mem_rdata_word_reg_6_/E
+u_cpu/mem_rdata_word_reg_7_/E
+u_cpu/mem_rdata_word_reg_8_/E
+u_cpu/mem_rdata_word_reg_9_/E
+u_cpu/mem_rdata_word_reg_10_/E
+u_cpu/mem_rdata_word_reg_11_/E
+u_cpu/mem_rdata_word_reg_12_/E
+u_cpu/mem_rdata_word_reg_13_/E
+u_cpu/mem_rdata_word_reg_14_/E
+u_cpu/mem_rdata_word_reg_15_/E
+u_cpu/mem_rdata_word_reg_16_/E
+u_cpu/mem_rdata_word_reg_17_/E
+u_cpu/mem_rdata_word_reg_18_/E
+u_cpu/mem_rdata_word_reg_19_/E
+u_cpu/mem_rdata_word_reg_20_/E
+u_cpu/mem_rdata_word_reg_21_/E
+u_cpu/mem_rdata_word_reg_22_/E
+u_cpu/mem_rdata_word_reg_23_/E
+u_cpu/mem_rdata_word_reg_24_/E
+u_cpu/mem_rdata_word_reg_25_/E
+u_cpu/mem_rdata_word_reg_26_/E
+u_cpu/mem_rdata_word_reg_27_/E
+u_cpu/mem_rdata_word_reg_28_/E
+u_cpu/mem_rdata_word_reg_29_/E
+u_cpu/mem_rdata_word_reg_30_/E
+u_cpu/mem_rdata_word_reg_31_/E
+
+Information: Checking 'partial_input_delay'.
+Information: Checking 'generic'.
+Information: Checking 'loops'.
+Information: Checking 'generated_clocks'.
+Information: Checking 'pulse_clock_non_pulse_clock_merge'.
+Information: Checking 'pll_configuration'.
+Information: Checking 'voltage_level'.
+
+Check cell voltage level related issues including rail voltages
+Cell Name                      min/max    issues found 
+----------------------------------------------------------------------
+0

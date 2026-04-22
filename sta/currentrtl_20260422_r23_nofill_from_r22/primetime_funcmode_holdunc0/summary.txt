@@ -1,0 +1,16 @@
+PrimeTime functional-mode STA summary
+design=soc_top
+source_checkpoint=/home/fy2243/soc_design/pd/nofill_currentrtl_20260422_r23_from_r22/with_sram_drvfix_r23_nofill_from_r22.enc.dat
+netlist=/home/fy2243/soc_design/sta/currentrtl_20260422_r23_nofill_from_r22/innovus/soc_top_postroute_drvfix_r23_nofill_from_r22.v
+spef=/home/fy2243/soc_design/sta/currentrtl_20260422_r23_nofill_from_r22/innovus/soc_top_postroute_drvfix_r23_nofill_from_r22.spef
+cppr_enabled=true
+rst_n_case_analysis=1
+input_drive_for_non_clock_non_reset=INVD1BWP16P90
+setup_clock_uncertainty=0.100
+hold_clock_uncertainty=0.000
+setup_wns=7.033002
+setup_tns=0.0
+setup_violating_paths=0
+hold_wns=0.002382
+hold_tns=0.0
+hold_violating_paths=0

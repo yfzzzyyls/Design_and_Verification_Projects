@@ -182,7 +182,7 @@ def rewrite_top_subckt_for_sram(top_text: str, macro_pin_map: dict) -> str:
     while i < len(lines):
         line = lines[i]
         stripped = line.strip()
-        if stripped.startswith("X") and " $PINS " in stripped:
+        if stripped.startswith("X") and "$PINS" in stripped.split():
             original_block = [line.rstrip()]
             parse_block = [stripped]
             i += 1
@@ -343,7 +343,7 @@ def rewrite_top_instance_named_pins(
     while i < len(lines):
         line = lines[i]
         stripped = line.strip()
-        if stripped.startswith("X") and " $PINS " in stripped:
+        if stripped.startswith("X") and "$PINS" in stripped.split():
             original_block = [line.rstrip()]
             parse_block = [stripped]
             i += 1

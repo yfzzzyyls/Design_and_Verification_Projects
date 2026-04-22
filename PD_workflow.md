@@ -3051,8 +3051,301 @@ Conclusion:
 
 ## 3. PrimeTime and Calibre Signoff
 
-To be filled more cleanly as the walkthrough matures:
-- PrimeTime / STA closure
-- Calibre DRC
-- Calibre LVS
-- what was proven clean versus what still required ECO work
+### 3.1 Reference Calibre Signoff Proof
+
+Before switching to timing closure, the known-clean reference Calibre run was
+rechecked so that it remains a valid compass for the walkthrough.
+
+Reference DRC rerun:
+
+```text
+signoff/calibre_axi_uartcordic_currentrtl_v48clean_20260416/05_drc
+scr/runset.rerun_20260422.cmd
+output/DRC_rerun_20260422.rep
+output/DRC_RES_rerun_20260422.db
+```
+
+Result:
+
+```text
+TOTAL RESULTS GENERATED = 0 (0)
+```
+
+Reference LVS rerun:
+
+```text
+signoff/calibre_axi_uartcordic_currentrtl_postdrc_20260412_r2/07_lvs
+scr/runset.compare.physall_supplyalias_global.rerun_20260422.cmd
+output/lvs.physall_supplyalias_global_rerun_20260422.rep
+```
+
+Result:
+
+```text
+LVS completed. CORRECT.
+```
+
+The reference therefore proves that the Calibre decks, library merge, supply
+aliasing, and signoff wrapper can produce a DRC/LVS-clean result for this
+technology/library setup.
+
+### 3.2 PrimeTime Hold Closure
+
+PrimeTime was run on the currentRTL post-route design using:
+
+```text
+/eda/synopsys/prime/T-2022.03-SP5-1/bin/pt_shell
+```
+
+The PrimeTime setup used:
+
+- post-route Verilog from Innovus
+- post-route SPEF from Innovus
+- TSMC N16 ADFP standard-cell and SRAM NLDM `.db` libraries
+- functional mode SDC from the reference Innovus checkpoint
+- `set_case_analysis 1 [get_ports rst_n]` for normal reset-deasserted timing
+- `set_driving_cell -lib_cell INVD1BWP16P90` on non-clock/non-reset inputs
+- CPPR enabled
+
+Initial PrimeTime baseline:
+
+```text
+sta/currentrtl_20260416_r1/primetime/summary.txt
+setup_wns=7.359498
+setup_tns=0.0
+setup_violating_paths=0
+hold_wns=-0.155249
+hold_tns=-205.026414
+hold_violating_paths=4996
+```
+
+The first hold-fix passes reduced the hold problem but did not fully close it:
+
+```text
+sta/currentrtl_20260418_holdfix_r2/primetime/summary.txt
+hold_wns=-0.074464
+hold_tns=-1.721699
+hold_violating_paths=59
+
+sta/currentrtl_20260418_holdfix_r3/primetime/summary.txt
+hold_wns=-0.051408
+hold_tns=-0.608325
+hold_violating_paths=27
+```
+
+The r4 targeted no-filler pass inserted delay cells only on the remaining
+reported hold endpoints. This cleaned PrimeTime setup/hold, but
+`report_constraint -all_violators` still showed data-net max-transition and
+max-capacitance design-rule timing violations.
+
+```text
+sta/currentrtl_20260418_holdfix_r4_targeted_nofiller/primetime_funcmode/summary.txt
+setup_wns=7.185687
+setup_tns=0.0
+setup_violating_paths=0
+hold_wns=0.000479
+hold_tns=0.0
+hold_violating_paths=0
+```
+
+The r5 pass ran post-route DRV repair from the r4 checkpoint. This removed the
+PrimeTime max-transition/max-capacitance violators, but introduced one tiny
+hold violation:
+
+```text
+sta/currentrtl_20260422_drvfix_r5/primetime_funcmode/summary.txt
+setup_wns=7.193209
+setup_tns=0.0
+setup_violating_paths=0
+hold_wns=-0.000615
+hold_tns=-0.000615
+hold_violating_paths=1
+```
+
+The r6 pass added one local delay cell on the remaining PrimeTime hold endpoint:
+
+```text
+targeted_term=u_cordic_accel/rdata_reg_reg_21_/D
+targeted_cell=DEL025D1BWP20P90
+checkpoint_out=pd/holdfix_currentrtl_20260422_r6_nofiller/with_sram_holdfix_r6_nofiller.enc.dat
+```
+
+PrimeTime r6 functional-mode result:
+
+```text
+sta/currentrtl_20260422_holdfix_r6_nofiller/primetime_funcmode/summary.txt
+setup_wns=7.193429
+setup_tns=0.0
+setup_violating_paths=0
+hold_wns=0.006064
+hold_tns=0.0
+hold_violating_paths=0
+```
+
+`report_constraint -all_violators` for r6 is empty, so setup, hold, and
+PrimeTime design-rule timing checks are clean for this functional-mode,
+no-filler timing checkpoint.
+
+Important qualification:
+
+- `check_timing -verbose` still reports inherited warnings that existed in the
+  earlier PrimeTime runs: two primary ports (`clk`, `rst_n`) have parasitics but
+  no driving cell, and 68 latch-style `LHQD1BWP16P90` enable pins under
+  `u_cpu/mem_la_wdata`, `u_cpu/mem_la_wstrb`, and `u_cpu/mem_rdata_word` are
+  reported as no-clock/unconstrained.
+- These are not introduced by the hold ECO. They are a separate constraint/RTL
+  modeling issue around inferred level-sensitive latches.
+- Therefore the current r6 result is PrimeTime setup/hold/DRV clean, but it is
+  not yet a fully closed signoff-quality physical database until the inherited
+  latch/check-timing warnings are accepted or resolved, fillers/metal fill are
+  finalized, and Calibre DRC/LVS are rerun on the final physical checkpoint.
+
+### 3.3 Timing-Clean Branches vs Physical Signoff
+
+After the r6 no-filler timing checkpoint, several follow-up branches were
+tested to see whether the timing-clean state could be turned into a physical
+signoff candidate.
+
+The important result is that the no-filler lineage should not be used as the
+final physical baseline:
+
+```text
+pd/holdfix_currentrtl_20260422_r6_nofiller/with_sram_holdfix_r6_nofiller.enc.dat
+sta/currentrtl_20260422_holdfix_r6_nofiller/primetime_funcmode/summary.txt
+setup_wns=7.193429
+hold_wns=0.006064
+setup_violating_paths=0
+hold_violating_paths=0
+```
+
+This branch is PrimeTime setup/hold clean, but its Calibre/physical signoff
+state is not clean when used directly:
+
+```text
+signoff/calibre_currentrtl_holdfix_r6_nofiller_signoff_20260422/05_drc/output/DRC.rep
+TOTAL DRC RESULTS: 348251+
+```
+
+Two additional physical repair experiments were also rejected:
+
+```text
+pd/drvfix_currentrtl_20260422_r15_targeted_size
+pd/finalize_currentrtl_20260422_r16_filleronly
+```
+
+Both show the same physical failure signature after the attempted repair/filler
+finalization:
+
+```text
+innovus_verify_drc_final.rpt: Total Violations : 10000
+innovus_conn_regular_final.rpt: 299 VDD regular-connectivity opens
+innovus_conn_special_final.rpt: 965 VDD/VSS special-connectivity issues
+innovus_antenna_final.rpt: No Violations Found
+```
+
+Conclusion:
+
+- The proven physical baseline remains the v48/currentRTL Calibre-clean
+  post-DRC checkpoint.
+- The r6/r15/r16 no-filler/filler-repair branches are useful timing experiments
+  but are not acceptable signoff candidates.
+- The next valid timing-closure attempt must start from the Calibre-clean
+  physical checkpoint and apply small localized hold ECOs without globally
+  disturbing filler, PG shapes, or routed power connectivity.
+
+### 3.4 R23 Nofill Signoff Closure
+
+The final accepted currentRTL branch is the r23 no-Innovus-metal-fill branch:
+
+```text
+pd/nofill_currentrtl_20260422_r23_from_r22/with_sram_drvfix_r23_nofill_from_r22.enc.dat
+signoff/calibre_currentrtl_r23_nofill_signoff_20260422
+```
+
+PrimeTime functional-mode STA is clean for setup, hold, and reported design-rule
+timing constraints:
+
+```text
+sta/currentrtl_20260422_r23_nofill_from_r22/primetime_funcmode_holdunc0/summary.txt
+setup_wns=7.033002
+setup_tns=0.0
+setup_violating_paths=0
+hold_wns=0.002382
+hold_tns=0.0
+hold_violating_paths=0
+
+sta/currentrtl_20260422_r23_nofill_from_r22/primetime_funcmode_holdunc0/constraint_violators.rpt
+report_constraint -all_violators -> empty
+```
+
+`check_timing.rpt` still carries the inherited warnings about two input ports
+with parasitics but no driving cell and 68 latch-style endpoints/clock pins
+that are not constrained. Those warnings were present before the final r23
+physical cleanup; the closed result below means setup, hold, timing DRV,
+Calibre DRC, and Calibre LVS are clean under the functional-mode constraints
+used in this walkthrough.
+
+The final Calibre DRC path intentionally avoided the earlier VIA3-deletion
+branch. That branch could make DRC clean, but LVS proved it opened two CORDIC
+nets. The accepted branch preserved those VIA3 connections and fixed the
+physical spacing/enclosure markers locally:
+
+```text
+04_dummyMerge/scr/edit_r23_boundary_ap_only.cmd
+04_dummyMerge/scr/edit_r23_boundary_ap_via3_trim_m4_overlap.cmd
+04_dummyMerge/scr/edit_r23_boundary_ap_via3trim_m4en_longcover.cmd
+04_dummyMerge/scr/edit_r23_boundary_ap_via3trim_m4en_longcover_deletedm4ref_b10.cmd
+04_dummyMerge/scr/edit_r23_boundary_ap_m4enlong_s25_via4_vn_m5encfix.cmd
+```
+
+What those edits fixed:
+
+- SRAM-edge `BOUNDARY_LEFTBWP16P90` M1 spacing was fixed by swapping only the
+  SRAM-edge references to a cloned boundary cell with the offending M1 geometry
+  removed.
+- The full-die `AP.DN.1.T` marker was fixed by adding the same AP marker
+  treatment used by the reference signoff cleanup.
+- The two VIA3/M4 enclosure markers were fixed by adding same-net M4 cover
+  geometry, not by deleting the VIA3 references.
+- One B10 dummy M4 ref near the second M4 cover was removed from `B10asoc_top`
+  to clear the induced dummy-metal spacing marker.
+- The final two `M4.S.25` markers were fixed by replacing two upper VIA4 refs
+  with north-shifted/custom via masters and resizing the M5 landing at one
+  hotspot.
+
+Final DRC evidence:
+
+```text
+signoff/calibre_currentrtl_r23_nofill_signoff_20260422/04_dummyMerge/output/soc_top.dmmerge_boundary_ap_m4enlong_s25_via4_vn_m5encfix.oas.gz
+signoff/calibre_currentrtl_r23_nofill_signoff_20260422/05_drc/output/DRC_boundary_ap_m4enlong_s25_via4_vn_m5encfix.rep
+signoff/calibre_currentrtl_r23_nofill_signoff_20260422/05_drc/log/runset.boundary_ap_m4enlong_s25_via4_vn_m5encfix.log
+TOTAL RESULTS GENERATED = 0 (0)
+```
+
+Final LVS used the same DRC-clean OASIS. The extracted layout SPICE initially
+included `VDD` and `VSS` as top-level ports:
+
+```text
+.SUBCKT soc_top VSS VDD uart_rx rst_n clk trap uart_tx
+```
+
+The reference LVS convention treats `VDD` and `VSS` as globals, not top ports,
+so the final compare stripped only those two names from the top `.SUBCKT` port
+list while keeping:
+
+```text
+.GLOBAL VDD VSS
+```
+
+Final LVS evidence:
+
+```text
+signoff/calibre_currentrtl_r23_nofill_signoff_20260422/07_lvs/output/soc_top.m4enlong_s25_via4_vn_m5encfix.supplyalias.global.notopports.layspi
+signoff/calibre_currentrtl_r23_nofill_signoff_20260422/07_lvs/output/lvs.m4enlong_s25_via4_vn_m5encfix_supplyalias_global_notopports.rep
+signoff/calibre_currentrtl_r23_nofill_signoff_20260422/07_lvs/log/runset.m4enlong_s25_via4_vn_m5encfix_supplyalias_global_notopports.log
+LVS completed. CORRECT.
+```
+
+This final Calibre LVS result also classifies the earlier Innovus
+`verifyConnectivity -type special` VDD/VPP markers: under the reference
+Calibre LVS source/layout alias flow, they do not appear as a real LVS mismatch.

@@ -1,0 +1,899 @@
+
+
+
+                  ##################################################
+                  ##                                              ##
+                  ##         C A L I B R E    S Y S T E M         ##
+                  ##                                              ##
+                  ##             L V S   R E P O R T              ##
+                  ##                                              ##
+                  ##################################################
+
+
+
+REPORT FILE NAME:         output/lvs.m4enlong_s25_via4_vn_m5encfix_supplyalias_global_notopports.rep
+LAYOUT NAME:              ./output/soc_top.m4enlong_s25_via4_vn_m5encfix.supplyalias.global.notopports.layspi ('soc_top')
+SOURCE NAME:              ./source_fix/soc_top_lvs.spi ('soc_top')
+RULE FILE:                ./scr/runset.compare.m4enlong_s25_via4_vn_m5encfix_supplyalias_global_notopports.cmd
+HCELL FILE:               ./source_fix/hcell.ts1alias
+CREATION TIME:            Wed Apr 22 18:10:48 2026
+CURRENT DIRECTORY:        /home/fy2243/soc_design/signoff/calibre_currentrtl_r23_nofill_signoff_20260422/07_lvs
+USER NAME:                fy2243
+CALIBRE VERSION:          v2024.2_29.16    Thu May 2 07:35:42 PDT 2024
+
+
+
+                               OVERALL COMPARISON RESULTS
+
+
+
+                         #       ###################       _   _   
+                        #        #                 #       *   *   
+                   #   #         #     CORRECT     #         |     
+                    # #          #                 #       \___/  
+                     #           ###################               
+
+
+
+
+**************************************************************************************************************
+                                      CELL  SUMMARY
+**************************************************************************************************************
+
+  Result         Layout                        Source
+  -----------    -----------                   --------------
+  CORRECT        soc_top                       soc_top
+
+
+
+**************************************************************************************************************
+                                      LVS PARAMETERS
+**************************************************************************************************************
+
+
+o LVS Setup:
+
+   // LVS COMPONENT TYPE PROPERTY
+   // LVS COMPONENT SUBTYPE PROPERTY
+   // LVS PIN NAME PROPERTY
+   LVS POWER NAME                         "VDD" "VDDM" "VDDPST" "AVDD" "DVDD"
+   LVS GROUND NAME                        "VSS"
+   LVS CELL SUPPLY                        YES
+   LVS RECOGNIZE GATES                    NONE
+   // LVS HCELL REPORT
+   LVS IGNORE PORTS                       NO
+   LVS CHECK PORT NAMES                   YES
+   LVS IGNORE TRIVIAL NAMED PORTS         NO
+   LVS BUILTIN DEVICE PIN SWAP            YES
+   LVS ALL CAPACITOR PINS SWAPPABLE       YES
+   LVS DISCARD PINS BY DEVICE             NO
+   LVS SOFT SUBSTRATE PINS                NO
+   LVS INJECT LOGIC                       NO
+   LVS EXPAND UNBALANCED CELLS            YES
+   LVS FLATTEN INSIDE CELL                NO
+   LVS EXPAND SEED PROMOTIONS             NO
+   LVS PRESERVE PARAMETERIZED CELLS       NO
+   LVS GLOBALS ARE PORTS                  NO
+   LVS RELAX INITIAL CPOINTS              NONE
+   LVS REVERSE WL                         NO
+   // LVS NETLIST FILTER DEVICES          NO
+   // LVS PRESERVE BOX PORTS              NO
+   LVS SPICE PREFER PINS                  YES
+   LVS SPICE SLASH IS SPACE               YES
+   LVS SPICE ALLOW FLOATING PINS          YES
+   // LVS SPICE ALLOW INLINE PARAMETERS     
+   LVS SPICE ALLOW UNQUOTED STRINGS       NO
+   LVS SPICE CONDITIONAL LDD              NO
+   LVS SPICE CULL PRIMITIVE SUBCIRCUITS   NO
+   LVS SPICE EXCLUDE CELL SOURCE          "BOUNDARY_LEFTBWP16P90" "BOUNDARY_LEFTBWP16P90LVT" "BOUNDARY_LEFTBWP20P90"
+                                          "BOUNDARY_LEFTBWP20P90LVT" "BOUNDARY_NCORNERBWP16P90" "BOUNDARY_NCORNERBWP16P90LVT"
+                                          "BOUNDARY_NCORNERBWP20P90" "BOUNDARY_NCORNERBWP20P90LVT" "BOUNDARY_NROW1BWP16P90"
+                                          "BOUNDARY_NROW1BWP16P90LVT" "BOUNDARY_NROW1BWP20P90" "BOUNDARY_NROW1BWP20P90LVT"
+                                          "BOUNDARY_NROW2BWP16P90" "BOUNDARY_NROW2BWP16P90LVT" "BOUNDARY_NROW2BWP20P90"
+                                          "BOUNDARY_NROW2BWP20P90LVT" "BOUNDARY_NROW3BWP16P90" "BOUNDARY_NROW3BWP16P90LVT"
+                                          "BOUNDARY_NROW3BWP20P90" "BOUNDARY_NROW3BWP20P90LVT" "BOUNDARY_NROW4BWP16P90"
+                                          "BOUNDARY_NROW4BWP16P90LVT" "BOUNDARY_NROW4BWP20P90" "BOUNDARY_NROW4BWP20P90LVT"
+                                          "BOUNDARY_NTAPBWP16P90" "BOUNDARY_NTAPBWP16P90LVT" "BOUNDARY_NTAPBWP16P90LVT_VPP_VBB"
+                                          "BOUNDARY_NTAPBWP16P90LVT_VPP_VSS" "BOUNDARY_NTAPBWP16P90_VPP_VBB"
+                                          "BOUNDARY_NTAPBWP16P90_VPP_VSS" "BOUNDARY_NTAPBWP20P90" "BOUNDARY_NTAPBWP20P90LVT"
+                                          "BOUNDARY_NTAPBWP20P90LVT_VPP_VBB" "BOUNDARY_NTAPBWP20P90LVT_VPP_VSS"
+                                          "BOUNDARY_NTAPBWP20P90_VPP_VBB" "BOUNDARY_NTAPBWP20P90_VPP_VSS"
+                                          "BOUNDARY_PCORNERBWP16P90" "BOUNDARY_PCORNERBWP16P90LVT" "BOUNDARY_PCORNERBWP20P90"
+                                          "BOUNDARY_PCORNERBWP20P90LVT" "BOUNDARY_PROW1BWP16P90" "BOUNDARY_PROW1BWP16P90LVT"
+                                          "BOUNDARY_PROW1BWP20P90" "BOUNDARY_PROW1BWP20P90LVT" "BOUNDARY_PROW2BWP16P90"
+                                          "BOUNDARY_PROW2BWP16P90LVT" "BOUNDARY_PROW2BWP20P90" "BOUNDARY_PROW2BWP20P90LVT"
+                                          "BOUNDARY_PROW3BWP16P90" "BOUNDARY_PROW3BWP16P90LVT" "BOUNDARY_PROW3BWP20P90"
+                                          "BOUNDARY_PROW3BWP20P90LVT" "BOUNDARY_PROW4BWP16P90" "BOUNDARY_PROW4BWP16P90LVT"
+                                          "BOUNDARY_PROW4BWP20P90" "BOUNDARY_PROW4BWP20P90LVT" "BOUNDARY_PTAPBWP16P90"
+                                          "BOUNDARY_PTAPBWP16P90LVT" "BOUNDARY_PTAPBWP16P90LVT_VPP_VBB"
+                                          "BOUNDARY_PTAPBWP16P90LVT_VPP_VSS" "BOUNDARY_PTAPBWP16P90_VPP_VBB"
+                                          "BOUNDARY_PTAPBWP16P90_VPP_VSS" "BOUNDARY_PTAPBWP20P90" "BOUNDARY_PTAPBWP20P90LVT"
+                                          "BOUNDARY_PTAPBWP20P90LVT_VPP_VBB" "BOUNDARY_PTAPBWP20P90LVT_VPP_VSS"
+                                          "BOUNDARY_PTAPBWP20P90_VPP_VBB" "BOUNDARY_PTAPBWP20P90_VPP_VSS" "BOUNDARY_RIGHTBWP16P90"
+                                          "BOUNDARY_RIGHTBWP16P90LVT" "BOUNDARY_RIGHTBWP20P90" "BOUNDARY_RIGHTBWP20P90LVT"
+                                          "DCAP16BWP16P90" "DCAP16BWP16P90LVT" "DCAP16BWP20P90" "DCAP16BWP20P90LVT"
+                                          "DCAP32BWP16P90" "DCAP32BWP16P90LVT" "DCAP32BWP20P90" "DCAP32BWP20P90LVT" "DCAP4BWP16P90"
+                                          "DCAP4BWP16P90LVT" "DCAP4BWP20P90" "DCAP4BWP20P90LVT" "DCAP64BWP16P90"
+                                          "DCAP64BWP16P90LVT" "DCAP64BWP20P90" "DCAP64BWP20P90LVT" "DCAP8BWP16P90"
+                                          "DCAP8BWP16P90LVT" "DCAP8BWP20P90" "DCAP8BWP20P90LVT" "FILL16BWP16P90"
+                                          "FILL16BWP16P90LVT" "FILL16BWP20P90" "FILL16BWP20P90LVT" "FILL1BWP16P90"
+                                          "FILL1BWP16P90LVT" "FILL1BWP20P90" "FILL1BWP20P90LVT" "FILL2BWP16P90" "FILL2BWP16P90LVT"
+                                          "FILL2BWP20P90" "FILL2BWP20P90LVT" "FILL32BWP16P90" "FILL32BWP16P90LVT" "FILL32BWP20P90"
+                                          "FILL32BWP20P90LVT" "FILL3BWP16P90" "FILL3BWP16P90LVT" "FILL3BWP20P90" "FILL3BWP20P90LVT"
+                                          "FILL4BWP16P90" "FILL4BWP16P90LVT" "FILL4BWP20P90" "FILL4BWP20P90LVT" "FILL64BWP16P90"
+                                          "FILL64BWP16P90LVT" "FILL64BWP20P90" "FILL64BWP20P90LVT" "FILL8BWP16P90"
+                                          "FILL8BWP16P90LVT" "FILL8BWP20P90" "FILL8BWP20P90LVT" "TAPCELLBWP16P90"
+                                          "TAPCELLBWP16P90LVT" "TAPCELLBWP16P90LVT_VPP_VBB" "TAPCELLBWP16P90LVT_VPP_VSS"
+                                          "TAPCELLBWP16P90_VPP_VBB" "TAPCELLBWP16P90_VPP_VSS" "TAPCELLBWP20P90"
+                                          "TAPCELLBWP20P90LVT" "TAPCELLBWP20P90LVT_VPP_VBB" "TAPCELLBWP20P90LVT_VPP_VSS"
+                                          "TAPCELLBWP20P90_VPP_VBB" "TAPCELLBWP20P90_VPP_VSS"
+   LVS SPICE EXCLUDE CELL LAYOUT          "BOUNDARY_LEFTBWP16P90" "BOUNDARY_LEFTBWP16P90LVT" "BOUNDARY_LEFTBWP20P90"
+                                          "BOUNDARY_LEFTBWP20P90LVT" "BOUNDARY_NCORNERBWP16P90" "BOUNDARY_NCORNERBWP16P90LVT"
+                                          "BOUNDARY_NCORNERBWP20P90" "BOUNDARY_NCORNERBWP20P90LVT" "BOUNDARY_NROW1BWP16P90"
+                                          "BOUNDARY_NROW1BWP16P90LVT" "BOUNDARY_NROW1BWP20P90" "BOUNDARY_NROW1BWP20P90LVT"
+                                          "BOUNDARY_NROW2BWP16P90" "BOUNDARY_NROW2BWP16P90LVT" "BOUNDARY_NROW2BWP20P90"
+                                          "BOUNDARY_NROW2BWP20P90LVT" "BOUNDARY_NROW3BWP16P90" "BOUNDARY_NROW3BWP16P90LVT"
+                                          "BOUNDARY_NROW3BWP20P90" "BOUNDARY_NROW3BWP20P90LVT" "BOUNDARY_NROW4BWP16P90"
+                                          "BOUNDARY_NROW4BWP16P90LVT" "BOUNDARY_NROW4BWP20P90" "BOUNDARY_NROW4BWP20P90LVT"
+                                          "BOUNDARY_NTAPBWP16P90" "BOUNDARY_NTAPBWP16P90LVT" "BOUNDARY_NTAPBWP16P90LVT_VPP_VBB"
+                                          "BOUNDARY_NTAPBWP16P90LVT_VPP_VSS" "BOUNDARY_NTAPBWP16P90_VPP_VBB"
+                                          "BOUNDARY_NTAPBWP16P90_VPP_VSS" "BOUNDARY_NTAPBWP20P90" "BOUNDARY_NTAPBWP20P90LVT"
+                                          "BOUNDARY_NTAPBWP20P90LVT_VPP_VBB" "BOUNDARY_NTAPBWP20P90LVT_VPP_VSS"
+                                          "BOUNDARY_NTAPBWP20P90_VPP_VBB" "BOUNDARY_NTAPBWP20P90_VPP_VSS"
+                                          "BOUNDARY_PCORNERBWP16P90" "BOUNDARY_PCORNERBWP16P90LVT" "BOUNDARY_PCORNERBWP20P90"
+                                          "BOUNDARY_PCORNERBWP20P90LVT" "BOUNDARY_PROW1BWP16P90" "BOUNDARY_PROW1BWP16P90LVT"
+                                          "BOUNDARY_PROW1BWP20P90" "BOUNDARY_PROW1BWP20P90LVT" "BOUNDARY_PROW2BWP16P90"
+                                          "BOUNDARY_PROW2BWP16P90LVT" "BOUNDARY_PROW2BWP20P90" "BOUNDARY_PROW2BWP20P90LVT"
+                                          "BOUNDARY_PROW3BWP16P90" "BOUNDARY_PROW3BWP16P90LVT" "BOUNDARY_PROW3BWP20P90"
+                                          "BOUNDARY_PROW3BWP20P90LVT" "BOUNDARY_PROW4BWP16P90" "BOUNDARY_PROW4BWP16P90LVT"
+                                          "BOUNDARY_PROW4BWP20P90" "BOUNDARY_PROW4BWP20P90LVT" "BOUNDARY_PTAPBWP16P90"
+                                          "BOUNDARY_PTAPBWP16P90LVT" "BOUNDARY_PTAPBWP16P90LVT_VPP_VBB"
+                                          "BOUNDARY_PTAPBWP16P90LVT_VPP_VSS" "BOUNDARY_PTAPBWP16P90_VPP_VBB"
+                                          "BOUNDARY_PTAPBWP16P90_VPP_VSS" "BOUNDARY_PTAPBWP20P90" "BOUNDARY_PTAPBWP20P90LVT"
+                                          "BOUNDARY_PTAPBWP20P90LVT_VPP_VBB" "BOUNDARY_PTAPBWP20P90LVT_VPP_VSS"
+                                          "BOUNDARY_PTAPBWP20P90_VPP_VBB" "BOUNDARY_PTAPBWP20P90_VPP_VSS" "BOUNDARY_RIGHTBWP16P90"
+                                          "BOUNDARY_RIGHTBWP16P90LVT" "BOUNDARY_RIGHTBWP20P90" "BOUNDARY_RIGHTBWP20P90LVT"
+                                          "DCAP16BWP16P90" "DCAP16BWP16P90LVT" "DCAP16BWP20P90" "DCAP16BWP20P90LVT"
+                                          "DCAP32BWP16P90" "DCAP32BWP16P90LVT" "DCAP32BWP20P90" "DCAP32BWP20P90LVT" "DCAP4BWP16P90"
+                                          "DCAP4BWP16P90LVT" "DCAP4BWP20P90" "DCAP4BWP20P90LVT" "DCAP64BWP16P90"
+                                          "DCAP64BWP16P90LVT" "DCAP64BWP20P90" "DCAP64BWP20P90LVT" "DCAP8BWP16P90"
+                                          "DCAP8BWP16P90LVT" "DCAP8BWP20P90" "DCAP8BWP20P90LVT" "FILL16BWP16P90"
+                                          "FILL16BWP16P90LVT" "FILL16BWP20P90" "FILL16BWP20P90LVT" "FILL1BWP16P90"
+                                          "FILL1BWP16P90LVT" "FILL1BWP20P90" "FILL1BWP20P90LVT" "FILL2BWP16P90" "FILL2BWP16P90LVT"
+                                          "FILL2BWP20P90" "FILL2BWP20P90LVT" "FILL32BWP16P90" "FILL32BWP16P90LVT" "FILL32BWP20P90"
+                                          "FILL32BWP20P90LVT" "FILL3BWP16P90" "FILL3BWP16P90LVT" "FILL3BWP20P90" "FILL3BWP20P90LVT"
+                                          "FILL4BWP16P90" "FILL4BWP16P90LVT" "FILL4BWP20P90" "FILL4BWP20P90LVT" "FILL64BWP16P90"
+                                          "FILL64BWP16P90LVT" "FILL64BWP20P90" "FILL64BWP20P90LVT" "FILL8BWP16P90"
+                                          "FILL8BWP16P90LVT" "FILL8BWP20P90" "FILL8BWP20P90LVT" "TAPCELLBWP16P90"
+                                          "TAPCELLBWP16P90LVT" "TAPCELLBWP16P90LVT_VPP_VBB" "TAPCELLBWP16P90LVT_VPP_VSS"
+                                          "TAPCELLBWP16P90_VPP_VBB" "TAPCELLBWP16P90_VPP_VSS" "TAPCELLBWP20P90"
+                                          "TAPCELLBWP20P90LVT" "TAPCELLBWP20P90LVT_VPP_VBB" "TAPCELLBWP20P90LVT_VPP_VSS"
+                                          "TAPCELLBWP20P90_VPP_VBB" "TAPCELLBWP20P90_VPP_VSS"
+   LVS SPICE IMPLIED MOS AREA             NO
+   // LVS SPICE MULTIPLIER NAME
+   LVS SPICE OVERRIDE GLOBALS             NO
+   LVS SPICE REDEFINE PARAM               NO
+   LVS SPICE REPLICATE DEVICES            YES
+   LVS SPICE SCALE X PARAMETERS           NO
+   LVS SPICE STRICT WL                    NO
+   // LVS SPICE OPTION
+   LVS STRICT SUBTYPES                    NO
+   LVS EXACT SUBTYPES                     NO
+   LAYOUT CASE                            YES
+   SOURCE CASE                            YES
+   LVS COMPARE CASE                       NAMES TYPES SUBTYPES VALUES
+   LVS COMPARE CASE STRICT                NO
+   LVS DOWNCASE DEVICE                    NO
+   LVS REPORT MAXIMUM                     1000
+   LVS PROPERTY RESOLUTION MAXIMUM        65536
+   // LVS SIGNATURE MAXIMUM
+   LVS FILTER UNUSED OPTION               AG RC RE RG
+   LVS REPORT OPTION                      S
+   LVS REPORT UNITS                       YES
+   LVS SWAPPABLE HCELL PINS               GENERAL
+   // LVS NON USER NAME PORT
+   // LVS NON USER NAME NET
+   // LVS NON USER NAME INSTANCE
+   LVS IGNORE DEVICE PIN                  DCAP8BWP20P90LVT 2 3 6 7 8 9 10
+   LVS IGNORE DEVICE PIN                  DCAP8BWP20P90 2 3 6 7 8 9 10
+   LVS IGNORE DEVICE PIN                  DCAP8BWP16P90LVT 2 3 6 7 8 9 10
+   LVS IGNORE DEVICE PIN                  DCAP8BWP16P90 2 3 6 7 8 9 10
+   LVS IGNORE DEVICE PIN                  DCAP64BWP20P90LVT 2 3 6 7 8 9 10
+   LVS IGNORE DEVICE PIN                  DCAP64BWP20P90 2 3 6 7 8 9 10
+   LVS IGNORE DEVICE PIN                  DCAP64BWP16P90LVT 2 3 6 7 8 9 10
+   LVS IGNORE DEVICE PIN                  DCAP64BWP16P90 2 3 6 7 8 9 10
+   LVS IGNORE DEVICE PIN                  DCAP4BWP20P90LVT 2 3 6 7 8 9 10
+   LVS IGNORE DEVICE PIN                  DCAP4BWP20P90 2 3 6 7 8 9 10
+   LVS IGNORE DEVICE PIN                  DCAP4BWP16P90LVT 2 3 6 7 8 9 10
+   LVS IGNORE DEVICE PIN                  DCAP4BWP16P90 2 3 6 7 8 9 10
+   LVS IGNORE DEVICE PIN                  DCAP32BWP20P90LVT 2 3 6 7 8 9 10
+   LVS IGNORE DEVICE PIN                  DCAP32BWP20P90 2 3 6 7 8 9 10
+   LVS IGNORE DEVICE PIN                  DCAP32BWP16P90LVT 2 3 6 7 8 9 10
+   LVS IGNORE DEVICE PIN                  DCAP32BWP16P90 2 3 6 7 8 9 10
+   LVS IGNORE DEVICE PIN                  DCAP16BWP20P90LVT 2 3 6 7 8 9 10
+   LVS IGNORE DEVICE PIN                  DCAP16BWP20P90 2 3 6 7 8 9 10
+   LVS IGNORE DEVICE PIN                  DCAP16BWP16P90LVT 2 3 6 7 8 9 10
+   LVS IGNORE DEVICE PIN                  DCAP16BWP16P90 2 3 6 7 8 9 10
+   // LVS PREFER NETS FILTER SOURCE
+   // LVS PREFER NETS FILTER LAYOUT
+   LVS PREFER PORT NETS                   NO
+   LVS EXPAND ON ERROR                    NO
+   LVS EXPAND AMBIGUOUSLY HIGH SHORTED HCELLS NO
+
+   // Device Type Map
+
+   LVS DEVICE TYPE                        RESISTOR "rhim" "rm10w" "rm11w" "rm1w" "rm2w" "rm3w" "rm4w" "rm5w" "rm6w" "rm7w" "rm8w"
+                                                   "rm9w" "rmap" [ POS=PLUS NEG=MINUS ]  SOURCE LAYOUT
+
+   // Reduction
+
+   LVS REDUCE SERIES MOS                  NO
+   LVS REDUCE PARALLEL MOS                NO
+   LVS REDUCE SEMI SERIES MOS             NO
+   LVS REDUCE SPLIT GATES                 NO
+   LVS REDUCE PARALLEL BIPOLAR            NO
+   LVS REDUCE SERIES CAPACITORS           NO
+   LVS REDUCE PARALLEL CAPACITORS         NO
+   LVS REDUCE SERIES RESISTORS            NO
+   LVS REDUCE PARALLEL RESISTORS          NO
+   LVS REDUCE PARALLEL DIODES             NO
+
+   LVS REDUCE  rhim  PARALLEL NO
+   LVS REDUCE  rhim  SERIES PLUS MINUS NO
+   LVS REDUCE  rm1w  PARALLEL NO
+   LVS REDUCE  rm1w  SERIES PLUS MINUS NO
+   LVS REDUCE  rm2w  PARALLEL NO
+   LVS REDUCE  rm2w  SERIES PLUS MINUS NO
+   LVS REDUCE  rm3w  PARALLEL NO
+   LVS REDUCE  rm3w  SERIES PLUS MINUS NO
+   LVS REDUCE  rm4w  PARALLEL NO
+   LVS REDUCE  rm4w  SERIES PLUS MINUS NO
+   LVS REDUCE  rm5w  PARALLEL NO
+   LVS REDUCE  rm5w  SERIES PLUS MINUS NO
+   LVS REDUCE  rm6w  PARALLEL NO
+   LVS REDUCE  rm6w  SERIES PLUS MINUS NO
+   LVS REDUCE  rm7w  PARALLEL NO
+   LVS REDUCE  rm7w  SERIES PLUS MINUS NO
+   LVS REDUCE  rm8w  PARALLEL NO
+   LVS REDUCE  rm8w  SERIES PLUS MINUS NO
+   LVS REDUCE  rm9w  PARALLEL NO
+   LVS REDUCE  rm9w  SERIES PLUS MINUS NO
+   LVS REDUCE  rm10w  PARALLEL NO
+   LVS REDUCE  rm10w  SERIES PLUS MINUS NO
+   LVS REDUCE  rm11w  PARALLEL NO
+   LVS REDUCE  rm11w  SERIES PLUS MINUS NO
+   LVS REDUCE  rmap  PARALLEL NO
+   LVS REDUCE  rmap  SERIES PLUS MINUS NO
+   LVS REDUCE  efuse_mx  PARALLEL NO
+   LVS REDUCE  efuse_mx  SERIES PLUS MINUS NO
+   LVS REDUCE  efuse_vx  PARALLEL NO
+   LVS REDUCE  efuse_vx  SERIES PLUS MINUS NO
+   LVS REDUCTION PRIORITY                 PARALLEL
+   
+   LVS SHORT EQUIVALENT NODES             NO
+
+   // Filter
+
+   LVS FILTER  D(pnwdio)  OPEN LAYOUT
+   LVS FILTER  MN(nch_mpodelvt_mac)  OPEN LAYOUT
+   LVS FILTER  MN(nch_mpodesvt_mac)  OPEN LAYOUT
+   LVS FILTER  MP(pch_mpodelvt_mac)  OPEN LAYOUT
+   LVS FILTER  MP(pch_mpodesvt_mac)  OPEN LAYOUT
+   LVS FILTER  npode_18_mac  OPEN LAYOUT
+   LVS FILTER  npode_lvt_mac  OPEN LAYOUT
+   LVS FILTER  npode_svt_mac  OPEN LAYOUT
+   LVS FILTER  ppode_18_mac  OPEN LAYOUT
+   LVS FILTER  ppode_lvt_mac  OPEN LAYOUT
+   LVS FILTER  ppode_svt_mac  OPEN LAYOUT
+
+   // Trace Property
+
+   TRACE PROPERTY  mn(nch_18_dnw_mac)  l l 0
+   TRACE PROPERTY  mn(nch_18_dnw_mac)  nfin nfin 0
+   TRACE PROPERTY  mn(nch_18_mac)  l l 0
+   TRACE PROPERTY  mn(nch_18_mac)  nfin nfin 0
+   TRACE PROPERTY  mn(nch_lvt_dnw_mac)  l l 0
+   TRACE PROPERTY  mn(nch_lvt_dnw_mac)  nfin nfin 0
+   TRACE PROPERTY  mn(nch_lvt_mac)  l l 0
+   TRACE PROPERTY  mn(nch_lvt_mac)  nfin nfin 0
+   TRACE PROPERTY  mn(nch_mpodelvt_mac)  l l 0
+   TRACE PROPERTY  mn(nch_mpodelvt_mac)  nfin nfin 0
+   TRACE PROPERTY  mn(nch_mpodesvt_mac)  l l 0
+   TRACE PROPERTY  mn(nch_mpodesvt_mac)  nfin nfin 0
+   TRACE PROPERTY  mn(nch_svt_dnw_mac)  l l 0
+   TRACE PROPERTY  mn(nch_svt_dnw_mac)  nfin nfin 0
+   TRACE PROPERTY  mn(nch_svt_mac)  l l 0
+   TRACE PROPERTY  mn(nch_svt_mac)  nfin nfin 0
+   TRACE PROPERTY  mp(pch_18_mac)  l l 0
+   TRACE PROPERTY  mp(pch_18_mac)  nfin nfin 0
+   TRACE PROPERTY  mp(pch_lvt_mac)  l l 0
+   TRACE PROPERTY  mp(pch_lvt_mac)  nfin nfin 0
+   TRACE PROPERTY  mp(pch_mpodelvt_mac)  l l 0
+   TRACE PROPERTY  mp(pch_mpodelvt_mac)  nfin nfin 0
+   TRACE PROPERTY  mp(pch_mpodesvt_mac)  l l 0
+   TRACE PROPERTY  mp(pch_mpodesvt_mac)  nfin nfin 0
+   TRACE PROPERTY  mp(pch_svt_mac)  l l 0
+   TRACE PROPERTY  mp(pch_svt_mac)  nfin nfin 0
+   TRACE PROPERTY  d(nwdio)  a a 0
+   TRACE PROPERTY  ndio_18_mac  nfin nfin 0
+   TRACE PROPERTY  ndio_18_mac  l l 0
+   TRACE PROPERTY  ndio_mac  nfin nfin 0
+   TRACE PROPERTY  ndio_mac  l l 0
+   TRACE PROPERTY  nmoscap_18  nfin nfin 0
+   TRACE PROPERTY  nmoscap_18  lr lr 0
+   TRACE PROPERTY  npode_18_mac  nfin nfin 0
+   TRACE PROPERTY  npode_18_mac  l l 0
+   TRACE PROPERTY  npode_lvt_mac  nfin nfin 0
+   TRACE PROPERTY  npode_lvt_mac  l l 0
+   TRACE PROPERTY  npode_svt_mac  nfin nfin 0
+   TRACE PROPERTY  npode_svt_mac  l l 0
+   TRACE PROPERTY  pdio_18_mac  nfin nfin 0
+   TRACE PROPERTY  pdio_18_mac  l l 0
+   TRACE PROPERTY  pdio_mac  nfin nfin 0
+   TRACE PROPERTY  pdio_mac  l l 0
+   TRACE PROPERTY  ppode_18_mac  nfin nfin 0
+   TRACE PROPERTY  ppode_18_mac  l l 0
+   TRACE PROPERTY  ppode_lvt_mac  nfin nfin 0
+   TRACE PROPERTY  ppode_lvt_mac  l l 0
+   TRACE PROPERTY  ppode_svt_mac  nfin nfin 0
+   TRACE PROPERTY  ppode_svt_mac  l l 0
+   TRACE PROPERTY  rhim  w w 0
+   TRACE PROPERTY  rhim  l l 0
+   TRACE PROPERTY  rm10w  w w 0
+   TRACE PROPERTY  rm10w  l l 0
+   TRACE PROPERTY  rm11w  w w 0
+   TRACE PROPERTY  rm11w  l l 0
+   TRACE PROPERTY  rm1w  w w 0
+   TRACE PROPERTY  rm1w  l l 0
+   TRACE PROPERTY  rm2w  w w 0
+   TRACE PROPERTY  rm2w  l l 0
+   TRACE PROPERTY  rm3w  w w 0
+   TRACE PROPERTY  rm3w  l l 0
+   TRACE PROPERTY  rm4w  w w 0
+   TRACE PROPERTY  rm4w  l l 0
+   TRACE PROPERTY  rm5w  w w 0
+   TRACE PROPERTY  rm5w  l l 0
+   TRACE PROPERTY  rm6w  w w 0
+   TRACE PROPERTY  rm6w  l l 0
+   TRACE PROPERTY  rm7w  w w 0
+   TRACE PROPERTY  rm7w  l l 0
+   TRACE PROPERTY  rm8w  w w 0
+   TRACE PROPERTY  rm8w  l l 0
+   TRACE PROPERTY  rm9w  w w 0
+   TRACE PROPERTY  rm9w  l l 0
+   TRACE PROPERTY  rmap  w w 0
+   TRACE PROPERTY  rmap  l l 0
+
+
+
+                   CELL COMPARISON RESULTS ( TOP LEVEL )
+
+
+
+                         #       ###################       _   _   
+                        #        #                 #       *   *   
+                   #   #         #     CORRECT     #         |     
+                    # #          #                 #       \___/  
+                     #           ###################               
+
+
+
+LAYOUT CELL NAME:         soc_top
+SOURCE CELL NAME:         soc_top
+
+--------------------------------------------------------------------------------------------------------------
+
+INITIAL NUMBERS OF OBJECTS
+--------------------------
+
+                Layout    Source         Component Type
+                ------    ------         --------------
+ Ports:              5         5
+
+ Nets:           87021     42980    *
+
+ Instances:         69        69         AN2D1BWP20P90 (5 pins)
+                     1         1         AN2D4BWP20P90 (5 pins)
+                     7         7         AN3D1BWP20P90 (6 pins)
+                     9         9         AN4D1BWP20P90 (7 pins)
+                    71        71         AO21D1BWP20P90 (6 pins)
+                     1         1         AO21D2BWP20P90 (6 pins)
+                    15        15         AO21D4BWP20P90 (6 pins)
+                     1         1         AO21D4BWP20P90LVT (6 pins)
+                     2         2         AO22D1BWP16P90 (7 pins)
+                   673       673         AO22D1BWP20P90 (7 pins)
+                    12        12         AO22D2BWP20P90 (7 pins)
+                   190       190         AO22D4BWP20P90 (7 pins)
+                     8         8         AOAI211D1BWP20P90 (7 pins)
+                   111       111         AOI211D1BWP20P90 (7 pins)
+                     4         4         AOI21D1BWP16P90 (6 pins)
+                     6         6         AOI21D1BWP16P90LVT (6 pins)
+                   546       546         AOI21D1BWP20P90 (6 pins)
+                     2         2         AOI21D1BWP20P90LVT (6 pins)
+                     8         8         AOI222D1BWP20P90 (9 pins)
+                     1         1         AOI22D1BWP16P90 (7 pins)
+                  1794      1794         AOI22D1BWP20P90 (7 pins)
+                    30        30         AOI31D1BWP20P90 (7 pins)
+                     9         9         AOI32D1BWP20P90 (8 pins)
+                     9         9         AOI33D1BWP20P90 (9 pins)
+                    15        15         BUFFD12BWP16P90LVT (4 pins)
+                   119       119         BUFFD1BWP16P90 (4 pins)
+                   334       334         BUFFD1BWP16P90LVT (4 pins)
+                  6496      6496         BUFFD1BWP20P90 (4 pins)
+                    54        54         BUFFD1BWP20P90LVT (4 pins)
+                    15        15         BUFFD2BWP16P90 (4 pins)
+                    18        18         BUFFD2BWP16P90LVT (4 pins)
+                  1313      1313         BUFFD2BWP20P90 (4 pins)
+                    10        10         BUFFD2BWP20P90LVT (4 pins)
+                     4         4         BUFFD4BWP16P90LVT (4 pins)
+                    43        43         CKBD16BWP16P90LVT (4 pins)
+                     6         6         CKBD1BWP16P90LVT (4 pins)
+                     5         5         CKBD8BWP16P90LVT (4 pins)
+                     7         7         CKMUX2D2BWP20P90 (6 pins)
+                     1         1         CKND1BWP16P90LVT (4 pins)
+                    26        26         CKND2BWP20P90 (4 pins)
+                     1         1         CKND2D1BWP16P90 (5 pins)
+                   123       123         CKND2D1BWP20P90 (5 pins)
+                     2         2         CKND2D2BWP20P90 (5 pins)
+                     1         1         CKNR2D1BWP16P90 (5 pins)
+                     7         7         CKNR2D1BWP20P90 (5 pins)
+                     3         3         CKNR2D2BWP20P90 (5 pins)
+                     1         1         CKNR2D4BWP16P90 (5 pins)
+                     4         4         CKOR2D2BWP20P90 (5 pins)
+                   132       132         DEL025D1BWP16P90 (4 pins)
+                    89        89         DEL025D1BWP16P90LVT (4 pins)
+                  2581      2581         DEL025D1BWP20P90 (4 pins)
+                    55        55         DEL025D1BWP20P90LVT (4 pins)
+                   125       125         DEL050D1BWP16P90 (4 pins)
+                   238       238         DEL050D1BWP16P90LVT (4 pins)
+                   282       282         DEL050D1BWP20P90 (4 pins)
+                    42        42         DEL050D1BWP20P90LVT (4 pins)
+                   426       426         DEL075D1BWP16P90 (4 pins)
+                    98        98         DEL075D1BWP16P90LVT (4 pins)
+                  5820      5820         DEL075D1BWP20P90 (4 pins)
+                   161       161         DEL075D1BWP20P90LVT (4 pins)
+                  3075      3075         DFCNQD1BWP16P90 (6 pins)
+                   217       217         DFCNQD1BWP20P90 (6 pins)
+                    15        15         DFCNQD2BWP16P90 (6 pins)
+                    14        14         DFCNQND1BWP16P90 (6 pins)
+                     1         1         DFCNQND1BWP20P90 (6 pins)
+                   117       117         DFQD1BWP20P90 (5 pins)
+                     1         1         DFQD1BWP20P90LVT (5 pins)
+                   286       286         DFQD2BWP16P90 (5 pins)
+                    13        13         DFQD2BWP16P90LVT (5 pins)
+                  1356      1356         DFQD2BWP20P90 (5 pins)
+                    12        12         DFQD2BWP20P90LVT (5 pins)
+                  2997      2997         FA1D1BWP20P90 (7 pins)
+                    30        30         HA1D1BWP20P90 (6 pins)
+                    25        25         IAO21D1BWP20P90 (6 pins)
+                     1         1         IAOI21D1BWP20P90 (6 pins)
+                     1         1         IIND3D1BWP20P90 (6 pins)
+                     1         1         IINR4D1BWP20P90 (7 pins)
+                     1         1         IND2D1BWP16P90LVT (5 pins)
+                    60        60         IND2D1BWP20P90 (5 pins)
+                     3         3         IND2D2BWP20P90 (5 pins)
+                    16        16         IND3D1BWP20P90 (6 pins)
+                     7         7         IND4D1BWP20P90 (7 pins)
+                     3         3         INR2D1BWP16P90 (5 pins)
+                     1         1         INR2D1BWP16P90LVT (5 pins)
+                   173       173         INR2D1BWP20P90 (5 pins)
+                    13        13         INR2D1BWP20P90LVT (5 pins)
+                     1         1         INR2D2BWP16P90LVT (5 pins)
+                     7         7         INR2D2BWP20P90 (5 pins)
+                     4         4         INR3D1BWP20P90 (6 pins)
+                     1         1         INR3D1BWP20P90LVT (6 pins)
+                     1         1         INR3D4BWP20P90 (6 pins)
+                    10        10         INR4D1BWP20P90 (7 pins)
+                    29        29         INVD1BWP16P90 (4 pins)
+                  1110      1110         INVD1BWP20P90 (4 pins)
+                     1         1         INVD4BWP20P90 (4 pins)
+                   284       284         IOA21D1BWP20P90 (6 pins)
+                     3         3         IOAI21D1BWP20P90 (6 pins)
+                    63        63         LHQD1BWP16P90 (5 pins)
+                     5         5         LHQD1BWP20P90 (5 pins)
+                     2         2         MAOI22D1BWP20P90 (7 pins)
+                    10        10         MOAI22D1BWP20P90 (7 pins)
+                    68        68         MUX2D1BWP20P90 (6 pins)
+                     3         3         MUX2D2BWP20P90 (6 pins)
+                     1         1         MUX2ND1BWP20P90 (6 pins)
+                    36        36         MUX3D1BWP20P90 (8 pins)
+                    22        22         ND2D1BWP16P90 (5 pins)
+                  1043      1043         ND2D1BWP20P90 (5 pins)
+                     1         1         ND2D2BWP20P90LVT (5 pins)
+                    66        66         ND3D1BWP20P90 (6 pins)
+                   343       343         ND4D1BWP20P90 (7 pins)
+                     2         2         ND4D1BWP20P90LVT (7 pins)
+                     1         1         NR2D1BWP16P90 (5 pins)
+                     4         4         NR2D1BWP16P90LVT (5 pins)
+                   331       331         NR2D1BWP20P90 (5 pins)
+                    44        44         NR2D1BWP20P90LVT (5 pins)
+                     1         1         NR2D2BWP20P90 (5 pins)
+                     1         1         NR3D1BWP16P90LVT (6 pins)
+                    69        69         NR3D1BWP20P90 (6 pins)
+                     2         2         NR3D1BWP20P90LVT (6 pins)
+                   190       190         NR4D1BWP20P90 (7 pins)
+                     4         4         OA21D1BWP20P90 (6 pins)
+                     2         2         OA21D4BWP20P90 (6 pins)
+                    22        22         OA22D1BWP20P90 (7 pins)
+                    12        12         OA22D4BWP20P90 (7 pins)
+                   133       133         OAI211D1BWP20P90 (7 pins)
+                    23        23         OAI21D1BWP16P90 (6 pins)
+                     2         2         OAI21D1BWP16P90LVT (6 pins)
+                  1150      1150         OAI21D1BWP20P90 (6 pins)
+                     9         9         OAI221D1BWP20P90 (8 pins)
+                    29        29         OAI222D1BWP20P90 (9 pins)
+                   363       363         OAI22D1BWP20P90 (7 pins)
+                     1         1         OAI31D1BWP16P90 (7 pins)
+                    74        74         OAI31D1BWP20P90 (7 pins)
+                    36        36         OAI32D1BWP20P90 (8 pins)
+                     8         8         OAI33D1BWP20P90 (9 pins)
+                     9         9         OAOI211D1BWP20P90 (7 pins)
+                     1         1         OAOI211D1BWP20P90LVT (7 pins)
+                    25        25         OR2D1BWP20P90 (5 pins)
+                    17        17         OR3D1BWP20P90 (6 pins)
+                     1         1         OR3D2BWP20P90 (6 pins)
+                     1         1         OR3D4BWP20P90 (6 pins)
+                    12        12         OR4D1BWP20P90 (7 pins)
+                     2         2         TIEHBWP20P90LVT (3 pins)
+                     1         1         TIELBWP20P90LVT (3 pins)
+                     1         1         TS1N16ADFPCLLLVTA512X45M4SWSHOD (158 pins)
+                    75        75         XNR2D1BWP20P90 (5 pins)
+                     1         1         XNR2D2BWP20P90 (5 pins)
+                    12        12         XNR3D1BWP20P90 (6 pins)
+                  1922      1922         XOR2D1BWP20P90 (5 pins)
+                    15        15         XOR3D1BWP20P90 (6 pins)
+                ------    ------
+ Total Inst:     38397     38397
+
+
+NUMBERS OF OBJECTS AFTER TRANSFORMATION
+---------------------------------------
+
+                Layout    Source         Component Type
+                ------    ------         --------------
+ Ports:              5         5
+
+ Nets:           41474     41474
+
+ Instances:         69        69         AN2D1BWP20P90 (5 pins)
+                     1         1         AN2D4BWP20P90 (5 pins)
+                     7         7         AN3D1BWP20P90 (6 pins)
+                     9         9         AN4D1BWP20P90 (7 pins)
+                    71        71         AO21D1BWP20P90 (6 pins)
+                     1         1         AO21D2BWP20P90 (6 pins)
+                    15        15         AO21D4BWP20P90 (6 pins)
+                     1         1         AO21D4BWP20P90LVT (6 pins)
+                     2         2         AO22D1BWP16P90 (7 pins)
+                   673       673         AO22D1BWP20P90 (7 pins)
+                    12        12         AO22D2BWP20P90 (7 pins)
+                   190       190         AO22D4BWP20P90 (7 pins)
+                     8         8         AOAI211D1BWP20P90 (7 pins)
+                   111       111         AOI211D1BWP20P90 (7 pins)
+                     4         4         AOI21D1BWP16P90 (6 pins)
+                     6         6         AOI21D1BWP16P90LVT (6 pins)
+                   546       546         AOI21D1BWP20P90 (6 pins)
+                     2         2         AOI21D1BWP20P90LVT (6 pins)
+                     8         8         AOI222D1BWP20P90 (9 pins)
+                     1         1         AOI22D1BWP16P90 (7 pins)
+                  1794      1794         AOI22D1BWP20P90 (7 pins)
+                    30        30         AOI31D1BWP20P90 (7 pins)
+                     9         9         AOI32D1BWP20P90 (8 pins)
+                     9         9         AOI33D1BWP20P90 (9 pins)
+                    15        15         BUFFD12BWP16P90LVT (4 pins)
+                   119       119         BUFFD1BWP16P90 (4 pins)
+                   334       334         BUFFD1BWP16P90LVT (4 pins)
+                  6496      6496         BUFFD1BWP20P90 (4 pins)
+                    54        54         BUFFD1BWP20P90LVT (4 pins)
+                    15        15         BUFFD2BWP16P90 (4 pins)
+                    18        18         BUFFD2BWP16P90LVT (4 pins)
+                  1313      1313         BUFFD2BWP20P90 (4 pins)
+                    10        10         BUFFD2BWP20P90LVT (4 pins)
+                     4         4         BUFFD4BWP16P90LVT (4 pins)
+                    43        43         CKBD16BWP16P90LVT (4 pins)
+                     6         6         CKBD1BWP16P90LVT (4 pins)
+                     5         5         CKBD8BWP16P90LVT (4 pins)
+                     7         7         CKMUX2D2BWP20P90 (6 pins)
+                     1         1         CKND1BWP16P90LVT (4 pins)
+                    26        26         CKND2BWP20P90 (4 pins)
+                     1         1         CKND2D1BWP16P90 (5 pins)
+                   123       123         CKND2D1BWP20P90 (5 pins)
+                     2         2         CKND2D2BWP20P90 (5 pins)
+                     1         1         CKNR2D1BWP16P90 (5 pins)
+                     7         7         CKNR2D1BWP20P90 (5 pins)
+                     3         3         CKNR2D2BWP20P90 (5 pins)
+                     1         1         CKNR2D4BWP16P90 (5 pins)
+                     4         4         CKOR2D2BWP20P90 (5 pins)
+                   132       132         DEL025D1BWP16P90 (4 pins)
+                    89        89         DEL025D1BWP16P90LVT (4 pins)
+                  2581      2581         DEL025D1BWP20P90 (4 pins)
+                    55        55         DEL025D1BWP20P90LVT (4 pins)
+                   125       125         DEL050D1BWP16P90 (4 pins)
+                   238       238         DEL050D1BWP16P90LVT (4 pins)
+                   282       282         DEL050D1BWP20P90 (4 pins)
+                    42        42         DEL050D1BWP20P90LVT (4 pins)
+                   426       426         DEL075D1BWP16P90 (4 pins)
+                    98        98         DEL075D1BWP16P90LVT (4 pins)
+                  5820      5820         DEL075D1BWP20P90 (4 pins)
+                   161       161         DEL075D1BWP20P90LVT (4 pins)
+                  3075      3075         DFCNQD1BWP16P90 (6 pins)
+                   217       217         DFCNQD1BWP20P90 (6 pins)
+                    15        15         DFCNQD2BWP16P90 (6 pins)
+                    14        14         DFCNQND1BWP16P90 (6 pins)
+                     1         1         DFCNQND1BWP20P90 (6 pins)
+                   117       117         DFQD1BWP20P90 (5 pins)
+                     1         1         DFQD1BWP20P90LVT (5 pins)
+                   286       286         DFQD2BWP16P90 (5 pins)
+                    13        13         DFQD2BWP16P90LVT (5 pins)
+                  1356      1356         DFQD2BWP20P90 (5 pins)
+                    12        12         DFQD2BWP20P90LVT (5 pins)
+                  2997      2997         FA1D1BWP20P90 (7 pins)
+                    30        30         HA1D1BWP20P90 (6 pins)
+                    25        25         IAO21D1BWP20P90 (6 pins)
+                     1         1         IAOI21D1BWP20P90 (6 pins)
+                     1         1         IIND3D1BWP20P90 (6 pins)
+                     1         1         IINR4D1BWP20P90 (7 pins)
+                     1         1         IND2D1BWP16P90LVT (5 pins)
+                    60        60         IND2D1BWP20P90 (5 pins)
+                     3         3         IND2D2BWP20P90 (5 pins)
+                    16        16         IND3D1BWP20P90 (6 pins)
+                     7         7         IND4D1BWP20P90 (7 pins)
+                     3         3         INR2D1BWP16P90 (5 pins)
+                     1         1         INR2D1BWP16P90LVT (5 pins)
+                   173       173         INR2D1BWP20P90 (5 pins)
+                    13        13         INR2D1BWP20P90LVT (5 pins)
+                     1         1         INR2D2BWP16P90LVT (5 pins)
+                     7         7         INR2D2BWP20P90 (5 pins)
+                     4         4         INR3D1BWP20P90 (6 pins)
+                     1         1         INR3D1BWP20P90LVT (6 pins)
+                     1         1         INR3D4BWP20P90 (6 pins)
+                    10        10         INR4D1BWP20P90 (7 pins)
+                    29        29         INVD1BWP16P90 (4 pins)
+                  1110      1110         INVD1BWP20P90 (4 pins)
+                     1         1         INVD4BWP20P90 (4 pins)
+                   284       284         IOA21D1BWP20P90 (6 pins)
+                     3         3         IOAI21D1BWP20P90 (6 pins)
+                    63        63         LHQD1BWP16P90 (5 pins)
+                     5         5         LHQD1BWP20P90 (5 pins)
+                     2         2         MAOI22D1BWP20P90 (7 pins)
+                    10        10         MOAI22D1BWP20P90 (7 pins)
+                    68        68         MUX2D1BWP20P90 (6 pins)
+                     3         3         MUX2D2BWP20P90 (6 pins)
+                     1         1         MUX2ND1BWP20P90 (6 pins)
+                    36        36         MUX3D1BWP20P90 (8 pins)
+                    22        22         ND2D1BWP16P90 (5 pins)
+                  1043      1043         ND2D1BWP20P90 (5 pins)
+                     1         1         ND2D2BWP20P90LVT (5 pins)
+                    66        66         ND3D1BWP20P90 (6 pins)
+                   343       343         ND4D1BWP20P90 (7 pins)
+                     2         2         ND4D1BWP20P90LVT (7 pins)
+                     1         1         NR2D1BWP16P90 (5 pins)
+                     4         4         NR2D1BWP16P90LVT (5 pins)
+                   331       331         NR2D1BWP20P90 (5 pins)
+                    44        44         NR2D1BWP20P90LVT (5 pins)
+                     1         1         NR2D2BWP20P90 (5 pins)
+                     1         1         NR3D1BWP16P90LVT (6 pins)
+                    69        69         NR3D1BWP20P90 (6 pins)
+                     2         2         NR3D1BWP20P90LVT (6 pins)
+                   190       190         NR4D1BWP20P90 (7 pins)
+                     4         4         OA21D1BWP20P90 (6 pins)
+                     2         2         OA21D4BWP20P90 (6 pins)
+                    22        22         OA22D1BWP20P90 (7 pins)
+                    12        12         OA22D4BWP20P90 (7 pins)
+                   133       133         OAI211D1BWP20P90 (7 pins)
+                    23        23         OAI21D1BWP16P90 (6 pins)
+                     2         2         OAI21D1BWP16P90LVT (6 pins)
+                  1150      1150         OAI21D1BWP20P90 (6 pins)
+                     9         9         OAI221D1BWP20P90 (8 pins)
+                    29        29         OAI222D1BWP20P90 (9 pins)
+                   363       363         OAI22D1BWP20P90 (7 pins)
+                     1         1         OAI31D1BWP16P90 (7 pins)
+                    74        74         OAI31D1BWP20P90 (7 pins)
+                    36        36         OAI32D1BWP20P90 (8 pins)
+                     8         8         OAI33D1BWP20P90 (9 pins)
+                     9         9         OAOI211D1BWP20P90 (7 pins)
+                     1         1         OAOI211D1BWP20P90LVT (7 pins)
+                    25        25         OR2D1BWP20P90 (5 pins)
+                    17        17         OR3D1BWP20P90 (6 pins)
+                     1         1         OR3D2BWP20P90 (6 pins)
+                     1         1         OR3D4BWP20P90 (6 pins)
+                    12        12         OR4D1BWP20P90 (7 pins)
+                     2         2         TIEHBWP20P90LVT (3 pins)
+                     1         1         TIELBWP20P90LVT (3 pins)
+                     1         1         TS1N16ADFPCLLLVTA512X45M4SWSHOD (158 pins)
+                    75        75         XNR2D1BWP20P90 (5 pins)
+                     1         1         XNR2D2BWP20P90 (5 pins)
+                    12        12         XNR3D1BWP20P90 (6 pins)
+                  1922      1922         XOR2D1BWP20P90 (5 pins)
+                    15        15         XOR3D1BWP20P90 (6 pins)
+                ------    ------
+ Total Inst:     38397     38397
+
+
+       * = Number of objects in layout different from number in source.
+
+
+
+**************************************************************************************************************
+                               INFORMATION AND WARNINGS
+**************************************************************************************************************
+
+
+                  Matched    Matched    Unmatched    Unmatched    Component
+                   Layout     Source       Layout       Source    Type
+                  -------    -------    ---------    ---------    ---------
+   Ports:               5          5            0            0
+
+   Nets:            41474      41474            0            0
+
+   Instances:          69         69            0            0    AN2D1BWP20P90
+                        1          1            0            0    AN2D4BWP20P90
+                        7          7            0            0    AN3D1BWP20P90
+                        9          9            0            0    AN4D1BWP20P90
+                       71         71            0            0    AO21D1BWP20P90
+                        1          1            0            0    AO21D2BWP20P90
+                       15         15            0            0    AO21D4BWP20P90
+                        1          1            0            0    AO21D4BWP20P90LVT
+                        2          2            0            0    AO22D1BWP16P90
+                      673        673            0            0    AO22D1BWP20P90
+                       12         12            0            0    AO22D2BWP20P90
+                      190        190            0            0    AO22D4BWP20P90
+                        8          8            0            0    AOAI211D1BWP20P90
+                      111        111            0            0    AOI211D1BWP20P90
+                        4          4            0            0    AOI21D1BWP16P90
+                        6          6            0            0    AOI21D1BWP16P90LVT
+                      546        546            0            0    AOI21D1BWP20P90
+                        2          2            0            0    AOI21D1BWP20P90LVT
+                        8          8            0            0    AOI222D1BWP20P90
+                        1          1            0            0    AOI22D1BWP16P90
+                     1794       1794            0            0    AOI22D1BWP20P90
+                       30         30            0            0    AOI31D1BWP20P90
+                        9          9            0            0    AOI32D1BWP20P90
+                        9          9            0            0    AOI33D1BWP20P90
+                       15         15            0            0    BUFFD12BWP16P90LVT
+                      119        119            0            0    BUFFD1BWP16P90
+                      334        334            0            0    BUFFD1BWP16P90LVT
+                     6496       6496            0            0    BUFFD1BWP20P90
+                       54         54            0            0    BUFFD1BWP20P90LVT
+                       15         15            0            0    BUFFD2BWP16P90
+                       18         18            0            0    BUFFD2BWP16P90LVT
+                     1313       1313            0            0    BUFFD2BWP20P90
+                       10         10            0            0    BUFFD2BWP20P90LVT
+                        4          4            0            0    BUFFD4BWP16P90LVT
+                       43         43            0            0    CKBD16BWP16P90LVT
+                        6          6            0            0    CKBD1BWP16P90LVT
+                        5          5            0            0    CKBD8BWP16P90LVT
+                        7          7            0            0    CKMUX2D2BWP20P90
+                        1          1            0            0    CKND1BWP16P90LVT
+                       26         26            0            0    CKND2BWP20P90
+                        1          1            0            0    CKND2D1BWP16P90
+                      123        123            0            0    CKND2D1BWP20P90
+                        2          2            0            0    CKND2D2BWP20P90
+                        1          1            0            0    CKNR2D1BWP16P90
+                        7          7            0            0    CKNR2D1BWP20P90
+                        3          3            0            0    CKNR2D2BWP20P90
+                        1          1            0            0    CKNR2D4BWP16P90
+                        4          4            0            0    CKOR2D2BWP20P90
+                      132        132            0            0    DEL025D1BWP16P90
+                       89         89            0            0    DEL025D1BWP16P90LVT
+                     2581       2581            0            0    DEL025D1BWP20P90
+                       55         55            0            0    DEL025D1BWP20P90LVT
+                      125        125            0            0    DEL050D1BWP16P90
+                      238        238            0            0    DEL050D1BWP16P90LVT
+                      282        282            0            0    DEL050D1BWP20P90
+                       42         42            0            0    DEL050D1BWP20P90LVT
+                      426        426            0            0    DEL075D1BWP16P90
+                       98         98            0            0    DEL075D1BWP16P90LVT
+                     5820       5820            0            0    DEL075D1BWP20P90
+                      161        161            0            0    DEL075D1BWP20P90LVT
+                     3075       3075            0            0    DFCNQD1BWP16P90
+                      217        217            0            0    DFCNQD1BWP20P90
+                       15         15            0            0    DFCNQD2BWP16P90
+                       14         14            0            0    DFCNQND1BWP16P90
+                        1          1            0            0    DFCNQND1BWP20P90
+                      117        117            0            0    DFQD1BWP20P90
+                        1          1            0            0    DFQD1BWP20P90LVT
+                      286        286            0            0    DFQD2BWP16P90
+                       13         13            0            0    DFQD2BWP16P90LVT
+                     1356       1356            0            0    DFQD2BWP20P90
+                       12         12            0            0    DFQD2BWP20P90LVT
+                     2997       2997            0            0    FA1D1BWP20P90
+                       30         30            0            0    HA1D1BWP20P90
+                       25         25            0            0    IAO21D1BWP20P90
+                        1          1            0            0    IAOI21D1BWP20P90
+                        1          1            0            0    IIND3D1BWP20P90
+                        1          1            0            0    IINR4D1BWP20P90
+                        1          1            0            0    IND2D1BWP16P90LVT
+                       60         60            0            0    IND2D1BWP20P90
+                        3          3            0            0    IND2D2BWP20P90
+                       16         16            0            0    IND3D1BWP20P90
+                        7          7            0            0    IND4D1BWP20P90
+                        3          3            0            0    INR2D1BWP16P90
+                        1          1            0            0    INR2D1BWP16P90LVT
+                      173        173            0            0    INR2D1BWP20P90
+                       13         13            0            0    INR2D1BWP20P90LVT
+                        1          1            0            0    INR2D2BWP16P90LVT
+                        7          7            0            0    INR2D2BWP20P90
+                        4          4            0            0    INR3D1BWP20P90
+                        1          1            0            0    INR3D1BWP20P90LVT
+                        1          1            0            0    INR3D4BWP20P90
+                       10         10            0            0    INR4D1BWP20P90
+                       29         29            0            0    INVD1BWP16P90
+                     1110       1110            0            0    INVD1BWP20P90
+                        1          1            0            0    INVD4BWP20P90
+                      284        284            0            0    IOA21D1BWP20P90
+                        3          3            0            0    IOAI21D1BWP20P90
+                       63         63            0            0    LHQD1BWP16P90
+                        5          5            0            0    LHQD1BWP20P90
+                        2          2            0            0    MAOI22D1BWP20P90
+                       10         10            0            0    MOAI22D1BWP20P90
+                       68         68            0            0    MUX2D1BWP20P90
+                        3          3            0            0    MUX2D2BWP20P90
+                        1          1            0            0    MUX2ND1BWP20P90
+                       36         36            0            0    MUX3D1BWP20P90
+                       22         22            0            0    ND2D1BWP16P90
+                     1043       1043            0            0    ND2D1BWP20P90
+                        1          1            0            0    ND2D2BWP20P90LVT
+                       66         66            0            0    ND3D1BWP20P90
+                      343        343            0            0    ND4D1BWP20P90
+                        2          2            0            0    ND4D1BWP20P90LVT
+                        1          1            0            0    NR2D1BWP16P90
+                        4          4            0            0    NR2D1BWP16P90LVT
+                      331        331            0            0    NR2D1BWP20P90
+                       44         44            0            0    NR2D1BWP20P90LVT
+                        1          1            0            0    NR2D2BWP20P90
+                        1          1            0            0    NR3D1BWP16P90LVT
+                       69         69            0            0    NR3D1BWP20P90
+                        2          2            0            0    NR3D1BWP20P90LVT
+                      190        190            0            0    NR4D1BWP20P90
+                        4          4            0            0    OA21D1BWP20P90
+                        2          2            0            0    OA21D4BWP20P90
+                       22         22            0            0    OA22D1BWP20P90
+                       12         12            0            0    OA22D4BWP20P90
+                      133        133            0            0    OAI211D1BWP20P90
+                       23         23            0            0    OAI21D1BWP16P90
+                        2          2            0            0    OAI21D1BWP16P90LVT
+                     1150       1150            0            0    OAI21D1BWP20P90
+                        9          9            0            0    OAI221D1BWP20P90
+                       29         29            0            0    OAI222D1BWP20P90
+                      363        363            0            0    OAI22D1BWP20P90
+                        1          1            0            0    OAI31D1BWP16P90
+                       74         74            0            0    OAI31D1BWP20P90
+                       36         36            0            0    OAI32D1BWP20P90
+                        8          8            0            0    OAI33D1BWP20P90
+                        9          9            0            0    OAOI211D1BWP20P90
+                        1          1            0            0    OAOI211D1BWP20P90LVT
+                       25         25            0            0    OR2D1BWP20P90
+                       17         17            0            0    OR3D1BWP20P90
+                        1          1            0            0    OR3D2BWP20P90
+                        1          1            0            0    OR3D4BWP20P90
+                       12         12            0            0    OR4D1BWP20P90
+                        2          2            0            0    TIEHBWP20P90LVT
+                        1          1            0            0    TIELBWP20P90LVT
+                        1          1            0            0    TS1N16ADFPCLLLVTA512X45M4SWSHOD
+                       75         75            0            0    XNR2D1BWP20P90
+                        1          1            0            0    XNR2D2BWP20P90
+                       12         12            0            0    XNR3D1BWP20P90
+                     1922       1922            0            0    XOR2D1BWP20P90
+                       15         15            0            0    XOR3D1BWP20P90
+                  -------    -------    ---------    ---------
+   Total Inst:      38397      38397            0            0
+
+
+o Statistics:
+
+   45547 layout nets had all their pins removed and were deleted.
+   796 source nets had all their pins removed and were deleted.
+
+
+o Initial Correspondence Points:
+
+   Ports:        uart_rx rst_n clk trap uart_tx
+   Nets:         VDD VSS
+
+
+**************************************************************************************************************
+                                         SUMMARY
+**************************************************************************************************************
+
+Total CPU Time:      1 sec
+Total Elapsed Time:  2 sec
