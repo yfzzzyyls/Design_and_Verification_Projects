@@ -2399,6 +2399,574 @@ Debug lesson:
   - this M4 `SLTbl` problem is now fixed by routing repair
   - the remaining `VPP` special-connectivity issue still needs separate classification against the Calibre LVS flow
 
+##### Post-Route Checkpoint Before Calibre
+
+After clearing the selected-net M4 route DRC, the walkthrough was reset to a clean post-route baseline before starting Calibre.
+
+Current preserved Innovus checkpoint:
+
+```text
+/home/fy2243/soc_design/pd/innovus/route.enc
+/home/fy2243/soc_design/pd/innovus/route.enc.dat/
+```
+
+Important checkpoint convention:
+- `route.enc` is the Innovus restore handle / pointer file
+- `route.enc.dat/` is the actual design database directory
+- treat the pair as one checkpoint; do not delete either side
+- this checkpoint is the clean routed database, not a Verilog netlist and not yet the final filler/Calibre-ready database
+
+Fresh recheck reports were generated from the current routed state:
+
+```tcl
+verify_drc -limit 10000 \
+  -report /home/fy2243/soc_design/pd/innovus/postroute_drc_recheck.rpt
+
+verifyConnectivity -type regular -error 1000 -warning 100 \
+  -report /home/fy2243/soc_design/pd/innovus/postroute_conn_regular_recheck.rpt
+
+verifyConnectivity -type special -noAntenna -error 2000 -warning 100 \
+  -report /home/fy2243/soc_design/pd/innovus/postroute_conn_special_recheck.rpt
+
+verifyProcessAntenna \
+  -report /home/fy2243/soc_design/pd/innovus/postroute_antenna_recheck.rpt
+```
+
+Recheck results:
+- DRC is clean:
+
+```text
+pd/innovus/postroute_drc_recheck.rpt
+No DRC violations were found
+```
+
+- regular connectivity is clean:
+
+```text
+pd/innovus/postroute_conn_regular_recheck.rpt
+Found no problems or warnings.
+```
+
+- antenna is clean:
+
+```text
+pd/innovus/postroute_antenna_recheck.rpt
+No Violations Found
+```
+
+- special connectivity is still not clean:
+
+```text
+pd/innovus/postroute_conn_special_recheck.rpt
+1491 Problem(s) (IMPVFC-96): Terminal(s) are not connected.
+1 Problem(s) (IMPVFC-200): Special Wires: Pieces of the net are not connected together.
+508 Problem(s) (IMPVFC-92): Pieces of the net are not connected together.
+2000 total info(s) created.
+```
+
+Interpretation before Calibre:
+- the `IMPVFC-96` terminal errors are still the known `VDD` net / standard-cell `VPP` body-pin class
+- those `VPP` errors may be an Innovus special-connectivity modeling/classification issue, so do not spend the walkthrough trying to manually patch every body pin before Calibre
+- the `IMPVFC-200` and `IMPVFC-92` VDD open-like messages are more concerning by name, but they are still from `verifyConnectivity -type special`
+- because DRC, regular connectivity, and antenna are clean, these special-connectivity markers should be treated as **needs Calibre classification**, not as proven real LVS failures yet
+- if Calibre LVS later reports a real VDD/VPP mismatch, come back to this report and debug the matching coordinates/nets
+
+Next stage after this checkpoint:
+- insert filler/decap cells and metal fill as the finalization step
+- rerun Innovus DRC/connectivity/antenna after finalization
+- save a final Innovus checkpoint for Calibre export
+- then run the Calibre export/DRC/LVS flow and compare against the known-good reference package
+
+##### Filler / Decap Insertion
+
+The next walkthrough step was standard-cell filler/decap insertion. This is separate from metal fill:
+- filler/decap insertion adds standard-cell instances into empty row sites
+- it closes nwell/implant/rail/diffusion-style row continuity and adds decap/filler physical structures
+- metal fill later adds non-functional metal polygons on routing layers for density/manufacturing
+
+Interactive filler list used:
+
+```tcl
+set filler_cells {
+  DCAP64BWP20P90 DCAP64BWP16P90
+  DCAP32BWP20P90 DCAP32BWP16P90
+  DCAP16BWP20P90 DCAP16BWP16P90
+  DCAP8BWP20P90  DCAP8BWP16P90
+  DCAP4BWP20P90  DCAP4BWP16P90
+  FILL64BWP20P90 FILL64BWP16P90
+  FILL32BWP20P90 FILL32BWP16P90
+  FILL16BWP20P90 FILL16BWP16P90
+  FILL8BWP20P90  FILL8BWP16P90
+  FILL4BWP20P90  FILL4BWP16P90
+  FILL3BWP20P90  FILL3BWP16P90
+  FILL2BWP20P90  FILL2BWP16P90
+  FILL1BWP20P90  FILL1BWP16P90
+}
+
+setPlaceMode -place_detail_use_no_diffusion_one_site_filler true
+setPlaceMode -place_detail_no_filler_without_implant true
+setPlaceMode -place_detail_check_diffusion_forbidden_spacing true
+
+setFillerMode -core $filler_cells -preserveUserOrder true -fitGap true \
+  -corePrefix FILLER -add_fillers_with_drc false -check_signal_drc true
+
+addFiller
+checkFiller
+checkPlace
+```
+
+Notes from Innovus:
+- the loaded library view did not contain the `BWP16P90` filler/decap masters in this session, so Innovus warned that those cells were not found
+- Innovus used the available `BWP20P90` filler/decap masters
+- `addFiller` reported:
+
+```text
+Total 40498 filler insts added - prefix FILLER
+```
+
+Filler validation:
+
+```text
+checkFiller:
+Total number of padded cell violations: 0
+Total number of gaps found: 0
+
+checkPlace:
+Unplaced = 0
+Placement Density: 100.00%
+```
+
+The post-route warning from `addFiller` was:
+
+```text
+addFiller command is running on a postRoute database.
+It is recommended to be followed by ecoRoute -target command to make the DRC clean.
+```
+
+Interpretation:
+- this warning is not itself a violation
+- filler cells can introduce new physical shapes after routing, so Innovus warns that a routing cleanup may be needed
+- the correct walkthrough response is to run `verify_drc` first, not blindly run `ecoRoute`
+
+Post-fill reports:
+
+```text
+pd/innovus/postfill_drc.rpt
+No DRC violations were found
+
+pd/innovus/postfill_conn_regular.rpt
+Found no problems or warnings.
+
+pd/innovus/postfill_antenna.rpt
+No Violations Found
+```
+
+Post-fill special connectivity remained in the same classification bucket:
+
+```text
+pd/innovus/postfill_conn_special.rpt
+631 Problem(s) (IMPVFC-96): Terminal(s) are not connected.
+2 Problem(s) (IMPVFC-200): Special Wires: Pieces of the net are not connected together.
+599 Problem(s) (IMPVFC-92): Pieces of the net are not connected together.
+```
+
+Most visible terminal errors were now on `EC_TAP_*` / `WELLTAP_*` `VPP` pins. Since DRC, regular connectivity, and antenna stayed clean, these remain special PG/body/tap classification markers to classify against Calibre LVS.
+
+##### Blanket Metal Fill Experiment
+
+For learning, the walkthrough intentionally tried a simple blanket metal-fill experiment first, instead of immediately copying the known-good reference keepout strategy.
+
+Reason:
+- a normal designer might first try broad metal fill after filler insertion
+- if this caused DRC, the failing report would explain why the reference had M4/M5/SRAM keepouts
+- if Innovus DRC stayed clean, the keepouts might still be Calibre-driven or legacy, which must be distinguished later
+
+Blanket fill command used:
+
+```tcl
+addMetalFill -layer {M1 M2 M3 M4 M5 M6} -timingAware sta
+```
+
+Why metal fill can create problems in general:
+- it adds real dummy metal polygons, not logical wires
+- dummy metal must still obey spacing, density, enclosure, and macro-boundary rules
+- Innovus checks against abstract LEF views, while Calibre later sees merged standard-cell/SRAM GDS
+- therefore an Innovus-clean fill can still need Calibre DRC classification
+
+Post-blanket-fill reports:
+
+```text
+pd/innovus/postfill_metalfill_all_drc.rpt
+No DRC violations were found
+
+pd/innovus/postfill_metalfill_all_conn_regular.rpt
+Found no problems or warnings.
+
+pd/innovus/postfill_metalfill_all_antenna.rpt
+No Violations Found
+```
+
+Special connectivity was unchanged from post-fill:
+
+```text
+pd/innovus/postfill_metalfill_all_conn_special.rpt
+631 Problem(s) (IMPVFC-96): Terminal(s) are not connected.
+2 Problem(s) (IMPVFC-200): Special Wires: Pieces of the net are not connected together.
+599 Problem(s) (IMPVFC-92): Pieces of the net are not connected together.
+```
+
+Interpretation:
+- blanket metal fill passed Innovus DRC, regular connectivity, and antenna
+- it did not change the special-connectivity marker counts
+- this does not prove the reference keepouts are unnecessary for signoff
+- the keepouts may have been added for Calibre-only DRC after GDS/OASIS merge, not for Innovus `verify_drc`
+
+Checkpoint to save after this experiment:
+
+```tcl
+saveDesign /home/fy2243/soc_design/pd/innovus/postfill_metalfill_all.enc
+```
+
+##### First Calibre DRC on Blanket-Filled Database
+
+The blanket-filled Innovus checkpoint was saved:
+
+```text
+/home/fy2243/soc_design/pd/innovus/postfill_metalfill_all.enc
+/home/fy2243/soc_design/pd/innovus/postfill_metalfill_all.enc.dat/
+```
+
+Calibre DRC was then run first, with LVS intentionally disabled:
+
+```tcsh
+cd /home/fy2243/soc_design
+
+setenv FINAL_ENC /home/fy2243/soc_design/pd/innovus/postfill_metalfill_all.enc
+setenv DATE_TAG postfill_metalfill_all_drc_20260421
+setenv RUN_DRC 1
+setenv RUN_LVS 0
+
+./run_calibre_signoff.sh
+```
+
+Generated workspace:
+
+```text
+signoff/calibre_postfill_metalfill_all_drc_20260421/
+```
+
+Important output:
+
+```text
+signoff/calibre_postfill_metalfill_all_drc_20260421/05_drc/output/DRC.rep
+```
+
+Calibre DRC result:
+
+```text
+TOTAL DRC Results Generated: 15481 (15481)
+```
+
+The violations were concentrated in these rule checks:
+
+```text
+M1.S.1.T              77
+M4.EN.31.4.T           2
+VIA3.R.10              2
+M4.S.25               14
+AP.DN.1.T              1
+DM1.S.2              524
+DM2.S.2             2164
+DM3.S.2             2101
+DM4.S.2             5542
+DM5.S.2             2872
+DM6.S.2             2182
+```
+
+Comparison against the known-good reference:
+
+```text
+signoff/calibre_foundrytap_lightfinal_20260410/05_drc/output/DRC_dmmerge_macroedge_cut1plus.rep
+TOTAL DRC Results Generated: 0 (0)
+```
+
+The same rule checks are all zero in the known-good reference package.
+
+Interpretation:
+- this Calibre run proves the simple blanket-fill experiment is not signoff-clean
+- Innovus `verify_drc` did not catch these because Calibre checks the merged signoff layout with the foundry rule deck
+- the dominant failure class is dummy-metal spacing (`DM*.S.2`), so this is mainly a fill/dummy-fill interaction problem, not the earlier VPP special-connectivity issue
+- this explains why the reference flow had special finalization handling around fill and post-merge layout cleanup
+- do not proceed to LVS from this database yet; first make Calibre DRC clean
+
+The wrapper printed several messages like:
+
+```text
+sed: preserving permissions ... Operation not supported
+```
+
+Those are filesystem permission-preservation warnings from the script environment. They are not the DRC result. The actual DRC result is the `DRC.rep` summary above.
+
+##### Calibre DRC Isolation: No Innovus Metal Fill
+
+To separate blanket Innovus metal-fill issues from other Calibre signoff issues, Calibre DRC was rerun on the post-filler checkpoint before Innovus metal fill:
+
+```tcsh
+cd /home/fy2243/soc_design
+
+setenv FINAL_ENC /home/fy2243/soc_design/pd/innovus/postfill.enc
+setenv DATE_TAG postfill_no_metalfill_drc_20260421
+setenv RUN_DRC 1
+setenv RUN_LVS 0
+
+./run_calibre_signoff.sh
+```
+
+Result:
+
+```text
+signoff/calibre_postfill_no_metalfill_drc_20260421/05_drc/output/DRC.rep
+TOTAL DRC Results Generated: 96 (96)
+```
+
+Comparison:
+
+```text
+Rule        blanket fill   no Innovus metal fill
+DM1.S.2       524              0
+DM2.S.2      2164              0
+DM3.S.2      2101              0
+DM4.S.2      5542              0
+DM5.S.2      2872              0
+DM6.S.2      2182              0
+```
+
+Conclusion:
+- the huge `DM*.S.2` dummy-metal spacing problem was caused by the blanket Innovus `addMetalFill -layer {M1 M2 M3 M4 M5 M6}` experiment
+- the no-metal-fill run removes those dummy-metal spacing failures
+- therefore the next debug target becomes the remaining 96 real Calibre DRC results, not the blanket-fill database
+
+Remaining rule checks:
+
+```text
+M1.S.1.T       77
+M4.EN.31.4.T    2
+VIA3.R.10       2
+M4.S.25        14
+AP.DN.1.T       1
+```
+
+##### Debug: SRAM Edge / Boundary Cell M1 Spacing
+
+The first remaining rule debug target was:
+
+```text
+RULECHECK M1.S.1.T  TOTAL Result Count = 77 (77)
+```
+
+The Calibre result database was used to extract coordinates:
+
+```text
+signoff/calibre_postfill_no_metalfill_drc_20260421/05_drc/output/DRC_RES.db
+```
+
+`M1.S.1.T` coordinate range:
+
+```text
+bbox = (105.039, 63.219) to (105.093, 164.038) um
+```
+
+Example markers:
+
+```text
+(105.065, 63.224) to (105.067, 63.309)
+(105.065, 64.376) to (105.067, 64.461)
+(105.065, 67.256) to (105.067, 67.341)
+```
+
+This showed a narrow vertical stripe around:
+
+```text
+x ~= 105.06 um
+```
+
+Innovus was restored to the post-filler database for visual/local query:
+
+```tcl
+restoreDesign /home/fy2243/soc_design/pd/innovus/postfill.enc.dat soc_top
+zoomBox 105.060 63.200 105.075 63.330
+```
+
+The coordinate landed on the SRAM macro right edge:
+
+```tcl
+dbGet [dbGet top.insts.name u_sram/u_sram_macro -p].box
+{62.04 62.016 105.065 167.568}
+```
+
+The nearby boundary cell example:
+
+```tcl
+dbGet [dbGet top.insts.name EC_209 -p].box
+{105.12 84.576 105.48 85.152}
+
+dbGet [dbGet top.insts.name EC_209 -p].cell.name
+BOUNDARY_LEFTBWP16P90
+```
+
+Area query around the stripe:
+
+```tcl
+dbGet [dbQuery -area {104.9 63.0 105.3 164.5} -objType inst].name
+```
+
+showed the SRAM macro plus many `EC_*` instances. Sampling those instances showed they were `BOUNDARY_LEFTBWP16P90`:
+
+```tcl
+dbGet [dbGet top.insts.name EC_133 -p].cell.name
+BOUNDARY_LEFTBWP16P90
+
+dbGet [dbGet top.insts.name EC_501 -p].cell.name
+BOUNDARY_LEFTBWP16P90
+
+dbGet [dbGet top.insts.name EC_721 -p].cell.name
+BOUNDARY_LEFTBWP16P90
+```
+
+Interpretation:
+- `M1.S.1.T` is an SRAM macro-edge versus `BOUNDARY_LEFTBWP16P90` endcap/boundary-cell interaction
+- the SRAM right edge is at `x = 105.065`
+- the boundary cells sit immediately adjacent to/crossing that macro-edge neighborhood in merged signoff layout
+- this is not a routing problem and should not be fixed by moving the SRAM or disturbing placement
+
+Reference-clean solution class:
+
+```text
+signoff/calibre_foundrytap_lightfinal_20260410/04_dummyMerge/scr/edit_dmmerge_macroedge_cut1plus.cmd
+```
+
+The known-good flow fixes this class after layout merge by:
+- cloning the affected boundary/decap layout cells
+- deleting selected local M1 polygons from the cloned cells
+- swapping only the refs near the SRAM macro edge
+- writing a patched OASIS
+- rerunning Calibre DRC on the patched OASIS
+
+Therefore the walkthrough conclusion is:
+- use the reference post-merge OASIS cleanup strategy for this SRAM-edge/endcap DRC class
+- do not try to solve this by route repair
+- do not proceed to LVS until Calibre DRC is clean
+
+Patch test:
+
+```text
+signoff/calibre_postfill_no_metalfill_drc_20260421/04_dummyMerge/scr/edit_m1_boundary_cut.cmd
+```
+
+The patch cloned `BOUNDARY_LEFTBWP16P90`, deleted the same local M1 edge polygons used by the reference-clean approach, and swapped only SRAM-edge references. The first attempt matched zero refs because the OASIS bbox crossed the SRAM edge rather than starting to the right of it. The condition was corrected to match refs whose bbox crosses `macro_urx`.
+
+Patch command:
+
+```tcsh
+cd /home/fy2243/soc_design/signoff/calibre_postfill_no_metalfill_drc_20260421/04_dummyMerge
+
+/eda/mentor/Calibre/aok_cal_2024.2_29.16/bin/calibredrv -64 \
+  ./scr/edit_m1_boundary_cut.cmd | tee log/edit_m1_boundary_cut.log
+```
+
+Patch output:
+
+```text
+Swapped 185 BOUNDARY_LEFTBWP16P90 refs near SRAM edge
+```
+
+Patched DRC run:
+
+```tcsh
+cd /home/fy2243/soc_design/signoff/calibre_postfill_no_metalfill_drc_20260421/05_drc
+
+/eda/mentor/Calibre/aok_cal_2024.2_29.16/bin/calibre \
+  -drc -hier -64 -turbo 8 -hyper ./scr/runset.m1boundarycut.cmd \
+  | tee -i log/runset.m1boundarycut.log
+```
+
+Result:
+
+```text
+output/DRC_m1boundarycut.rep
+TOTAL DRC Results Generated: 19 (19)
+RULECHECK M1.S.1.T TOTAL Result Count = 0 (0)
+```
+
+Remaining rule checks after this patch:
+
+```text
+M4.EN.31.4.T    2
+VIA3.R.10       2
+M4.S.25        14
+AP.DN.1.T       1
+```
+
+Conclusion:
+- the endcap/SRAM-edge M1 spacing issue is resolved by the reference-style post-merge boundary-cell cut/swap
+- total Calibre DRC count improved from 96 to 19
+- next debug target is the remaining M4/VIA3/AP rule group
+
+##### Debug: AP Density Marker
+
+The next target was:
+
+```text
+AP.DN.1.T  1
+```
+
+The marker polygon in the Calibre result database covered the full design:
+
+```text
+(0.000, 0.000) to (338.850, 338.496) um
+```
+
+Interpretation:
+- this is a global AP marker/density requirement
+- it is not a local routing or macro-edge conflict
+- the reference-clean flow fixed this by adding AP layer polygons on layer `74.0`
+
+An AP-only patch was applied on top of the good `m1boundarycut` OASIS:
+
+```text
+signoff/calibre_postfill_no_metalfill_drc_20260421/04_dummyMerge/scr/edit_ap_only_on_m1boundarycut.cmd
+```
+
+Patch command:
+
+```tcsh
+cd /home/fy2243/soc_design/signoff/calibre_postfill_no_metalfill_drc_20260421/04_dummyMerge
+
+/eda/mentor/Calibre/aok_cal_2024.2_29.16/bin/calibredrv -64 \
+  ./scr/edit_ap_only_on_m1boundarycut.cmd | tee log/edit_ap_only_on_m1boundarycut.log
+```
+
+DRC result:
+
+```text
+output/DRC_m1boundarycut_ap.rep
+TOTAL DRC Results Generated: 18 (18)
+AP.DN.1.T 0 (0)
+```
+
+Remaining rule checks:
+
+```text
+M4.EN.31.4.T    2
+VIA3.R.10       2
+M4.S.25        14
+```
+
+Conclusion:
+- AP-only patch is safe for this layout
+- it improves total Calibre DRC count from 19 to 18
+- next target is the M4/VIA3 group
+
 ## 3. PrimeTime and Calibre Signoff
 
 To be filled more cleanly as the walkthrough matures:
