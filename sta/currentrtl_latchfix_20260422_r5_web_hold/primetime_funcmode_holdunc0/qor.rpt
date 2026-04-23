@@ -1,0 +1,53 @@
+****************************************
+Report : qor
+Design : soc_top
+Version: T-2022.03-SP5-1
+Date   : Wed Apr 22 22:18:43 2026
+****************************************
+
+  Timing Path Group 'clk' (max_delay/setup)
+  ---------------------------------------------
+  Levels of Logic:                           64
+  Critical Path Length:                    2.66
+  Critical Path Slack:                     7.33
+  Total Negative Slack:                    0.00
+  No. of Violating Paths:                     0
+  ---------------------------------------------
+
+  Timing Path Group 'clk' (min_delay/hold)
+  ---------------------------------------------
+  Levels of Logic:                            3
+  Critical Path Length:                    0.19
+  Critical Path Slack:                     0.01
+  Total Negative Slack:                    0.00
+  No. of Violating Paths:                     0
+  ---------------------------------------------
+
+  Area
+  ---------------------------------------------
+  Net Interconnect area:                   0.00
+  Total cell area:                     17050.28
+  Design Area:                         17050.28
+  ---------------------------------------------
+
+
+  Cell & Pin Count
+  ---------------------------------------------
+  Pin Count:                              78823
+  Hierarchical Cell Count:                   13
+  Hierarchical Port Count:                 2886
+  Leaf Cell Count:                        19891
+  ---------------------------------------------
+
+
+  Design Rule Violations
+  ---------------------------------------------
+  Total No. of Pins in Design:            78823
+  max_capacitance Count:                     81
+  max_transition Count:                     242
+  max_capacitance Cost:                    0.68
+  max_transition Cost:                    82.93
+  Total DRC Cost:                         83.61
+  ---------------------------------------------
+
+1

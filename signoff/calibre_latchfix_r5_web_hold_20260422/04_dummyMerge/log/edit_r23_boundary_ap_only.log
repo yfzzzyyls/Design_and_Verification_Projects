@@ -1,0 +1,38 @@
+Read in 2 MB                                                                                  Collecting data...                                                         
+Analyzing data...
+Sorting data...
+
+
+-------------------------------------------------------------------------
+-----                  LAYOUT FILE OBJECT SUMMARY                   -----
+-------------------------------------------------------------------------
+
+Type                         Count
+----------------------------------
+LAYER                          116
+CELL                           341
+PLACEMENT                  694,883
+ARRAY                       50,102
+RECTANGLE                   31,181
+POLYGON                        389
+PATH                       233,403
+TEXT                         4,244
+PROPERTY                   489,780
+
+
+-------------------------------------------------------------------------
+-----                     LOAD LAYOUT SUMMARY                       -----
+-------------------------------------------------------------------------
+
+OASIS FILE READ FROM '/home/fy2243/soc_design/signoff/calibre_latchfix_r5_web_hold_20260422/04_dummyMerge/./output/soc_top.dmmerge.oas.gz'
+
+DATABASE PRECISION:  1000
+
+MAXIMUM HIERARCHY DEPTH:  3
+
+LAYOUT FILE SIZE =            3608 K  =            3 M
+LAYOUT MEMORY    =           21744 K  =           21 M
+LAYOUT READ TIME = 0 sec REAL.  TOTAL TIME = 0 sec REAL.
+
+Swapped 185 BOUNDARY_LEFTBWP16P90 refs near SRAM edge
+Writing compressed file: "./output/soc_top.dmmerge_boundary_ap.oas.gz"

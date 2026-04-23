@@ -1,0 +1,13 @@
+Latchfix r5 WEB targeted hold ECO summary
+checkpoint_in=/home/fy2243/soc_design/pd/latchfix_20260422_r4_sram_hold/postfill_sram_hold_r4.enc.dat
+checkpoint_out=/home/fy2243/soc_design/pd/latchfix_20260422_r5_web_hold/postfill_web_hold_r5.enc
+delay_cell=DEL075D1BWP20P90
+target_terms=1
+inserted=1
+failed=
+final_drc=/home/fy2243/soc_design/pd/latchfix_20260422_r5_web_hold/innovus_verify_drc_final.rpt
+final_antenna=/home/fy2243/soc_design/pd/latchfix_20260422_r5_web_hold/innovus_antenna_final.rpt
+final_regular_conn=/home/fy2243/soc_design/pd/latchfix_20260422_r5_web_hold/innovus_conn_regular_final.rpt
+final_special_conn=/home/fy2243/soc_design/pd/latchfix_20260422_r5_web_hold/innovus_conn_special_final.rpt
+setup_summary=/home/fy2243/soc_design/sta/currentrtl_latchfix_20260422_r5_web_hold/innovus/timeDesign_setup/soc_top_postRoute.summary.gz
+hold_nominal_summary=/home/fy2243/soc_design/sta/currentrtl_latchfix_20260422_r5_web_hold/innovus/timeDesign_hold_nominal/soc_top_postRoute_hold.summary.gz

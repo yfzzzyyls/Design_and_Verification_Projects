@@ -1,0 +1,89 @@
+if {![namespace exists ::IMEX]} { namespace eval ::IMEX {} }
+set ::IMEX::dataVar [file dirname [file normalize [info script]]]
+set ::IMEX::libVar ${::IMEX::dataVar}/libs
+
+catch { setAnalysisMode -analysisType onChipVariation }
+catch { setAnalysisMode -checkType hold }
+catch { setAnalysisMode -clkSrcPath true }
+catch { setAnalysisMode -clockPropagation sdcControl }
+catch { setAnalysisMode -cppr both }
+catch { setAnalysisMode -skew true }
+catch { setAnalysisMode -virtualIPO false }
+catch { setOptMode -preserveAllSequential false }
+catch { setPathGroupOptions reg2reg -effortLevel high -weight 2 }
+catch { setPathGroupOptions reg2reg -late -slackAdjustment -0 }
+catch { setPathGroupOptions default -late -slackAdjustment -0 }
+catch { setExtractRCMode  -effortLevel medium -engine postRoute -total_c_th 5 -relative_c_th 0.03 -coupling_c_th 3 }
+catch {setNanoRouteMode -quiet -drouteAntennaFactor 1.000000}
+catch {setNanoRouteMode -quiet -drouteFixAntenna true}
+catch {setNanoRouteMode -quiet -droutePostRouteSpreadWire "true"}
+catch {setNanoRouteMode -quiet -drouteStartIteration 0}
+catch {setNanoRouteMode -quiet -drouteUseLefPinTaperRule true}
+catch {setNanoRouteMode -quiet -drouteUseMinSpacingForBlockage auto}
+catch {setNanoRouteMode -quiet -drouteUseMultiCutViaEffort "high"}
+catch {setNanoRouteMode -quiet -extractDesignSignature 135482132}
+catch {setNanoRouteMode -quiet -extractRcModelFile "${::IMEX::libVar}/misc/rc_model.bin"}
+catch {setNanoRouteMode -quiet -extractThirdPartyCompatible false}
+catch {setNanoRouteMode -quiet -grouteExpTdUseTifTimingEngineForImportDesign false}
+catch {setNanoRouteMode -quiet -routeAllowPowerGroundPin true}
+catch {setNanoRouteMode -quiet -routeBottomRoutingLayer 1}
+catch {setNanoRouteMode -quiet -routeFillerInstPrefix "FILLER"}
+catch {setNanoRouteMode -quiet -routeReInsertFillerCellList "DCAP64BWP20P90 DCAP64BWP16P90 DCAP64BWP20P90LVT DCAP32BWP20P90 DCAP32BWP16P90 DCAP32BWP20P90LVT DCAP16BWP20P90 DCAP16BWP16P90 DCAP16BWP20P90LVT DCAP8BWP20P90 DCAP8BWP16P90 DCAP8BWP20P90LVT DCAP4BWP20P90 DCAP4BWP16P90 DCAP4BWP20P90LVT FILL64BWP20P90 FILL64BWP16P90 FILL64BWP20P90LVT FILL32BWP20P90 FILL32BWP16P90 FILL32BWP20P90LVT FILL16BWP20P90 FILL16BWP16P90 FILL16BWP20P90LVT FILL8BWP20P90 FILL8BWP16P90 FILL8BWP20P90LVT FILL4BWP20P90 FILL4BWP16P90 FILL4BWP20P90LVT FILL3BWP20P90 FILL3BWP16P90 FILL3BWP20P90LVT FILL2BWP20P90 FILL2BWP16P90 FILL2BWP20P90LVT FILL1BWP20P90 FILL1BWP16P90 FILL1BWP20P90LVT"}
+catch {setNanoRouteMode -quiet -routeReInsertFillerCellListFromFile false}
+catch {setNanoRouteMode -quiet -routeStrictlyHonorNonDefaultRule "false"}
+catch {setNanoRouteMode -quiet -routeTopRoutingLayer 6}
+catch {setNanoRouteMode -quiet -routeWithSiDriven false}
+catch {setNanoRouteMode -quiet -routeWithTimingDriven false}
+catch {setNanoRouteMode -quiet -routeWithViaInPin "true"}
+catch {setNanoRouteMode -quiet -routeWithViaOnlyForStandardCellPin "true"}
+
+catch { setPlaceMode -place_detail_check_diffusion_forbidden_spacing true }
+catch { setPlaceMode -place_detail_no_filler_without_implant true }
+catch { setPlaceMode -place_detail_use_no_diffusion_one_site_filler true }
+catch { setIlmMode -keepHighFanoutPorts true -keepLoopBack false -keepInstInSdc false -keepFlatten true }
+catch { set_well_tap_mode -bottom_tap_cell BOUNDARY_NTAPBWP16P90_VPP_VSS }
+catch { set_well_tap_mode -cell TAPCELLBWP16P90_VPP_VSS }
+catch { set_well_tap_mode -rule 50.76 }
+catch { set_well_tap_mode -top_tap_cell BOUNDARY_PTAPBWP16P90_VPP_VSS }
+catch { setActiveLogicViewMode -keepHighFanoutCriticalInsts false }
+catch { setDelayCalMode -enable_high_fanout true }
+catch { setDelayCalMode -engine aae }
+catch { setDelayCalMode -ignoreNetLoad false }
+catch { setDelayCalMode -SIAware true }
+catch { setDelayCalMode -socv_accuracy_mode low }
+catch { setPinAssignMode -pinEditInBatch false }
+catch { setImportMode -config true }
+catch { setImportMode -discardFloatingVNets false }
+catch { setImportMode -keepEmptyModule true }
+catch { setSIMode -separate_delta_delay_on_data true }
+catch { setEndCapMode -bottomEdge {BOUNDARY_NROW4BWP16P90 BOUNDARY_NROW3BWP16P90 BOUNDARY_NROW2BWP16P90 BOUNDARY_NROW1BWP16P90} }
+catch { setEndCapMode -boundary_tap true }
+catch { setEndCapMode -fitGap true }
+catch { setEndCapMode -leftBottomCorner BOUNDARY_NCORNERBWP16P90 }
+catch { setEndCapMode -leftBottomEdge FILL3BWP16P90 }
+catch { setEndCapMode -leftEdge BOUNDARY_RIGHTBWP16P90 }
+catch { setEndCapMode -leftTopCorner BOUNDARY_PCORNERBWP16P90 }
+catch { setEndCapMode -leftTopEdge FILL3BWP16P90 }
+catch { setEndCapMode -prefix EC }
+catch { setEndCapMode -rightBottomEdge FILL3BWP16P90 }
+catch { setEndCapMode -rightEdge BOUNDARY_LEFTBWP16P90 }
+catch { setEndCapMode -rightTopEdge FILL3BWP16P90 }
+catch { setEndCapMode -topEdge {BOUNDARY_PROW4BWP16P90 BOUNDARY_PROW3BWP16P90 BOUNDARY_PROW2BWP16P90 BOUNDARY_PROW1BWP16P90} }
+catch { setFillerMode -add_fillers_with_drc false }
+catch { setFillerMode -check_signal_drc true }
+catch { setFillerMode -core {DCAP64BWP20P90 DCAP64BWP16P90 DCAP64BWP20P90LVT DCAP32BWP20P90 DCAP32BWP16P90 DCAP32BWP20P90LVT DCAP16BWP20P90 DCAP16BWP16P90 DCAP16BWP20P90LVT DCAP8BWP20P90 DCAP8BWP16P90 DCAP8BWP20P90LVT DCAP4BWP20P90 DCAP4BWP16P90 DCAP4BWP20P90LVT FILL64BWP20P90 FILL64BWP16P90 FILL64BWP20P90LVT FILL32BWP20P90 FILL32BWP16P90 FILL32BWP20P90LVT FILL16BWP20P90 FILL16BWP16P90 FILL16BWP20P90LVT FILL8BWP20P90 FILL8BWP16P90 FILL8BWP20P90LVT FILL4BWP20P90 FILL4BWP16P90 FILL4BWP20P90LVT FILL3BWP20P90 FILL3BWP16P90 FILL3BWP20P90LVT FILL2BWP20P90 FILL2BWP16P90 FILL2BWP20P90LVT FILL1BWP20P90 FILL1BWP16P90 FILL1BWP20P90LVT} }
+catch { setFillerMode -corePrefix FILLER }
+catch { setFillerMode -fitGap true }
+catch { setFillerMode -preserveUserOrder true }
+catch { setFPlanMode -cellsForExtraSites {} }
+catch { setFPlanMode -defaultTechSite core }
+catch { setFPlanMode -extraSites {} }
+catch { setFPlanMode -maxIoHeight false }
+catch { setFPlanMode -place_check_ignore_fixed_cell_list {} }
+catch { setFPlanMode -powerRailLayer {} }
+catch { setFPlanMode -snapBlockGrid finfetManufacturing }
+catch { setFPlanMode -snapConstraintGrid finfetInst }
+catch { setFPlanMode -snapCoreGrid finfetPlacement }
+catch { setFPlanMode -snapDieGrid finfetPlacement }
+catch { setFPlanMode -snapIoGrid finfetManufacturing }
+catch { setFPlanMode -snapPlaceBlockageGrid inst }

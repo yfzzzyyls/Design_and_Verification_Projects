@@ -1,0 +1,93 @@
+ 
+****************************************
+Report : constraint
+        -all_violators
+Design : soc_top
+Version: W-2024.09-SP5-5
+Date   : Wed Apr 22 18:55:40 2026
+****************************************
+
+
+   min_delay/hold ('clk' group)
+
+                             Required        Actual
+   Endpoint                 Path Delay     Path Delay        Slack
+   -----------------------------------------------------------------
+   u_sram/u_sram_macro/A[6]     0.09           0.03 r        -0.05  (VIOLATED)
+   u_sram/u_sram_macro/A[7]     0.09           0.03 r        -0.05  (VIOLATED)
+   u_sram/u_sram_macro/A[8]     0.09           0.03 r        -0.05  (VIOLATED)
+   u_sram/u_sram_macro/D[8]     0.09           0.04 r        -0.05  (VIOLATED)
+   u_sram/u_sram_macro/D[9]     0.09           0.04 r        -0.05  (VIOLATED)
+   u_sram/u_sram_macro/D[11]     0.09          0.04 r        -0.05  (VIOLATED)
+   u_sram/u_sram_macro/D[12]     0.09          0.04 r        -0.05  (VIOLATED)
+   u_sram/u_sram_macro/D[13]     0.09          0.04 r        -0.05  (VIOLATED)
+   u_sram/u_sram_macro/D[14]     0.09          0.04 r        -0.05  (VIOLATED)
+   u_sram/u_sram_macro/D[15]     0.09          0.04 r        -0.05  (VIOLATED)
+   u_sram/u_sram_macro/D[16]     0.09          0.04 r        -0.05  (VIOLATED)
+   u_sram/u_sram_macro/D[17]     0.09          0.04 r        -0.05  (VIOLATED)
+   u_sram/u_sram_macro/D[18]     0.09          0.04 r        -0.05  (VIOLATED)
+   u_sram/u_sram_macro/D[19]     0.09          0.04 r        -0.05  (VIOLATED)
+   u_sram/u_sram_macro/D[20]     0.09          0.04 r        -0.05  (VIOLATED)
+   u_sram/u_sram_macro/D[21]     0.09          0.04 r        -0.05  (VIOLATED)
+   u_sram/u_sram_macro/D[22]     0.09          0.04 r        -0.05  (VIOLATED)
+   u_sram/u_sram_macro/D[23]     0.09          0.04 r        -0.05  (VIOLATED)
+   u_sram/u_sram_macro/D[24]     0.09          0.04 r        -0.05  (VIOLATED)
+   u_sram/u_sram_macro/D[25]     0.09          0.04 r        -0.05  (VIOLATED)
+   u_sram/u_sram_macro/D[26]     0.09          0.04 r        -0.05  (VIOLATED)
+   u_sram/u_sram_macro/D[27]     0.09          0.04 r        -0.05  (VIOLATED)
+   u_sram/u_sram_macro/D[28]     0.09          0.04 r        -0.05  (VIOLATED)
+   u_sram/u_sram_macro/D[29]     0.09          0.04 r        -0.05  (VIOLATED)
+   u_sram/u_sram_macro/D[30]     0.09          0.04 r        -0.05  (VIOLATED)
+   u_sram/u_sram_macro/D[31]     0.09          0.04 r        -0.05  (VIOLATED)
+   u_sram/u_sram_macro/D[7]     0.09           0.04 r        -0.05  (VIOLATED)
+   u_sram/u_sram_macro/D[4]     0.09           0.04 r        -0.05  (VIOLATED)
+   u_sram/u_sram_macro/D[6]     0.09           0.04 r        -0.05  (VIOLATED)
+   u_sram/u_sram_macro/D[1]     0.09           0.04 r        -0.05  (VIOLATED)
+   u_sram/u_sram_macro/D[5]     0.09           0.04 r        -0.05  (VIOLATED)
+   u_sram/u_sram_macro/A[4]     0.09           0.04 r        -0.05  (VIOLATED)
+   u_sram/u_sram_macro/A[5]     0.09           0.04 r        -0.05  (VIOLATED)
+   u_sram/u_sram_macro/D[0]     0.09           0.04 r        -0.05  (VIOLATED)
+   u_sram/u_sram_macro/D[2]     0.09           0.04 r        -0.05  (VIOLATED)
+   u_sram/u_sram_macro/A[3]     0.09           0.04 r        -0.05  (VIOLATED)
+   u_sram/u_sram_macro/A[1]     0.09           0.04 r        -0.05  (VIOLATED)
+   u_sram/u_sram_macro/A[2]     0.09           0.04 r        -0.05  (VIOLATED)
+   u_sram/u_sram_macro/A[0]     0.09           0.04 r        -0.05  (VIOLATED)
+   u_sram/u_sram_macro/D[10]     0.09          0.05 r        -0.04  (VIOLATED)
+   u_sram/u_sram_macro/D[3]     0.09           0.05 r        -0.04  (VIOLATED)
+   u_sram/u_sram_macro/BWEB[24]     0.09       0.06 f        -0.03  (VIOLATED)
+   u_sram/u_sram_macro/BWEB[25]     0.09       0.06 f        -0.03  (VIOLATED)
+   u_sram/u_sram_macro/BWEB[26]     0.09       0.06 f        -0.03  (VIOLATED)
+   u_sram/u_sram_macro/BWEB[27]     0.09       0.06 f        -0.03  (VIOLATED)
+   u_sram/u_sram_macro/BWEB[28]     0.09       0.06 f        -0.03  (VIOLATED)
+   u_sram/u_sram_macro/BWEB[29]     0.09       0.06 f        -0.03  (VIOLATED)
+   u_sram/u_sram_macro/BWEB[30]     0.09       0.06 f        -0.03  (VIOLATED)
+   u_sram/u_sram_macro/BWEB[31]     0.09       0.06 f        -0.03  (VIOLATED)
+   u_sram/u_sram_macro/BWEB[16]     0.09       0.06 f        -0.03  (VIOLATED)
+   u_sram/u_sram_macro/BWEB[17]     0.09       0.06 f        -0.03  (VIOLATED)
+   u_sram/u_sram_macro/BWEB[18]     0.09       0.06 f        -0.03  (VIOLATED)
+   u_sram/u_sram_macro/BWEB[19]     0.09       0.06 f        -0.03  (VIOLATED)
+   u_sram/u_sram_macro/BWEB[20]     0.09       0.06 f        -0.03  (VIOLATED)
+   u_sram/u_sram_macro/BWEB[21]     0.09       0.06 f        -0.03  (VIOLATED)
+   u_sram/u_sram_macro/BWEB[22]     0.09       0.06 f        -0.03  (VIOLATED)
+   u_sram/u_sram_macro/BWEB[23]     0.09       0.06 f        -0.03  (VIOLATED)
+   u_sram/u_sram_macro/BWEB[0]     0.09        0.06 f        -0.03  (VIOLATED)
+   u_sram/u_sram_macro/BWEB[1]     0.09        0.06 f        -0.03  (VIOLATED)
+   u_sram/u_sram_macro/BWEB[2]     0.09        0.06 f        -0.03  (VIOLATED)
+   u_sram/u_sram_macro/BWEB[3]     0.09        0.06 f        -0.03  (VIOLATED)
+   u_sram/u_sram_macro/BWEB[4]     0.09        0.06 f        -0.03  (VIOLATED)
+   u_sram/u_sram_macro/BWEB[5]     0.09        0.06 f        -0.03  (VIOLATED)
+   u_sram/u_sram_macro/BWEB[6]     0.09        0.06 f        -0.03  (VIOLATED)
+   u_sram/u_sram_macro/BWEB[7]     0.09        0.06 f        -0.03  (VIOLATED)
+   u_sram/u_sram_macro/BWEB[8]     0.09        0.07 f        -0.02  (VIOLATED)
+   u_sram/u_sram_macro/BWEB[9]     0.09        0.07 f        -0.02  (VIOLATED)
+   u_sram/u_sram_macro/BWEB[10]     0.09       0.07 f        -0.02  (VIOLATED)
+   u_sram/u_sram_macro/BWEB[11]     0.09       0.07 f        -0.02  (VIOLATED)
+   u_sram/u_sram_macro/BWEB[12]     0.09       0.07 f        -0.02  (VIOLATED)
+   u_sram/u_sram_macro/BWEB[13]     0.09       0.07 f        -0.02  (VIOLATED)
+   u_sram/u_sram_macro/BWEB[14]     0.09       0.07 f        -0.02  (VIOLATED)
+   u_sram/u_sram_macro/BWEB[15]     0.09       0.07 f        -0.02  (VIOLATED)
+   u_sram/u_sram_macro/WEB      0.07           0.05 r        -0.02  (VIOLATED)
+   u_sram/u_sram_macro/CEB      0.07           0.05 r        -0.01  (VIOLATED)
+
+
+1

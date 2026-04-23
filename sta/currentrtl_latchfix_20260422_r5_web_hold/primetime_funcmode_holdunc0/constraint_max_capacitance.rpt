@@ -1,0 +1,114 @@
+****************************************
+Report : constraint
+	-all_violators
+	-max_capacitance
+Design : soc_top
+Version: T-2022.03-SP5-1
+Date   : Wed Apr 22 22:18:43 2026
+****************************************
+
+
+   max_capacitance
+
+                             Required        Actual
+   Pin                      Capacitance    Capacitance       Slack
+   -----------------------------------------------------------------
+   u_cpu/genblk1_pcpi_mul/U1637/ZN
+                                0.03           0.14          -0.10  (VIOLATED)
+   u_cordic_accel/u_cordic_ctrl/u_core_sincos/FE_DBTC29_z_pipe_9__31/ZN
+                                0.07           0.10          -0.03  (VIOLATED)
+   u_cpu/U206/ZN                0.05           0.07          -0.02  (VIOLATED)
+   u_cordic_accel/u_cordic_ctrl/U3/ZN
+                                0.10           0.12          -0.02  (VIOLATED)
+   u_cpu/genblk1_pcpi_mul/U525/ZN
+                                0.03           0.04          -0.02  (VIOLATED)
+   u_cpu/U2001/ZN               0.04           0.06          -0.01  (VIOLATED)
+   u_cpu/U2005/ZN               0.04           0.05          -0.01  (VIOLATED)
+   u_cpu/genblk1_pcpi_mul/U886/ZN
+                                0.03           0.04          -0.01  (VIOLATED)
+   u_cordic_accel/u_cordic_ctrl/u_core_atan2/U3/ZN
+                                0.07           0.08          -0.01  (VIOLATED)
+   u_cpu/genblk2_pcpi_div/U4/ZN
+                                0.04           0.05          -0.01  (VIOLATED)
+   u_cpu/U1963/ZN               0.04           0.05          -0.01  (VIOLATED)
+   u_cpu/genblk2_pcpi_div/U3/ZN
+                                0.09           0.10          -0.01  (VIOLATED)
+   u_cpu/U133/ZN                0.04           0.05          -0.01  (VIOLATED)
+   u_cpu/U1999/ZN               0.04           0.05          -0.01  (VIOLATED)
+   u_cpu/U2008/ZN               0.04           0.05          -0.01  (VIOLATED)
+   u_mem_router/U10/ZN          0.03           0.04          -0.01  (VIOLATED)
+   u_cpu/U1972/ZN               0.04           0.05          -0.01  (VIOLATED)
+   u_cpu/U81/ZN                 0.04           0.05          -0.01  (VIOLATED)
+   u_cpu/U1970/ZN               0.04           0.05          -0.01  (VIOLATED)
+   u_cpu/U1995/ZN               0.04           0.05          -0.01  (VIOLATED)
+   u_cpu/U1973/ZN               0.04           0.05          -0.01  (VIOLATED)
+   u_cpu/U1954/ZN               0.04           0.05          -0.01  (VIOLATED)
+   u_cpu/genblk1_pcpi_mul/U18/ZN
+                                0.03           0.04          -0.01  (VIOLATED)
+   u_cpu/U1992/ZN               0.04           0.05          -0.01  (VIOLATED)
+   u_cpu/U1957/ZN               0.04           0.05          -0.01  (VIOLATED)
+   u_cpu/U1981/ZN               0.04           0.05          -0.01  (VIOLATED)
+   u_cpu/U1950/ZN               0.04           0.05          -0.01  (VIOLATED)
+   u_cpu/U1969/ZN               0.04           0.05          -0.01  (VIOLATED)
+   u_cpu/U65/ZN                 0.04           0.05          -0.01  (VIOLATED)
+   u_cpu/U120/ZN                0.04           0.05          -0.01  (VIOLATED)
+   u_cpu/U1982/ZN               0.04           0.05          -0.01  (VIOLATED)
+   u_cpu/U966/ZN                0.04           0.05          -0.01  (VIOLATED)
+   u_cpu/U2007/ZN               0.04           0.05          -0.01  (VIOLATED)
+   u_cpu/U138/ZN                0.04           0.05          -0.01  (VIOLATED)
+   u_cpu/U123/ZN                0.04           0.05          -0.01  (VIOLATED)
+   u_cpu/U1986/ZN               0.04           0.05          -0.01  (VIOLATED)
+   u_cpu/U121/ZN                0.04           0.05          -0.01  (VIOLATED)
+   u_cpu/U124/ZN                0.04           0.05          -0.01  (VIOLATED)
+   u_cpu/U107/ZN                0.04           0.05          -0.01  (VIOLATED)
+   u_cpu/U1985/ZN               0.04           0.05          -0.01  (VIOLATED)
+   u_cpu/genblk1_pcpi_mul/U1222/ZN
+                                0.03           0.04          -0.01  (VIOLATED)
+   u_cpu/U2004/ZN               0.04           0.05          -0.01  (VIOLATED)
+   u_cpu/U1991/ZN               0.04           0.05          -0.01  (VIOLATED)
+   u_cpu/U139/ZN                0.04           0.05          -0.01  (VIOLATED)
+   u_cpu/U1976/ZN               0.04           0.05          -0.01  (VIOLATED)
+   u_cpu/U80/ZN                 0.04           0.05          -0.01  (VIOLATED)
+   u_cpu/U100/ZN                0.04           0.05          -0.01  (VIOLATED)
+   u_cpu/U2002/ZN               0.04           0.05          -0.01  (VIOLATED)
+   u_cpu/U131/ZN                0.04           0.05          -0.01  (VIOLATED)
+   u_cpu/U1989/ZN               0.04           0.05          -0.01  (VIOLATED)
+   u_cpu/U1998/ZN               0.04           0.05          -0.01  (VIOLATED)
+   u_mem_router/U12/ZN          0.03           0.04          -0.01  (VIOLATED)
+   u_cpu/U117/ZN                0.04           0.05          -0.01  (VIOLATED)
+   u_cpu/U76/ZN                 0.04           0.05          -0.01  (VIOLATED)
+   u_cpu/U1946/ZN               0.04           0.05          -0.01  (VIOLATED)
+   u_cpu/U96/ZN                 0.04           0.05          -0.01  (VIOLATED)
+   u_cpu/U136/ZN                0.04           0.05          -0.01  (VIOLATED)
+   u_cpu/U102/ZN                0.04           0.05          -0.01  (VIOLATED)
+   u_cordic_accel/u_cordic_ctrl/u_core_atan2/U584/ZN
+                                0.08           0.08          -0.01  (VIOLATED)
+   u_cpu/U1994/ZN               0.04           0.05          -0.01  (VIOLATED)
+   u_cpu/U88/ZN                 0.04           0.05          -0.01  (VIOLATED)
+   u_cpu/U127/ZN                0.04           0.05           0.00  (VIOLATED: increase significant digits)
+   u_cpu/U105/ZN                0.04           0.05           0.00  (VIOLATED: increase significant digits)
+   u_cpu/U103/ZN                0.04           0.05           0.00  (VIOLATED: increase significant digits)
+   u_cpu/U135/ZN                0.04           0.05           0.00  (VIOLATED: increase significant digits)
+   u_cpu/U1962/ZN               0.04           0.05           0.00  (VIOLATED: increase significant digits)
+   u_cpu/U1965/ZN               0.04           0.05           0.00  (VIOLATED: increase significant digits)
+   u_cpu/U1988/ZN               0.04           0.05           0.00  (VIOLATED: increase significant digits)
+   u_cpu/U2503/ZN               0.04           0.04           0.00  (VIOLATED: increase significant digits)
+   u_cordic_accel/u_cordic_ctrl/U31/ZN
+                                0.03           0.03           0.00  (VIOLATED: increase significant digits)
+   u_cpu/U126/ZN                0.04           0.04           0.00  (VIOLATED: increase significant digits)
+   u_cpu/genblk1_pcpi_mul/U9/ZN
+                                0.04           0.04           0.00  (VIOLATED: increase significant digits)
+   u_cpu/U1925/ZN               0.03           0.03           0.00  (VIOLATED: increase significant digits)
+   u_cpu/genblk1_pcpi_mul/U95/ZN
+                                0.04           0.04           0.00  (VIOLATED: increase significant digits)
+   u_cordic_accel/u_cordic_ctrl/u_core_atan2/U22/ZN
+                                0.04           0.04           0.00  (VIOLATED: increase significant digits)
+   u_cpu/U4694/ZN               0.04           0.04           0.00  (VIOLATED: increase significant digits)
+   u_cpu/U4722/ZN               0.04           0.04           0.00  (VIOLATED: increase significant digits)
+   u_cpu/U4690/ZN               0.04           0.04           0.00  (VIOLATED: increase significant digits)
+   u_cpu/U1100/ZN               0.03           0.03           0.00  (VIOLATED: increase significant digits)
+   u_cpu/U761/ZN                0.03           0.03           0.00  (VIOLATED: increase significant digits)
+   u_cpu/U4682/ZN               0.04           0.04           0.00  (VIOLATED: increase significant digits)
+
+
+1

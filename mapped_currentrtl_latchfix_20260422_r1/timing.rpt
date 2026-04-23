@@ -1,0 +1,1241 @@
+Information: Updating design information... (UID-85)
+Warning: Design 'soc_top' contains 1 high-fanout nets. A fanout number of 1000 will be used for delay calculations involving these nets. (TIM-134)
+ 
+****************************************
+Report : timing
+        -path full
+        -delay max
+        -nets
+        -max_paths 10
+        -transition_time
+Design : soc_top
+Version: W-2024.09-SP5-5
+Date   : Wed Apr 22 18:55:40 2026
+****************************************
+
+ # A fanout number of 1000 was used for high fanout net computations.
+
+Operating Conditions: tt0p8v25c   Library: N16ADFP_StdCelltt0p8v25c
+Wire Load Model Mode: segmented
+
+  Startpoint: rst_n (input port clocked by clk)
+  Endpoint: u_cpu/genblk2.pcpi_div/dividend_reg[31]
+            (rising edge-triggered flip-flop clocked by clk)
+  Path Group: clk
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  axil_cordic_accel_WIDTH32_ITERATIONS16 ZeroWireload N16ADFP_StdCelltt0p8v25c
+  axil_uart          ZeroWireload          N16ADFP_StdCelltt0p8v25c
+  axil_interconnect_1x2 ZeroWireload       N16ADFP_StdCelltt0p8v25c
+  native_periph_bridge ZeroWireload        N16ADFP_StdCelltt0p8v25c
+  picorv32_axi_adapter ZeroWireload        N16ADFP_StdCelltt0p8v25c
+  sram_MEM_WORDS512  ZeroWireload          N16ADFP_StdCelltt0p8v25c
+  soc_top            ZeroWireload          N16ADFP_StdCelltt0p8v25c
+  picorv32_0_0_1_1_0_1_0_0_0_0_1_1_0_1_1_1_0_0_0_0_0_00000000_ffffffff_00000000_2048 ZeroWireload N16ADFP_StdCelltt0p8v25c
+  picorv32_pcpi_fast_mul ZeroWireload      N16ADFP_StdCelltt0p8v25c
+  picorv32_pcpi_div  ZeroWireload          N16ADFP_StdCelltt0p8v25c
+
+Attributes:
+    d - dont_touch
+    u - dont_use
+   mo - map_only
+   so - size_only
+    i - ideal_net or ideal_network
+  inf - infeasible path
+
+  Point                                                                                      Fanout     Trans      Incr       Path      Attributes
+  --------------------------------------------------------------------------------------------------------------------------------------------------------
+  clock clk (rise edge)                                                                                            0.00       0.00
+  clock network delay (ideal)                                                                                      0.00       0.00
+  input external delay                                                                                             2.00       2.00 r
+  rst_n (in)                                                                                             0.29      0.17       2.17 r
+  rst_n (net)                                                                                 98                   0.00       2.17 r
+  u_cpu/resetn (picorv32_0_0_1_1_0_1_0_0_0_0_1_1_0_1_1_1_0_0_0_0_0_00000000_ffffffff_00000000_2048)                0.00       2.17 r
+  u_cpu/resetn (net)                                                                                               0.00       2.17 r
+  u_cpu/U520/ZN (INVD1BWP20P90)                                                                          0.09      0.08       2.25 f
+  u_cpu/n3713 (net)                                                                           14                   0.00       2.25 f
+  u_cpu/U521/ZN (INVD1BWP20P90)                                                                          0.08      0.07       2.32 r
+  u_cpu/n5330 (net)                                                                           27                   0.00       2.32 r
+  u_cpu/genblk2.pcpi_div/resetn (picorv32_pcpi_div)                                                                0.00       2.32 r
+  u_cpu/genblk2.pcpi_div/resetn (net)                                                                              0.00       2.32 r
+  u_cpu/genblk2.pcpi_div/U46/ZN (INR2D1BWP20P90)                                                         0.01      0.03       2.35 r
+  u_cpu/genblk2.pcpi_div/n766 (net)                                                            2                   0.00       2.35 r
+  u_cpu/genblk2.pcpi_div/U5/ZN (IND2D1BWP20P90)                                                          0.14      0.09       2.43 f
+  u_cpu/genblk2.pcpi_div/n607 (net)                                                           38                   0.00       2.43 f
+  u_cpu/genblk2.pcpi_div/U357/ZN (IND2D1BWP20P90)                                                        0.02      0.04       2.47 f
+  u_cpu/genblk2.pcpi_div/n605 (net)                                                            4                   0.00       2.47 f
+  u_cpu/genblk2.pcpi_div/U358/ZN (INVD1BWP20P90)                                                         0.07      0.05       2.52 r
+  u_cpu/genblk2.pcpi_div/n188 (net)                                                           30                   0.00       2.52 r
+  u_cpu/genblk2.pcpi_div/U360/ZN (AOI21D1BWP20P90)                                                       0.03      0.03       2.55 f
+  u_cpu/genblk2.pcpi_div/n733 (net)                                                            1                   0.00       2.55 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U32/CO (FA1D1BWP20P90)                                      0.01      0.04       2.59 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n31 (net)                                         1                   0.00       2.59 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U31/CO (FA1D1BWP20P90)                                      0.01      0.03       2.62 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n30 (net)                                         1                   0.00       2.62 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U30/CO (FA1D1BWP20P90)                                      0.01      0.03       2.65 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n29 (net)                                         1                   0.00       2.65 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U29/CO (FA1D1BWP20P90)                                      0.01      0.03       2.68 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n28 (net)                                         1                   0.00       2.68 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U28/CO (FA1D1BWP20P90)                                      0.01      0.03       2.72 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n27 (net)                                         1                   0.00       2.72 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U27/CO (FA1D1BWP20P90)                                      0.01      0.03       2.75 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n26 (net)                                         1                   0.00       2.75 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U26/CO (FA1D1BWP20P90)                                      0.01      0.03       2.78 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n25 (net)                                         1                   0.00       2.78 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U25/CO (FA1D1BWP20P90)                                      0.01      0.03       2.81 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n24 (net)                                         1                   0.00       2.81 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U24/CO (FA1D1BWP20P90)                                      0.01      0.03       2.84 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n23 (net)                                         1                   0.00       2.84 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U23/CO (FA1D1BWP20P90)                                      0.01      0.03       2.87 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n22 (net)                                         1                   0.00       2.87 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U22/CO (FA1D1BWP20P90)                                      0.01      0.03       2.91 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n21 (net)                                         1                   0.00       2.91 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U21/CO (FA1D1BWP20P90)                                      0.01      0.03       2.94 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n20 (net)                                         1                   0.00       2.94 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U20/CO (FA1D1BWP20P90)                                      0.01      0.03       2.97 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n19 (net)                                         1                   0.00       2.97 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U19/CO (FA1D1BWP20P90)                                      0.01      0.03       3.00 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n18 (net)                                         1                   0.00       3.00 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U18/CO (FA1D1BWP20P90)                                      0.01      0.03       3.03 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n17 (net)                                         1                   0.00       3.03 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U17/CO (FA1D1BWP20P90)                                      0.01      0.03       3.06 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n16 (net)                                         1                   0.00       3.06 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U16/CO (FA1D1BWP20P90)                                      0.01      0.03       3.10 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n15 (net)                                         1                   0.00       3.10 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U15/CO (FA1D1BWP20P90)                                      0.01      0.03       3.13 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n14 (net)                                         1                   0.00       3.13 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U14/CO (FA1D1BWP20P90)                                      0.01      0.03       3.16 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n13 (net)                                         1                   0.00       3.16 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U13/CO (FA1D1BWP20P90)                                      0.01      0.03       3.19 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n12 (net)                                         1                   0.00       3.19 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U12/CO (FA1D1BWP20P90)                                      0.01      0.03       3.22 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n11 (net)                                         1                   0.00       3.22 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U11/CO (FA1D1BWP20P90)                                      0.01      0.03       3.25 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n10 (net)                                         1                   0.00       3.25 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U10/CO (FA1D1BWP20P90)                                      0.01      0.03       3.29 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n9 (net)                                          1                   0.00       3.29 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U9/CO (FA1D1BWP20P90)                                       0.01      0.03       3.32 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n8 (net)                                          1                   0.00       3.32 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U8/CO (FA1D1BWP20P90)                                       0.01      0.03       3.35 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n7 (net)                                          1                   0.00       3.35 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U7/CO (FA1D1BWP20P90)                                       0.01      0.03       3.38 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n6 (net)                                          1                   0.00       3.38 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U6/CO (FA1D1BWP20P90)                                       0.01      0.03       3.41 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n5 (net)                                          1                   0.00       3.41 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U5/CO (FA1D1BWP20P90)                                       0.01      0.03       3.45 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n4 (net)                                          1                   0.00       3.45 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U4/CO (FA1D1BWP20P90)                                       0.01      0.03       3.48 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n3 (net)                                          1                   0.00       3.48 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U3/CO (FA1D1BWP20P90)                                       0.01      0.03       3.50 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n2 (net)                                          1                   0.00       3.50 f
+  u_cpu/genblk2.pcpi_div/U687/Z (XOR2D1BWP20P90)                                                         0.01      0.03       3.53 r
+  u_cpu/genblk2.pcpi_div/n609 (net)                                                            1                   0.00       3.53 r
+  u_cpu/genblk2.pcpi_div/U692/ZN (IOA21D1BWP20P90)                                                       0.01      0.02       3.54 r
+  u_cpu/genblk2.pcpi_div/n274 (net)                                                            1                   0.00       3.54 r
+  u_cpu/genblk2.pcpi_div/dividend_reg[31]/D (DFQD2BWP16P90)                                              0.01      0.00       3.54 r
+  data arrival time                                                                                                           3.54
+
+  clock clk (rise edge)                                                                                           10.00      10.00
+  clock network delay (ideal)                                                                                      0.00      10.00
+  u_cpu/genblk2.pcpi_div/dividend_reg[31]/CP (DFQD2BWP16P90)                                                       0.00      10.00 r
+  library setup time                                                                                              -0.01       9.99
+  data required time                                                                                                          9.99
+  --------------------------------------------------------------------------------------------------------------------------------------------------------
+  data required time                                                                                                          9.99
+  data arrival time                                                                                                          -3.54
+  --------------------------------------------------------------------------------------------------------------------------------------------------------
+  slack (MET)                                                                                                                 6.44
+
+
+  Startpoint: rst_n (input port clocked by clk)
+  Endpoint: u_cpu/genblk2.pcpi_div/dividend_reg[30]
+            (rising edge-triggered flip-flop clocked by clk)
+  Path Group: clk
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  axil_cordic_accel_WIDTH32_ITERATIONS16 ZeroWireload N16ADFP_StdCelltt0p8v25c
+  axil_uart          ZeroWireload          N16ADFP_StdCelltt0p8v25c
+  axil_interconnect_1x2 ZeroWireload       N16ADFP_StdCelltt0p8v25c
+  native_periph_bridge ZeroWireload        N16ADFP_StdCelltt0p8v25c
+  picorv32_axi_adapter ZeroWireload        N16ADFP_StdCelltt0p8v25c
+  sram_MEM_WORDS512  ZeroWireload          N16ADFP_StdCelltt0p8v25c
+  soc_top            ZeroWireload          N16ADFP_StdCelltt0p8v25c
+  picorv32_0_0_1_1_0_1_0_0_0_0_1_1_0_1_1_1_0_0_0_0_0_00000000_ffffffff_00000000_2048 ZeroWireload N16ADFP_StdCelltt0p8v25c
+  picorv32_pcpi_fast_mul ZeroWireload      N16ADFP_StdCelltt0p8v25c
+  picorv32_pcpi_div  ZeroWireload          N16ADFP_StdCelltt0p8v25c
+
+Attributes:
+    d - dont_touch
+    u - dont_use
+   mo - map_only
+   so - size_only
+    i - ideal_net or ideal_network
+  inf - infeasible path
+
+  Point                                                                                      Fanout     Trans      Incr       Path      Attributes
+  --------------------------------------------------------------------------------------------------------------------------------------------------------
+  clock clk (rise edge)                                                                                            0.00       0.00
+  clock network delay (ideal)                                                                                      0.00       0.00
+  input external delay                                                                                             2.00       2.00 r
+  rst_n (in)                                                                                             0.29      0.17       2.17 r
+  rst_n (net)                                                                                 98                   0.00       2.17 r
+  u_cpu/resetn (picorv32_0_0_1_1_0_1_0_0_0_0_1_1_0_1_1_1_0_0_0_0_0_00000000_ffffffff_00000000_2048)                0.00       2.17 r
+  u_cpu/resetn (net)                                                                                               0.00       2.17 r
+  u_cpu/U520/ZN (INVD1BWP20P90)                                                                          0.09      0.08       2.25 f
+  u_cpu/n3713 (net)                                                                           14                   0.00       2.25 f
+  u_cpu/U521/ZN (INVD1BWP20P90)                                                                          0.08      0.07       2.32 r
+  u_cpu/n5330 (net)                                                                           27                   0.00       2.32 r
+  u_cpu/genblk2.pcpi_div/resetn (picorv32_pcpi_div)                                                                0.00       2.32 r
+  u_cpu/genblk2.pcpi_div/resetn (net)                                                                              0.00       2.32 r
+  u_cpu/genblk2.pcpi_div/U46/ZN (INR2D1BWP20P90)                                                         0.01      0.03       2.35 r
+  u_cpu/genblk2.pcpi_div/n766 (net)                                                            2                   0.00       2.35 r
+  u_cpu/genblk2.pcpi_div/U5/ZN (IND2D1BWP20P90)                                                          0.14      0.09       2.43 f
+  u_cpu/genblk2.pcpi_div/n607 (net)                                                           38                   0.00       2.43 f
+  u_cpu/genblk2.pcpi_div/U357/ZN (IND2D1BWP20P90)                                                        0.02      0.04       2.47 f
+  u_cpu/genblk2.pcpi_div/n605 (net)                                                            4                   0.00       2.47 f
+  u_cpu/genblk2.pcpi_div/U358/ZN (INVD1BWP20P90)                                                         0.07      0.05       2.52 r
+  u_cpu/genblk2.pcpi_div/n188 (net)                                                           30                   0.00       2.52 r
+  u_cpu/genblk2.pcpi_div/U360/ZN (AOI21D1BWP20P90)                                                       0.03      0.03       2.55 f
+  u_cpu/genblk2.pcpi_div/n733 (net)                                                            1                   0.00       2.55 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U32/CO (FA1D1BWP20P90)                                      0.01      0.04       2.59 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n31 (net)                                         1                   0.00       2.59 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U31/CO (FA1D1BWP20P90)                                      0.01      0.03       2.62 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n30 (net)                                         1                   0.00       2.62 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U30/CO (FA1D1BWP20P90)                                      0.01      0.03       2.65 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n29 (net)                                         1                   0.00       2.65 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U29/CO (FA1D1BWP20P90)                                      0.01      0.03       2.68 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n28 (net)                                         1                   0.00       2.68 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U28/CO (FA1D1BWP20P90)                                      0.01      0.03       2.72 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n27 (net)                                         1                   0.00       2.72 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U27/CO (FA1D1BWP20P90)                                      0.01      0.03       2.75 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n26 (net)                                         1                   0.00       2.75 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U26/CO (FA1D1BWP20P90)                                      0.01      0.03       2.78 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n25 (net)                                         1                   0.00       2.78 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U25/CO (FA1D1BWP20P90)                                      0.01      0.03       2.81 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n24 (net)                                         1                   0.00       2.81 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U24/CO (FA1D1BWP20P90)                                      0.01      0.03       2.84 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n23 (net)                                         1                   0.00       2.84 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U23/CO (FA1D1BWP20P90)                                      0.01      0.03       2.87 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n22 (net)                                         1                   0.00       2.87 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U22/CO (FA1D1BWP20P90)                                      0.01      0.03       2.91 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n21 (net)                                         1                   0.00       2.91 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U21/CO (FA1D1BWP20P90)                                      0.01      0.03       2.94 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n20 (net)                                         1                   0.00       2.94 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U20/CO (FA1D1BWP20P90)                                      0.01      0.03       2.97 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n19 (net)                                         1                   0.00       2.97 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U19/CO (FA1D1BWP20P90)                                      0.01      0.03       3.00 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n18 (net)                                         1                   0.00       3.00 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U18/CO (FA1D1BWP20P90)                                      0.01      0.03       3.03 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n17 (net)                                         1                   0.00       3.03 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U17/CO (FA1D1BWP20P90)                                      0.01      0.03       3.06 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n16 (net)                                         1                   0.00       3.06 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U16/CO (FA1D1BWP20P90)                                      0.01      0.03       3.10 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n15 (net)                                         1                   0.00       3.10 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U15/CO (FA1D1BWP20P90)                                      0.01      0.03       3.13 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n14 (net)                                         1                   0.00       3.13 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U14/CO (FA1D1BWP20P90)                                      0.01      0.03       3.16 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n13 (net)                                         1                   0.00       3.16 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U13/CO (FA1D1BWP20P90)                                      0.01      0.03       3.19 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n12 (net)                                         1                   0.00       3.19 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U12/CO (FA1D1BWP20P90)                                      0.01      0.03       3.22 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n11 (net)                                         1                   0.00       3.22 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U11/CO (FA1D1BWP20P90)                                      0.01      0.03       3.25 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n10 (net)                                         1                   0.00       3.25 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U10/CO (FA1D1BWP20P90)                                      0.01      0.03       3.29 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n9 (net)                                          1                   0.00       3.29 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U9/CO (FA1D1BWP20P90)                                       0.01      0.03       3.32 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n8 (net)                                          1                   0.00       3.32 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U8/CO (FA1D1BWP20P90)                                       0.01      0.03       3.35 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n7 (net)                                          1                   0.00       3.35 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U7/CO (FA1D1BWP20P90)                                       0.01      0.03       3.38 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n6 (net)                                          1                   0.00       3.38 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U6/CO (FA1D1BWP20P90)                                       0.01      0.03       3.41 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n5 (net)                                          1                   0.00       3.41 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U5/CO (FA1D1BWP20P90)                                       0.01      0.03       3.45 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n4 (net)                                          1                   0.00       3.45 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U4/CO (FA1D1BWP20P90)                                       0.01      0.03       3.48 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n3 (net)                                          1                   0.00       3.48 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U3/S (FA1D1BWP20P90)                                        0.01      0.05       3.52 r    mo 
+  u_cpu/genblk2.pcpi_div/C30/DATA2_30 (net)                                                    1                   0.00       3.52 r
+  u_cpu/genblk2.pcpi_div/U782/ZN (IOA21D1BWP20P90)                                                       0.01      0.02       3.54 r
+  u_cpu/genblk2.pcpi_div/n275 (net)                                                            1                   0.00       3.54 r
+  u_cpu/genblk2.pcpi_div/dividend_reg[30]/D (DFQD2BWP16P90)                                              0.01      0.00       3.54 r
+  data arrival time                                                                                                           3.54
+
+  clock clk (rise edge)                                                                                           10.00      10.00
+  clock network delay (ideal)                                                                                      0.00      10.00
+  u_cpu/genblk2.pcpi_div/dividend_reg[30]/CP (DFQD2BWP16P90)                                                       0.00      10.00 r
+  library setup time                                                                                              -0.01       9.99
+  data required time                                                                                                          9.99
+  --------------------------------------------------------------------------------------------------------------------------------------------------------
+  data required time                                                                                                          9.99
+  data arrival time                                                                                                          -3.54
+  --------------------------------------------------------------------------------------------------------------------------------------------------------
+  slack (MET)                                                                                                                 6.45
+
+
+  Startpoint: rst_n (input port clocked by clk)
+  Endpoint: u_cpu/genblk2.pcpi_div/dividend_reg[29]
+            (rising edge-triggered flip-flop clocked by clk)
+  Path Group: clk
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  axil_cordic_accel_WIDTH32_ITERATIONS16 ZeroWireload N16ADFP_StdCelltt0p8v25c
+  axil_uart          ZeroWireload          N16ADFP_StdCelltt0p8v25c
+  axil_interconnect_1x2 ZeroWireload       N16ADFP_StdCelltt0p8v25c
+  native_periph_bridge ZeroWireload        N16ADFP_StdCelltt0p8v25c
+  picorv32_axi_adapter ZeroWireload        N16ADFP_StdCelltt0p8v25c
+  sram_MEM_WORDS512  ZeroWireload          N16ADFP_StdCelltt0p8v25c
+  soc_top            ZeroWireload          N16ADFP_StdCelltt0p8v25c
+  picorv32_0_0_1_1_0_1_0_0_0_0_1_1_0_1_1_1_0_0_0_0_0_00000000_ffffffff_00000000_2048 ZeroWireload N16ADFP_StdCelltt0p8v25c
+  picorv32_pcpi_fast_mul ZeroWireload      N16ADFP_StdCelltt0p8v25c
+  picorv32_pcpi_div  ZeroWireload          N16ADFP_StdCelltt0p8v25c
+
+Attributes:
+    d - dont_touch
+    u - dont_use
+   mo - map_only
+   so - size_only
+    i - ideal_net or ideal_network
+  inf - infeasible path
+
+  Point                                                                                      Fanout     Trans      Incr       Path      Attributes
+  --------------------------------------------------------------------------------------------------------------------------------------------------------
+  clock clk (rise edge)                                                                                            0.00       0.00
+  clock network delay (ideal)                                                                                      0.00       0.00
+  input external delay                                                                                             2.00       2.00 r
+  rst_n (in)                                                                                             0.29      0.17       2.17 r
+  rst_n (net)                                                                                 98                   0.00       2.17 r
+  u_cpu/resetn (picorv32_0_0_1_1_0_1_0_0_0_0_1_1_0_1_1_1_0_0_0_0_0_00000000_ffffffff_00000000_2048)                0.00       2.17 r
+  u_cpu/resetn (net)                                                                                               0.00       2.17 r
+  u_cpu/U520/ZN (INVD1BWP20P90)                                                                          0.09      0.08       2.25 f
+  u_cpu/n3713 (net)                                                                           14                   0.00       2.25 f
+  u_cpu/U521/ZN (INVD1BWP20P90)                                                                          0.08      0.07       2.32 r
+  u_cpu/n5330 (net)                                                                           27                   0.00       2.32 r
+  u_cpu/genblk2.pcpi_div/resetn (picorv32_pcpi_div)                                                                0.00       2.32 r
+  u_cpu/genblk2.pcpi_div/resetn (net)                                                                              0.00       2.32 r
+  u_cpu/genblk2.pcpi_div/U46/ZN (INR2D1BWP20P90)                                                         0.01      0.03       2.35 r
+  u_cpu/genblk2.pcpi_div/n766 (net)                                                            2                   0.00       2.35 r
+  u_cpu/genblk2.pcpi_div/U5/ZN (IND2D1BWP20P90)                                                          0.14      0.09       2.43 f
+  u_cpu/genblk2.pcpi_div/n607 (net)                                                           38                   0.00       2.43 f
+  u_cpu/genblk2.pcpi_div/U357/ZN (IND2D1BWP20P90)                                                        0.02      0.04       2.47 f
+  u_cpu/genblk2.pcpi_div/n605 (net)                                                            4                   0.00       2.47 f
+  u_cpu/genblk2.pcpi_div/U358/ZN (INVD1BWP20P90)                                                         0.07      0.05       2.52 r
+  u_cpu/genblk2.pcpi_div/n188 (net)                                                           30                   0.00       2.52 r
+  u_cpu/genblk2.pcpi_div/U360/ZN (AOI21D1BWP20P90)                                                       0.03      0.03       2.55 f
+  u_cpu/genblk2.pcpi_div/n733 (net)                                                            1                   0.00       2.55 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U32/CO (FA1D1BWP20P90)                                      0.01      0.04       2.59 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n31 (net)                                         1                   0.00       2.59 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U31/CO (FA1D1BWP20P90)                                      0.01      0.03       2.62 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n30 (net)                                         1                   0.00       2.62 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U30/CO (FA1D1BWP20P90)                                      0.01      0.03       2.65 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n29 (net)                                         1                   0.00       2.65 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U29/CO (FA1D1BWP20P90)                                      0.01      0.03       2.68 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n28 (net)                                         1                   0.00       2.68 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U28/CO (FA1D1BWP20P90)                                      0.01      0.03       2.72 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n27 (net)                                         1                   0.00       2.72 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U27/CO (FA1D1BWP20P90)                                      0.01      0.03       2.75 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n26 (net)                                         1                   0.00       2.75 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U26/CO (FA1D1BWP20P90)                                      0.01      0.03       2.78 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n25 (net)                                         1                   0.00       2.78 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U25/CO (FA1D1BWP20P90)                                      0.01      0.03       2.81 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n24 (net)                                         1                   0.00       2.81 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U24/CO (FA1D1BWP20P90)                                      0.01      0.03       2.84 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n23 (net)                                         1                   0.00       2.84 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U23/CO (FA1D1BWP20P90)                                      0.01      0.03       2.87 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n22 (net)                                         1                   0.00       2.87 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U22/CO (FA1D1BWP20P90)                                      0.01      0.03       2.91 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n21 (net)                                         1                   0.00       2.91 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U21/CO (FA1D1BWP20P90)                                      0.01      0.03       2.94 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n20 (net)                                         1                   0.00       2.94 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U20/CO (FA1D1BWP20P90)                                      0.01      0.03       2.97 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n19 (net)                                         1                   0.00       2.97 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U19/CO (FA1D1BWP20P90)                                      0.01      0.03       3.00 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n18 (net)                                         1                   0.00       3.00 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U18/CO (FA1D1BWP20P90)                                      0.01      0.03       3.03 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n17 (net)                                         1                   0.00       3.03 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U17/CO (FA1D1BWP20P90)                                      0.01      0.03       3.06 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n16 (net)                                         1                   0.00       3.06 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U16/CO (FA1D1BWP20P90)                                      0.01      0.03       3.10 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n15 (net)                                         1                   0.00       3.10 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U15/CO (FA1D1BWP20P90)                                      0.01      0.03       3.13 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n14 (net)                                         1                   0.00       3.13 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U14/CO (FA1D1BWP20P90)                                      0.01      0.03       3.16 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n13 (net)                                         1                   0.00       3.16 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U13/CO (FA1D1BWP20P90)                                      0.01      0.03       3.19 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n12 (net)                                         1                   0.00       3.19 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U12/CO (FA1D1BWP20P90)                                      0.01      0.03       3.22 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n11 (net)                                         1                   0.00       3.22 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U11/CO (FA1D1BWP20P90)                                      0.01      0.03       3.25 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n10 (net)                                         1                   0.00       3.25 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U10/CO (FA1D1BWP20P90)                                      0.01      0.03       3.29 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n9 (net)                                          1                   0.00       3.29 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U9/CO (FA1D1BWP20P90)                                       0.01      0.03       3.32 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n8 (net)                                          1                   0.00       3.32 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U8/CO (FA1D1BWP20P90)                                       0.01      0.03       3.35 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n7 (net)                                          1                   0.00       3.35 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U7/CO (FA1D1BWP20P90)                                       0.01      0.03       3.38 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n6 (net)                                          1                   0.00       3.38 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U6/CO (FA1D1BWP20P90)                                       0.01      0.03       3.41 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n5 (net)                                          1                   0.00       3.41 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U5/CO (FA1D1BWP20P90)                                       0.01      0.03       3.45 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n4 (net)                                          1                   0.00       3.45 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U4/S (FA1D1BWP20P90)                                        0.01      0.05       3.49 r    mo 
+  u_cpu/genblk2.pcpi_div/C30/DATA2_29 (net)                                                    1                   0.00       3.49 r
+  u_cpu/genblk2.pcpi_div/U694/ZN (IOA21D1BWP20P90)                                                       0.01      0.02       3.51 r
+  u_cpu/genblk2.pcpi_div/n276 (net)                                                            1                   0.00       3.51 r
+  u_cpu/genblk2.pcpi_div/dividend_reg[29]/D (DFQD2BWP16P90)                                              0.01      0.00       3.51 r
+  data arrival time                                                                                                           3.51
+
+  clock clk (rise edge)                                                                                           10.00      10.00
+  clock network delay (ideal)                                                                                      0.00      10.00
+  u_cpu/genblk2.pcpi_div/dividend_reg[29]/CP (DFQD2BWP16P90)                                                       0.00      10.00 r
+  library setup time                                                                                              -0.01       9.99
+  data required time                                                                                                          9.99
+  --------------------------------------------------------------------------------------------------------------------------------------------------------
+  data required time                                                                                                          9.99
+  data arrival time                                                                                                          -3.51
+  --------------------------------------------------------------------------------------------------------------------------------------------------------
+  slack (MET)                                                                                                                 6.48
+
+
+  Startpoint: rst_n (input port clocked by clk)
+  Endpoint: u_cpu/genblk2.pcpi_div/dividend_reg[28]
+            (rising edge-triggered flip-flop clocked by clk)
+  Path Group: clk
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  axil_cordic_accel_WIDTH32_ITERATIONS16 ZeroWireload N16ADFP_StdCelltt0p8v25c
+  axil_uart          ZeroWireload          N16ADFP_StdCelltt0p8v25c
+  axil_interconnect_1x2 ZeroWireload       N16ADFP_StdCelltt0p8v25c
+  native_periph_bridge ZeroWireload        N16ADFP_StdCelltt0p8v25c
+  picorv32_axi_adapter ZeroWireload        N16ADFP_StdCelltt0p8v25c
+  sram_MEM_WORDS512  ZeroWireload          N16ADFP_StdCelltt0p8v25c
+  soc_top            ZeroWireload          N16ADFP_StdCelltt0p8v25c
+  picorv32_0_0_1_1_0_1_0_0_0_0_1_1_0_1_1_1_0_0_0_0_0_00000000_ffffffff_00000000_2048 ZeroWireload N16ADFP_StdCelltt0p8v25c
+  picorv32_pcpi_fast_mul ZeroWireload      N16ADFP_StdCelltt0p8v25c
+  picorv32_pcpi_div  ZeroWireload          N16ADFP_StdCelltt0p8v25c
+
+Attributes:
+    d - dont_touch
+    u - dont_use
+   mo - map_only
+   so - size_only
+    i - ideal_net or ideal_network
+  inf - infeasible path
+
+  Point                                                                                      Fanout     Trans      Incr       Path      Attributes
+  --------------------------------------------------------------------------------------------------------------------------------------------------------
+  clock clk (rise edge)                                                                                            0.00       0.00
+  clock network delay (ideal)                                                                                      0.00       0.00
+  input external delay                                                                                             2.00       2.00 r
+  rst_n (in)                                                                                             0.29      0.17       2.17 r
+  rst_n (net)                                                                                 98                   0.00       2.17 r
+  u_cpu/resetn (picorv32_0_0_1_1_0_1_0_0_0_0_1_1_0_1_1_1_0_0_0_0_0_00000000_ffffffff_00000000_2048)                0.00       2.17 r
+  u_cpu/resetn (net)                                                                                               0.00       2.17 r
+  u_cpu/U520/ZN (INVD1BWP20P90)                                                                          0.09      0.08       2.25 f
+  u_cpu/n3713 (net)                                                                           14                   0.00       2.25 f
+  u_cpu/U521/ZN (INVD1BWP20P90)                                                                          0.08      0.07       2.32 r
+  u_cpu/n5330 (net)                                                                           27                   0.00       2.32 r
+  u_cpu/genblk2.pcpi_div/resetn (picorv32_pcpi_div)                                                                0.00       2.32 r
+  u_cpu/genblk2.pcpi_div/resetn (net)                                                                              0.00       2.32 r
+  u_cpu/genblk2.pcpi_div/U46/ZN (INR2D1BWP20P90)                                                         0.01      0.03       2.35 r
+  u_cpu/genblk2.pcpi_div/n766 (net)                                                            2                   0.00       2.35 r
+  u_cpu/genblk2.pcpi_div/U5/ZN (IND2D1BWP20P90)                                                          0.14      0.09       2.43 f
+  u_cpu/genblk2.pcpi_div/n607 (net)                                                           38                   0.00       2.43 f
+  u_cpu/genblk2.pcpi_div/U357/ZN (IND2D1BWP20P90)                                                        0.02      0.04       2.47 f
+  u_cpu/genblk2.pcpi_div/n605 (net)                                                            4                   0.00       2.47 f
+  u_cpu/genblk2.pcpi_div/U358/ZN (INVD1BWP20P90)                                                         0.07      0.05       2.52 r
+  u_cpu/genblk2.pcpi_div/n188 (net)                                                           30                   0.00       2.52 r
+  u_cpu/genblk2.pcpi_div/U360/ZN (AOI21D1BWP20P90)                                                       0.03      0.03       2.55 f
+  u_cpu/genblk2.pcpi_div/n733 (net)                                                            1                   0.00       2.55 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U32/CO (FA1D1BWP20P90)                                      0.01      0.04       2.59 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n31 (net)                                         1                   0.00       2.59 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U31/CO (FA1D1BWP20P90)                                      0.01      0.03       2.62 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n30 (net)                                         1                   0.00       2.62 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U30/CO (FA1D1BWP20P90)                                      0.01      0.03       2.65 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n29 (net)                                         1                   0.00       2.65 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U29/CO (FA1D1BWP20P90)                                      0.01      0.03       2.68 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n28 (net)                                         1                   0.00       2.68 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U28/CO (FA1D1BWP20P90)                                      0.01      0.03       2.72 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n27 (net)                                         1                   0.00       2.72 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U27/CO (FA1D1BWP20P90)                                      0.01      0.03       2.75 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n26 (net)                                         1                   0.00       2.75 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U26/CO (FA1D1BWP20P90)                                      0.01      0.03       2.78 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n25 (net)                                         1                   0.00       2.78 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U25/CO (FA1D1BWP20P90)                                      0.01      0.03       2.81 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n24 (net)                                         1                   0.00       2.81 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U24/CO (FA1D1BWP20P90)                                      0.01      0.03       2.84 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n23 (net)                                         1                   0.00       2.84 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U23/CO (FA1D1BWP20P90)                                      0.01      0.03       2.87 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n22 (net)                                         1                   0.00       2.87 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U22/CO (FA1D1BWP20P90)                                      0.01      0.03       2.91 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n21 (net)                                         1                   0.00       2.91 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U21/CO (FA1D1BWP20P90)                                      0.01      0.03       2.94 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n20 (net)                                         1                   0.00       2.94 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U20/CO (FA1D1BWP20P90)                                      0.01      0.03       2.97 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n19 (net)                                         1                   0.00       2.97 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U19/CO (FA1D1BWP20P90)                                      0.01      0.03       3.00 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n18 (net)                                         1                   0.00       3.00 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U18/CO (FA1D1BWP20P90)                                      0.01      0.03       3.03 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n17 (net)                                         1                   0.00       3.03 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U17/CO (FA1D1BWP20P90)                                      0.01      0.03       3.06 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n16 (net)                                         1                   0.00       3.06 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U16/CO (FA1D1BWP20P90)                                      0.01      0.03       3.10 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n15 (net)                                         1                   0.00       3.10 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U15/CO (FA1D1BWP20P90)                                      0.01      0.03       3.13 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n14 (net)                                         1                   0.00       3.13 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U14/CO (FA1D1BWP20P90)                                      0.01      0.03       3.16 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n13 (net)                                         1                   0.00       3.16 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U13/CO (FA1D1BWP20P90)                                      0.01      0.03       3.19 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n12 (net)                                         1                   0.00       3.19 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U12/CO (FA1D1BWP20P90)                                      0.01      0.03       3.22 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n11 (net)                                         1                   0.00       3.22 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U11/CO (FA1D1BWP20P90)                                      0.01      0.03       3.25 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n10 (net)                                         1                   0.00       3.25 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U10/CO (FA1D1BWP20P90)                                      0.01      0.03       3.29 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n9 (net)                                          1                   0.00       3.29 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U9/CO (FA1D1BWP20P90)                                       0.01      0.03       3.32 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n8 (net)                                          1                   0.00       3.32 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U8/CO (FA1D1BWP20P90)                                       0.01      0.03       3.35 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n7 (net)                                          1                   0.00       3.35 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U7/CO (FA1D1BWP20P90)                                       0.01      0.03       3.38 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n6 (net)                                          1                   0.00       3.38 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U6/CO (FA1D1BWP20P90)                                       0.01      0.03       3.41 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n5 (net)                                          1                   0.00       3.41 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U5/S (FA1D1BWP20P90)                                        0.01      0.05       3.46 r    mo 
+  u_cpu/genblk2.pcpi_div/C30/DATA2_28 (net)                                                    1                   0.00       3.46 r
+  u_cpu/genblk2.pcpi_div/U696/ZN (IOA21D1BWP20P90)                                                       0.01      0.02       3.48 r
+  u_cpu/genblk2.pcpi_div/n277 (net)                                                            1                   0.00       3.48 r
+  u_cpu/genblk2.pcpi_div/dividend_reg[28]/D (DFQD2BWP16P90)                                              0.01      0.00       3.48 r
+  data arrival time                                                                                                           3.48
+
+  clock clk (rise edge)                                                                                           10.00      10.00
+  clock network delay (ideal)                                                                                      0.00      10.00
+  u_cpu/genblk2.pcpi_div/dividend_reg[28]/CP (DFQD2BWP16P90)                                                       0.00      10.00 r
+  library setup time                                                                                              -0.01       9.99
+  data required time                                                                                                          9.99
+  --------------------------------------------------------------------------------------------------------------------------------------------------------
+  data required time                                                                                                          9.99
+  data arrival time                                                                                                          -3.48
+  --------------------------------------------------------------------------------------------------------------------------------------------------------
+  slack (MET)                                                                                                                 6.51
+
+
+  Startpoint: rst_n (input port clocked by clk)
+  Endpoint: u_cpu/genblk2.pcpi_div/dividend_reg[27]
+            (rising edge-triggered flip-flop clocked by clk)
+  Path Group: clk
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  axil_cordic_accel_WIDTH32_ITERATIONS16 ZeroWireload N16ADFP_StdCelltt0p8v25c
+  axil_uart          ZeroWireload          N16ADFP_StdCelltt0p8v25c
+  axil_interconnect_1x2 ZeroWireload       N16ADFP_StdCelltt0p8v25c
+  native_periph_bridge ZeroWireload        N16ADFP_StdCelltt0p8v25c
+  picorv32_axi_adapter ZeroWireload        N16ADFP_StdCelltt0p8v25c
+  sram_MEM_WORDS512  ZeroWireload          N16ADFP_StdCelltt0p8v25c
+  soc_top            ZeroWireload          N16ADFP_StdCelltt0p8v25c
+  picorv32_0_0_1_1_0_1_0_0_0_0_1_1_0_1_1_1_0_0_0_0_0_00000000_ffffffff_00000000_2048 ZeroWireload N16ADFP_StdCelltt0p8v25c
+  picorv32_pcpi_fast_mul ZeroWireload      N16ADFP_StdCelltt0p8v25c
+  picorv32_pcpi_div  ZeroWireload          N16ADFP_StdCelltt0p8v25c
+
+Attributes:
+    d - dont_touch
+    u - dont_use
+   mo - map_only
+   so - size_only
+    i - ideal_net or ideal_network
+  inf - infeasible path
+
+  Point                                                                                      Fanout     Trans      Incr       Path      Attributes
+  --------------------------------------------------------------------------------------------------------------------------------------------------------
+  clock clk (rise edge)                                                                                            0.00       0.00
+  clock network delay (ideal)                                                                                      0.00       0.00
+  input external delay                                                                                             2.00       2.00 r
+  rst_n (in)                                                                                             0.29      0.17       2.17 r
+  rst_n (net)                                                                                 98                   0.00       2.17 r
+  u_cpu/resetn (picorv32_0_0_1_1_0_1_0_0_0_0_1_1_0_1_1_1_0_0_0_0_0_00000000_ffffffff_00000000_2048)                0.00       2.17 r
+  u_cpu/resetn (net)                                                                                               0.00       2.17 r
+  u_cpu/U520/ZN (INVD1BWP20P90)                                                                          0.09      0.08       2.25 f
+  u_cpu/n3713 (net)                                                                           14                   0.00       2.25 f
+  u_cpu/U521/ZN (INVD1BWP20P90)                                                                          0.08      0.07       2.32 r
+  u_cpu/n5330 (net)                                                                           27                   0.00       2.32 r
+  u_cpu/genblk2.pcpi_div/resetn (picorv32_pcpi_div)                                                                0.00       2.32 r
+  u_cpu/genblk2.pcpi_div/resetn (net)                                                                              0.00       2.32 r
+  u_cpu/genblk2.pcpi_div/U46/ZN (INR2D1BWP20P90)                                                         0.01      0.03       2.35 r
+  u_cpu/genblk2.pcpi_div/n766 (net)                                                            2                   0.00       2.35 r
+  u_cpu/genblk2.pcpi_div/U5/ZN (IND2D1BWP20P90)                                                          0.14      0.09       2.43 f
+  u_cpu/genblk2.pcpi_div/n607 (net)                                                           38                   0.00       2.43 f
+  u_cpu/genblk2.pcpi_div/U357/ZN (IND2D1BWP20P90)                                                        0.02      0.04       2.47 f
+  u_cpu/genblk2.pcpi_div/n605 (net)                                                            4                   0.00       2.47 f
+  u_cpu/genblk2.pcpi_div/U358/ZN (INVD1BWP20P90)                                                         0.07      0.05       2.52 r
+  u_cpu/genblk2.pcpi_div/n188 (net)                                                           30                   0.00       2.52 r
+  u_cpu/genblk2.pcpi_div/U360/ZN (AOI21D1BWP20P90)                                                       0.03      0.03       2.55 f
+  u_cpu/genblk2.pcpi_div/n733 (net)                                                            1                   0.00       2.55 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U32/CO (FA1D1BWP20P90)                                      0.01      0.04       2.59 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n31 (net)                                         1                   0.00       2.59 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U31/CO (FA1D1BWP20P90)                                      0.01      0.03       2.62 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n30 (net)                                         1                   0.00       2.62 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U30/CO (FA1D1BWP20P90)                                      0.01      0.03       2.65 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n29 (net)                                         1                   0.00       2.65 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U29/CO (FA1D1BWP20P90)                                      0.01      0.03       2.68 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n28 (net)                                         1                   0.00       2.68 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U28/CO (FA1D1BWP20P90)                                      0.01      0.03       2.72 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n27 (net)                                         1                   0.00       2.72 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U27/CO (FA1D1BWP20P90)                                      0.01      0.03       2.75 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n26 (net)                                         1                   0.00       2.75 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U26/CO (FA1D1BWP20P90)                                      0.01      0.03       2.78 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n25 (net)                                         1                   0.00       2.78 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U25/CO (FA1D1BWP20P90)                                      0.01      0.03       2.81 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n24 (net)                                         1                   0.00       2.81 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U24/CO (FA1D1BWP20P90)                                      0.01      0.03       2.84 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n23 (net)                                         1                   0.00       2.84 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U23/CO (FA1D1BWP20P90)                                      0.01      0.03       2.87 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n22 (net)                                         1                   0.00       2.87 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U22/CO (FA1D1BWP20P90)                                      0.01      0.03       2.91 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n21 (net)                                         1                   0.00       2.91 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U21/CO (FA1D1BWP20P90)                                      0.01      0.03       2.94 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n20 (net)                                         1                   0.00       2.94 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U20/CO (FA1D1BWP20P90)                                      0.01      0.03       2.97 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n19 (net)                                         1                   0.00       2.97 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U19/CO (FA1D1BWP20P90)                                      0.01      0.03       3.00 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n18 (net)                                         1                   0.00       3.00 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U18/CO (FA1D1BWP20P90)                                      0.01      0.03       3.03 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n17 (net)                                         1                   0.00       3.03 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U17/CO (FA1D1BWP20P90)                                      0.01      0.03       3.06 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n16 (net)                                         1                   0.00       3.06 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U16/CO (FA1D1BWP20P90)                                      0.01      0.03       3.10 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n15 (net)                                         1                   0.00       3.10 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U15/CO (FA1D1BWP20P90)                                      0.01      0.03       3.13 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n14 (net)                                         1                   0.00       3.13 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U14/CO (FA1D1BWP20P90)                                      0.01      0.03       3.16 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n13 (net)                                         1                   0.00       3.16 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U13/CO (FA1D1BWP20P90)                                      0.01      0.03       3.19 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n12 (net)                                         1                   0.00       3.19 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U12/CO (FA1D1BWP20P90)                                      0.01      0.03       3.22 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n11 (net)                                         1                   0.00       3.22 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U11/CO (FA1D1BWP20P90)                                      0.01      0.03       3.25 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n10 (net)                                         1                   0.00       3.25 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U10/CO (FA1D1BWP20P90)                                      0.01      0.03       3.29 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n9 (net)                                          1                   0.00       3.29 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U9/CO (FA1D1BWP20P90)                                       0.01      0.03       3.32 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n8 (net)                                          1                   0.00       3.32 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U8/CO (FA1D1BWP20P90)                                       0.01      0.03       3.35 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n7 (net)                                          1                   0.00       3.35 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U7/CO (FA1D1BWP20P90)                                       0.01      0.03       3.38 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n6 (net)                                          1                   0.00       3.38 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U6/S (FA1D1BWP20P90)                                        0.01      0.05       3.43 r    mo 
+  u_cpu/genblk2.pcpi_div/C30/DATA2_27 (net)                                                    1                   0.00       3.43 r
+  u_cpu/genblk2.pcpi_div/U698/ZN (IOA21D1BWP20P90)                                                       0.01      0.02       3.44 r
+  u_cpu/genblk2.pcpi_div/n278 (net)                                                            1                   0.00       3.44 r
+  u_cpu/genblk2.pcpi_div/dividend_reg[27]/D (DFQD2BWP16P90)                                              0.01      0.00       3.44 r
+  data arrival time                                                                                                           3.44
+
+  clock clk (rise edge)                                                                                           10.00      10.00
+  clock network delay (ideal)                                                                                      0.00      10.00
+  u_cpu/genblk2.pcpi_div/dividend_reg[27]/CP (DFQD2BWP16P90)                                                       0.00      10.00 r
+  library setup time                                                                                              -0.01       9.99
+  data required time                                                                                                          9.99
+  --------------------------------------------------------------------------------------------------------------------------------------------------------
+  data required time                                                                                                          9.99
+  data arrival time                                                                                                          -3.44
+  --------------------------------------------------------------------------------------------------------------------------------------------------------
+  slack (MET)                                                                                                                 6.54
+
+
+  Startpoint: rst_n (input port clocked by clk)
+  Endpoint: u_cpu/genblk2.pcpi_div/dividend_reg[26]
+            (rising edge-triggered flip-flop clocked by clk)
+  Path Group: clk
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  axil_cordic_accel_WIDTH32_ITERATIONS16 ZeroWireload N16ADFP_StdCelltt0p8v25c
+  axil_uart          ZeroWireload          N16ADFP_StdCelltt0p8v25c
+  axil_interconnect_1x2 ZeroWireload       N16ADFP_StdCelltt0p8v25c
+  native_periph_bridge ZeroWireload        N16ADFP_StdCelltt0p8v25c
+  picorv32_axi_adapter ZeroWireload        N16ADFP_StdCelltt0p8v25c
+  sram_MEM_WORDS512  ZeroWireload          N16ADFP_StdCelltt0p8v25c
+  soc_top            ZeroWireload          N16ADFP_StdCelltt0p8v25c
+  picorv32_0_0_1_1_0_1_0_0_0_0_1_1_0_1_1_1_0_0_0_0_0_00000000_ffffffff_00000000_2048 ZeroWireload N16ADFP_StdCelltt0p8v25c
+  picorv32_pcpi_fast_mul ZeroWireload      N16ADFP_StdCelltt0p8v25c
+  picorv32_pcpi_div  ZeroWireload          N16ADFP_StdCelltt0p8v25c
+
+Attributes:
+    d - dont_touch
+    u - dont_use
+   mo - map_only
+   so - size_only
+    i - ideal_net or ideal_network
+  inf - infeasible path
+
+  Point                                                                                      Fanout     Trans      Incr       Path      Attributes
+  --------------------------------------------------------------------------------------------------------------------------------------------------------
+  clock clk (rise edge)                                                                                            0.00       0.00
+  clock network delay (ideal)                                                                                      0.00       0.00
+  input external delay                                                                                             2.00       2.00 r
+  rst_n (in)                                                                                             0.29      0.17       2.17 r
+  rst_n (net)                                                                                 98                   0.00       2.17 r
+  u_cpu/resetn (picorv32_0_0_1_1_0_1_0_0_0_0_1_1_0_1_1_1_0_0_0_0_0_00000000_ffffffff_00000000_2048)                0.00       2.17 r
+  u_cpu/resetn (net)                                                                                               0.00       2.17 r
+  u_cpu/U520/ZN (INVD1BWP20P90)                                                                          0.09      0.08       2.25 f
+  u_cpu/n3713 (net)                                                                           14                   0.00       2.25 f
+  u_cpu/U521/ZN (INVD1BWP20P90)                                                                          0.08      0.07       2.32 r
+  u_cpu/n5330 (net)                                                                           27                   0.00       2.32 r
+  u_cpu/genblk2.pcpi_div/resetn (picorv32_pcpi_div)                                                                0.00       2.32 r
+  u_cpu/genblk2.pcpi_div/resetn (net)                                                                              0.00       2.32 r
+  u_cpu/genblk2.pcpi_div/U46/ZN (INR2D1BWP20P90)                                                         0.01      0.03       2.35 r
+  u_cpu/genblk2.pcpi_div/n766 (net)                                                            2                   0.00       2.35 r
+  u_cpu/genblk2.pcpi_div/U5/ZN (IND2D1BWP20P90)                                                          0.14      0.09       2.43 f
+  u_cpu/genblk2.pcpi_div/n607 (net)                                                           38                   0.00       2.43 f
+  u_cpu/genblk2.pcpi_div/U357/ZN (IND2D1BWP20P90)                                                        0.02      0.04       2.47 f
+  u_cpu/genblk2.pcpi_div/n605 (net)                                                            4                   0.00       2.47 f
+  u_cpu/genblk2.pcpi_div/U358/ZN (INVD1BWP20P90)                                                         0.07      0.05       2.52 r
+  u_cpu/genblk2.pcpi_div/n188 (net)                                                           30                   0.00       2.52 r
+  u_cpu/genblk2.pcpi_div/U360/ZN (AOI21D1BWP20P90)                                                       0.03      0.03       2.55 f
+  u_cpu/genblk2.pcpi_div/n733 (net)                                                            1                   0.00       2.55 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U32/CO (FA1D1BWP20P90)                                      0.01      0.04       2.59 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n31 (net)                                         1                   0.00       2.59 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U31/CO (FA1D1BWP20P90)                                      0.01      0.03       2.62 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n30 (net)                                         1                   0.00       2.62 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U30/CO (FA1D1BWP20P90)                                      0.01      0.03       2.65 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n29 (net)                                         1                   0.00       2.65 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U29/CO (FA1D1BWP20P90)                                      0.01      0.03       2.68 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n28 (net)                                         1                   0.00       2.68 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U28/CO (FA1D1BWP20P90)                                      0.01      0.03       2.72 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n27 (net)                                         1                   0.00       2.72 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U27/CO (FA1D1BWP20P90)                                      0.01      0.03       2.75 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n26 (net)                                         1                   0.00       2.75 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U26/CO (FA1D1BWP20P90)                                      0.01      0.03       2.78 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n25 (net)                                         1                   0.00       2.78 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U25/CO (FA1D1BWP20P90)                                      0.01      0.03       2.81 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n24 (net)                                         1                   0.00       2.81 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U24/CO (FA1D1BWP20P90)                                      0.01      0.03       2.84 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n23 (net)                                         1                   0.00       2.84 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U23/CO (FA1D1BWP20P90)                                      0.01      0.03       2.87 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n22 (net)                                         1                   0.00       2.87 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U22/CO (FA1D1BWP20P90)                                      0.01      0.03       2.91 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n21 (net)                                         1                   0.00       2.91 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U21/CO (FA1D1BWP20P90)                                      0.01      0.03       2.94 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n20 (net)                                         1                   0.00       2.94 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U20/CO (FA1D1BWP20P90)                                      0.01      0.03       2.97 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n19 (net)                                         1                   0.00       2.97 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U19/CO (FA1D1BWP20P90)                                      0.01      0.03       3.00 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n18 (net)                                         1                   0.00       3.00 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U18/CO (FA1D1BWP20P90)                                      0.01      0.03       3.03 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n17 (net)                                         1                   0.00       3.03 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U17/CO (FA1D1BWP20P90)                                      0.01      0.03       3.06 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n16 (net)                                         1                   0.00       3.06 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U16/CO (FA1D1BWP20P90)                                      0.01      0.03       3.10 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n15 (net)                                         1                   0.00       3.10 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U15/CO (FA1D1BWP20P90)                                      0.01      0.03       3.13 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n14 (net)                                         1                   0.00       3.13 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U14/CO (FA1D1BWP20P90)                                      0.01      0.03       3.16 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n13 (net)                                         1                   0.00       3.16 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U13/CO (FA1D1BWP20P90)                                      0.01      0.03       3.19 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n12 (net)                                         1                   0.00       3.19 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U12/CO (FA1D1BWP20P90)                                      0.01      0.03       3.22 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n11 (net)                                         1                   0.00       3.22 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U11/CO (FA1D1BWP20P90)                                      0.01      0.03       3.25 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n10 (net)                                         1                   0.00       3.25 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U10/CO (FA1D1BWP20P90)                                      0.01      0.03       3.29 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n9 (net)                                          1                   0.00       3.29 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U9/CO (FA1D1BWP20P90)                                       0.01      0.03       3.32 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n8 (net)                                          1                   0.00       3.32 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U8/CO (FA1D1BWP20P90)                                       0.01      0.03       3.35 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n7 (net)                                          1                   0.00       3.35 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U7/S (FA1D1BWP20P90)                                        0.01      0.05       3.40 r    mo 
+  u_cpu/genblk2.pcpi_div/C30/DATA2_26 (net)                                                    1                   0.00       3.40 r
+  u_cpu/genblk2.pcpi_div/U700/ZN (IOA21D1BWP20P90)                                                       0.01      0.02       3.41 r
+  u_cpu/genblk2.pcpi_div/n279 (net)                                                            1                   0.00       3.41 r
+  u_cpu/genblk2.pcpi_div/dividend_reg[26]/D (DFQD2BWP16P90)                                              0.01      0.00       3.41 r
+  data arrival time                                                                                                           3.41
+
+  clock clk (rise edge)                                                                                           10.00      10.00
+  clock network delay (ideal)                                                                                      0.00      10.00
+  u_cpu/genblk2.pcpi_div/dividend_reg[26]/CP (DFQD2BWP16P90)                                                       0.00      10.00 r
+  library setup time                                                                                              -0.01       9.99
+  data required time                                                                                                          9.99
+  --------------------------------------------------------------------------------------------------------------------------------------------------------
+  data required time                                                                                                          9.99
+  data arrival time                                                                                                          -3.41
+  --------------------------------------------------------------------------------------------------------------------------------------------------------
+  slack (MET)                                                                                                                 6.57
+
+
+  Startpoint: rst_n (input port clocked by clk)
+  Endpoint: u_cpu/genblk2.pcpi_div/dividend_reg[25]
+            (rising edge-triggered flip-flop clocked by clk)
+  Path Group: clk
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  axil_cordic_accel_WIDTH32_ITERATIONS16 ZeroWireload N16ADFP_StdCelltt0p8v25c
+  axil_uart          ZeroWireload          N16ADFP_StdCelltt0p8v25c
+  axil_interconnect_1x2 ZeroWireload       N16ADFP_StdCelltt0p8v25c
+  native_periph_bridge ZeroWireload        N16ADFP_StdCelltt0p8v25c
+  picorv32_axi_adapter ZeroWireload        N16ADFP_StdCelltt0p8v25c
+  sram_MEM_WORDS512  ZeroWireload          N16ADFP_StdCelltt0p8v25c
+  soc_top            ZeroWireload          N16ADFP_StdCelltt0p8v25c
+  picorv32_0_0_1_1_0_1_0_0_0_0_1_1_0_1_1_1_0_0_0_0_0_00000000_ffffffff_00000000_2048 ZeroWireload N16ADFP_StdCelltt0p8v25c
+  picorv32_pcpi_fast_mul ZeroWireload      N16ADFP_StdCelltt0p8v25c
+  picorv32_pcpi_div  ZeroWireload          N16ADFP_StdCelltt0p8v25c
+
+Attributes:
+    d - dont_touch
+    u - dont_use
+   mo - map_only
+   so - size_only
+    i - ideal_net or ideal_network
+  inf - infeasible path
+
+  Point                                                                                      Fanout     Trans      Incr       Path      Attributes
+  --------------------------------------------------------------------------------------------------------------------------------------------------------
+  clock clk (rise edge)                                                                                            0.00       0.00
+  clock network delay (ideal)                                                                                      0.00       0.00
+  input external delay                                                                                             2.00       2.00 r
+  rst_n (in)                                                                                             0.29      0.17       2.17 r
+  rst_n (net)                                                                                 98                   0.00       2.17 r
+  u_cpu/resetn (picorv32_0_0_1_1_0_1_0_0_0_0_1_1_0_1_1_1_0_0_0_0_0_00000000_ffffffff_00000000_2048)                0.00       2.17 r
+  u_cpu/resetn (net)                                                                                               0.00       2.17 r
+  u_cpu/U520/ZN (INVD1BWP20P90)                                                                          0.09      0.08       2.25 f
+  u_cpu/n3713 (net)                                                                           14                   0.00       2.25 f
+  u_cpu/U521/ZN (INVD1BWP20P90)                                                                          0.08      0.07       2.32 r
+  u_cpu/n5330 (net)                                                                           27                   0.00       2.32 r
+  u_cpu/genblk2.pcpi_div/resetn (picorv32_pcpi_div)                                                                0.00       2.32 r
+  u_cpu/genblk2.pcpi_div/resetn (net)                                                                              0.00       2.32 r
+  u_cpu/genblk2.pcpi_div/U46/ZN (INR2D1BWP20P90)                                                         0.01      0.03       2.35 r
+  u_cpu/genblk2.pcpi_div/n766 (net)                                                            2                   0.00       2.35 r
+  u_cpu/genblk2.pcpi_div/U5/ZN (IND2D1BWP20P90)                                                          0.14      0.09       2.43 f
+  u_cpu/genblk2.pcpi_div/n607 (net)                                                           38                   0.00       2.43 f
+  u_cpu/genblk2.pcpi_div/U357/ZN (IND2D1BWP20P90)                                                        0.02      0.04       2.47 f
+  u_cpu/genblk2.pcpi_div/n605 (net)                                                            4                   0.00       2.47 f
+  u_cpu/genblk2.pcpi_div/U358/ZN (INVD1BWP20P90)                                                         0.07      0.05       2.52 r
+  u_cpu/genblk2.pcpi_div/n188 (net)                                                           30                   0.00       2.52 r
+  u_cpu/genblk2.pcpi_div/U360/ZN (AOI21D1BWP20P90)                                                       0.03      0.03       2.55 f
+  u_cpu/genblk2.pcpi_div/n733 (net)                                                            1                   0.00       2.55 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U32/CO (FA1D1BWP20P90)                                      0.01      0.04       2.59 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n31 (net)                                         1                   0.00       2.59 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U31/CO (FA1D1BWP20P90)                                      0.01      0.03       2.62 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n30 (net)                                         1                   0.00       2.62 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U30/CO (FA1D1BWP20P90)                                      0.01      0.03       2.65 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n29 (net)                                         1                   0.00       2.65 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U29/CO (FA1D1BWP20P90)                                      0.01      0.03       2.68 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n28 (net)                                         1                   0.00       2.68 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U28/CO (FA1D1BWP20P90)                                      0.01      0.03       2.72 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n27 (net)                                         1                   0.00       2.72 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U27/CO (FA1D1BWP20P90)                                      0.01      0.03       2.75 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n26 (net)                                         1                   0.00       2.75 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U26/CO (FA1D1BWP20P90)                                      0.01      0.03       2.78 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n25 (net)                                         1                   0.00       2.78 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U25/CO (FA1D1BWP20P90)                                      0.01      0.03       2.81 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n24 (net)                                         1                   0.00       2.81 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U24/CO (FA1D1BWP20P90)                                      0.01      0.03       2.84 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n23 (net)                                         1                   0.00       2.84 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U23/CO (FA1D1BWP20P90)                                      0.01      0.03       2.87 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n22 (net)                                         1                   0.00       2.87 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U22/CO (FA1D1BWP20P90)                                      0.01      0.03       2.91 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n21 (net)                                         1                   0.00       2.91 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U21/CO (FA1D1BWP20P90)                                      0.01      0.03       2.94 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n20 (net)                                         1                   0.00       2.94 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U20/CO (FA1D1BWP20P90)                                      0.01      0.03       2.97 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n19 (net)                                         1                   0.00       2.97 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U19/CO (FA1D1BWP20P90)                                      0.01      0.03       3.00 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n18 (net)                                         1                   0.00       3.00 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U18/CO (FA1D1BWP20P90)                                      0.01      0.03       3.03 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n17 (net)                                         1                   0.00       3.03 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U17/CO (FA1D1BWP20P90)                                      0.01      0.03       3.06 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n16 (net)                                         1                   0.00       3.06 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U16/CO (FA1D1BWP20P90)                                      0.01      0.03       3.10 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n15 (net)                                         1                   0.00       3.10 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U15/CO (FA1D1BWP20P90)                                      0.01      0.03       3.13 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n14 (net)                                         1                   0.00       3.13 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U14/CO (FA1D1BWP20P90)                                      0.01      0.03       3.16 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n13 (net)                                         1                   0.00       3.16 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U13/CO (FA1D1BWP20P90)                                      0.01      0.03       3.19 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n12 (net)                                         1                   0.00       3.19 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U12/CO (FA1D1BWP20P90)                                      0.01      0.03       3.22 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n11 (net)                                         1                   0.00       3.22 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U11/CO (FA1D1BWP20P90)                                      0.01      0.03       3.25 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n10 (net)                                         1                   0.00       3.25 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U10/CO (FA1D1BWP20P90)                                      0.01      0.03       3.29 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n9 (net)                                          1                   0.00       3.29 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U9/CO (FA1D1BWP20P90)                                       0.01      0.03       3.32 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n8 (net)                                          1                   0.00       3.32 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U8/S (FA1D1BWP20P90)                                        0.01      0.05       3.36 r    mo 
+  u_cpu/genblk2.pcpi_div/C30/DATA2_25 (net)                                                    1                   0.00       3.36 r
+  u_cpu/genblk2.pcpi_div/U702/ZN (IOA21D1BWP20P90)                                                       0.01      0.02       3.38 r
+  u_cpu/genblk2.pcpi_div/n280 (net)                                                            1                   0.00       3.38 r
+  u_cpu/genblk2.pcpi_div/dividend_reg[25]/D (DFQD2BWP16P90)                                              0.01      0.00       3.38 r
+  data arrival time                                                                                                           3.38
+
+  clock clk (rise edge)                                                                                           10.00      10.00
+  clock network delay (ideal)                                                                                      0.00      10.00
+  u_cpu/genblk2.pcpi_div/dividend_reg[25]/CP (DFQD2BWP16P90)                                                       0.00      10.00 r
+  library setup time                                                                                              -0.01       9.99
+  data required time                                                                                                          9.99
+  --------------------------------------------------------------------------------------------------------------------------------------------------------
+  data required time                                                                                                          9.99
+  data arrival time                                                                                                          -3.38
+  --------------------------------------------------------------------------------------------------------------------------------------------------------
+  slack (MET)                                                                                                                 6.60
+
+
+  Startpoint: rst_n (input port clocked by clk)
+  Endpoint: u_cpu/genblk2.pcpi_div/dividend_reg[24]
+            (rising edge-triggered flip-flop clocked by clk)
+  Path Group: clk
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  axil_cordic_accel_WIDTH32_ITERATIONS16 ZeroWireload N16ADFP_StdCelltt0p8v25c
+  axil_uart          ZeroWireload          N16ADFP_StdCelltt0p8v25c
+  axil_interconnect_1x2 ZeroWireload       N16ADFP_StdCelltt0p8v25c
+  native_periph_bridge ZeroWireload        N16ADFP_StdCelltt0p8v25c
+  picorv32_axi_adapter ZeroWireload        N16ADFP_StdCelltt0p8v25c
+  sram_MEM_WORDS512  ZeroWireload          N16ADFP_StdCelltt0p8v25c
+  soc_top            ZeroWireload          N16ADFP_StdCelltt0p8v25c
+  picorv32_0_0_1_1_0_1_0_0_0_0_1_1_0_1_1_1_0_0_0_0_0_00000000_ffffffff_00000000_2048 ZeroWireload N16ADFP_StdCelltt0p8v25c
+  picorv32_pcpi_fast_mul ZeroWireload      N16ADFP_StdCelltt0p8v25c
+  picorv32_pcpi_div  ZeroWireload          N16ADFP_StdCelltt0p8v25c
+
+Attributes:
+    d - dont_touch
+    u - dont_use
+   mo - map_only
+   so - size_only
+    i - ideal_net or ideal_network
+  inf - infeasible path
+
+  Point                                                                                      Fanout     Trans      Incr       Path      Attributes
+  --------------------------------------------------------------------------------------------------------------------------------------------------------
+  clock clk (rise edge)                                                                                            0.00       0.00
+  clock network delay (ideal)                                                                                      0.00       0.00
+  input external delay                                                                                             2.00       2.00 r
+  rst_n (in)                                                                                             0.29      0.17       2.17 r
+  rst_n (net)                                                                                 98                   0.00       2.17 r
+  u_cpu/resetn (picorv32_0_0_1_1_0_1_0_0_0_0_1_1_0_1_1_1_0_0_0_0_0_00000000_ffffffff_00000000_2048)                0.00       2.17 r
+  u_cpu/resetn (net)                                                                                               0.00       2.17 r
+  u_cpu/U520/ZN (INVD1BWP20P90)                                                                          0.09      0.08       2.25 f
+  u_cpu/n3713 (net)                                                                           14                   0.00       2.25 f
+  u_cpu/U521/ZN (INVD1BWP20P90)                                                                          0.08      0.07       2.32 r
+  u_cpu/n5330 (net)                                                                           27                   0.00       2.32 r
+  u_cpu/genblk2.pcpi_div/resetn (picorv32_pcpi_div)                                                                0.00       2.32 r
+  u_cpu/genblk2.pcpi_div/resetn (net)                                                                              0.00       2.32 r
+  u_cpu/genblk2.pcpi_div/U46/ZN (INR2D1BWP20P90)                                                         0.01      0.03       2.35 r
+  u_cpu/genblk2.pcpi_div/n766 (net)                                                            2                   0.00       2.35 r
+  u_cpu/genblk2.pcpi_div/U5/ZN (IND2D1BWP20P90)                                                          0.14      0.09       2.43 f
+  u_cpu/genblk2.pcpi_div/n607 (net)                                                           38                   0.00       2.43 f
+  u_cpu/genblk2.pcpi_div/U357/ZN (IND2D1BWP20P90)                                                        0.02      0.04       2.47 f
+  u_cpu/genblk2.pcpi_div/n605 (net)                                                            4                   0.00       2.47 f
+  u_cpu/genblk2.pcpi_div/U358/ZN (INVD1BWP20P90)                                                         0.07      0.05       2.52 r
+  u_cpu/genblk2.pcpi_div/n188 (net)                                                           30                   0.00       2.52 r
+  u_cpu/genblk2.pcpi_div/U360/ZN (AOI21D1BWP20P90)                                                       0.03      0.03       2.55 f
+  u_cpu/genblk2.pcpi_div/n733 (net)                                                            1                   0.00       2.55 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U32/CO (FA1D1BWP20P90)                                      0.01      0.04       2.59 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n31 (net)                                         1                   0.00       2.59 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U31/CO (FA1D1BWP20P90)                                      0.01      0.03       2.62 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n30 (net)                                         1                   0.00       2.62 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U30/CO (FA1D1BWP20P90)                                      0.01      0.03       2.65 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n29 (net)                                         1                   0.00       2.65 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U29/CO (FA1D1BWP20P90)                                      0.01      0.03       2.68 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n28 (net)                                         1                   0.00       2.68 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U28/CO (FA1D1BWP20P90)                                      0.01      0.03       2.72 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n27 (net)                                         1                   0.00       2.72 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U27/CO (FA1D1BWP20P90)                                      0.01      0.03       2.75 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n26 (net)                                         1                   0.00       2.75 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U26/CO (FA1D1BWP20P90)                                      0.01      0.03       2.78 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n25 (net)                                         1                   0.00       2.78 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U25/CO (FA1D1BWP20P90)                                      0.01      0.03       2.81 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n24 (net)                                         1                   0.00       2.81 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U24/CO (FA1D1BWP20P90)                                      0.01      0.03       2.84 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n23 (net)                                         1                   0.00       2.84 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U23/CO (FA1D1BWP20P90)                                      0.01      0.03       2.87 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n22 (net)                                         1                   0.00       2.87 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U22/CO (FA1D1BWP20P90)                                      0.01      0.03       2.91 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n21 (net)                                         1                   0.00       2.91 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U21/CO (FA1D1BWP20P90)                                      0.01      0.03       2.94 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n20 (net)                                         1                   0.00       2.94 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U20/CO (FA1D1BWP20P90)                                      0.01      0.03       2.97 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n19 (net)                                         1                   0.00       2.97 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U19/CO (FA1D1BWP20P90)                                      0.01      0.03       3.00 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n18 (net)                                         1                   0.00       3.00 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U18/CO (FA1D1BWP20P90)                                      0.01      0.03       3.03 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n17 (net)                                         1                   0.00       3.03 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U17/CO (FA1D1BWP20P90)                                      0.01      0.03       3.06 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n16 (net)                                         1                   0.00       3.06 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U16/CO (FA1D1BWP20P90)                                      0.01      0.03       3.10 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n15 (net)                                         1                   0.00       3.10 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U15/CO (FA1D1BWP20P90)                                      0.01      0.03       3.13 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n14 (net)                                         1                   0.00       3.13 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U14/CO (FA1D1BWP20P90)                                      0.01      0.03       3.16 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n13 (net)                                         1                   0.00       3.16 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U13/CO (FA1D1BWP20P90)                                      0.01      0.03       3.19 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n12 (net)                                         1                   0.00       3.19 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U12/CO (FA1D1BWP20P90)                                      0.01      0.03       3.22 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n11 (net)                                         1                   0.00       3.22 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U11/CO (FA1D1BWP20P90)                                      0.01      0.03       3.25 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n10 (net)                                         1                   0.00       3.25 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U10/CO (FA1D1BWP20P90)                                      0.01      0.03       3.29 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n9 (net)                                          1                   0.00       3.29 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U9/S (FA1D1BWP20P90)                                        0.01      0.05       3.33 r    mo 
+  u_cpu/genblk2.pcpi_div/C30/DATA2_24 (net)                                                    1                   0.00       3.33 r
+  u_cpu/genblk2.pcpi_div/U704/ZN (IOA21D1BWP20P90)                                                       0.01      0.02       3.35 r
+  u_cpu/genblk2.pcpi_div/n281 (net)                                                            1                   0.00       3.35 r
+  u_cpu/genblk2.pcpi_div/dividend_reg[24]/D (DFQD2BWP16P90)                                              0.01      0.00       3.35 r
+  data arrival time                                                                                                           3.35
+
+  clock clk (rise edge)                                                                                           10.00      10.00
+  clock network delay (ideal)                                                                                      0.00      10.00
+  u_cpu/genblk2.pcpi_div/dividend_reg[24]/CP (DFQD2BWP16P90)                                                       0.00      10.00 r
+  library setup time                                                                                              -0.01       9.99
+  data required time                                                                                                          9.99
+  --------------------------------------------------------------------------------------------------------------------------------------------------------
+  data required time                                                                                                          9.99
+  data arrival time                                                                                                          -3.35
+  --------------------------------------------------------------------------------------------------------------------------------------------------------
+  slack (MET)                                                                                                                 6.64
+
+
+  Startpoint: rst_n (input port clocked by clk)
+  Endpoint: u_cpu/genblk2.pcpi_div/dividend_reg[23]
+            (rising edge-triggered flip-flop clocked by clk)
+  Path Group: clk
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  axil_cordic_accel_WIDTH32_ITERATIONS16 ZeroWireload N16ADFP_StdCelltt0p8v25c
+  axil_uart          ZeroWireload          N16ADFP_StdCelltt0p8v25c
+  axil_interconnect_1x2 ZeroWireload       N16ADFP_StdCelltt0p8v25c
+  native_periph_bridge ZeroWireload        N16ADFP_StdCelltt0p8v25c
+  picorv32_axi_adapter ZeroWireload        N16ADFP_StdCelltt0p8v25c
+  sram_MEM_WORDS512  ZeroWireload          N16ADFP_StdCelltt0p8v25c
+  soc_top            ZeroWireload          N16ADFP_StdCelltt0p8v25c
+  picorv32_0_0_1_1_0_1_0_0_0_0_1_1_0_1_1_1_0_0_0_0_0_00000000_ffffffff_00000000_2048 ZeroWireload N16ADFP_StdCelltt0p8v25c
+  picorv32_pcpi_fast_mul ZeroWireload      N16ADFP_StdCelltt0p8v25c
+  picorv32_pcpi_div  ZeroWireload          N16ADFP_StdCelltt0p8v25c
+
+Attributes:
+    d - dont_touch
+    u - dont_use
+   mo - map_only
+   so - size_only
+    i - ideal_net or ideal_network
+  inf - infeasible path
+
+  Point                                                                                      Fanout     Trans      Incr       Path      Attributes
+  --------------------------------------------------------------------------------------------------------------------------------------------------------
+  clock clk (rise edge)                                                                                            0.00       0.00
+  clock network delay (ideal)                                                                                      0.00       0.00
+  input external delay                                                                                             2.00       2.00 r
+  rst_n (in)                                                                                             0.29      0.17       2.17 r
+  rst_n (net)                                                                                 98                   0.00       2.17 r
+  u_cpu/resetn (picorv32_0_0_1_1_0_1_0_0_0_0_1_1_0_1_1_1_0_0_0_0_0_00000000_ffffffff_00000000_2048)                0.00       2.17 r
+  u_cpu/resetn (net)                                                                                               0.00       2.17 r
+  u_cpu/U520/ZN (INVD1BWP20P90)                                                                          0.09      0.08       2.25 f
+  u_cpu/n3713 (net)                                                                           14                   0.00       2.25 f
+  u_cpu/U521/ZN (INVD1BWP20P90)                                                                          0.08      0.07       2.32 r
+  u_cpu/n5330 (net)                                                                           27                   0.00       2.32 r
+  u_cpu/genblk2.pcpi_div/resetn (picorv32_pcpi_div)                                                                0.00       2.32 r
+  u_cpu/genblk2.pcpi_div/resetn (net)                                                                              0.00       2.32 r
+  u_cpu/genblk2.pcpi_div/U46/ZN (INR2D1BWP20P90)                                                         0.01      0.03       2.35 r
+  u_cpu/genblk2.pcpi_div/n766 (net)                                                            2                   0.00       2.35 r
+  u_cpu/genblk2.pcpi_div/U5/ZN (IND2D1BWP20P90)                                                          0.14      0.09       2.43 f
+  u_cpu/genblk2.pcpi_div/n607 (net)                                                           38                   0.00       2.43 f
+  u_cpu/genblk2.pcpi_div/U357/ZN (IND2D1BWP20P90)                                                        0.02      0.04       2.47 f
+  u_cpu/genblk2.pcpi_div/n605 (net)                                                            4                   0.00       2.47 f
+  u_cpu/genblk2.pcpi_div/U358/ZN (INVD1BWP20P90)                                                         0.07      0.05       2.52 r
+  u_cpu/genblk2.pcpi_div/n188 (net)                                                           30                   0.00       2.52 r
+  u_cpu/genblk2.pcpi_div/U360/ZN (AOI21D1BWP20P90)                                                       0.03      0.03       2.55 f
+  u_cpu/genblk2.pcpi_div/n733 (net)                                                            1                   0.00       2.55 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U32/CO (FA1D1BWP20P90)                                      0.01      0.04       2.59 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n31 (net)                                         1                   0.00       2.59 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U31/CO (FA1D1BWP20P90)                                      0.01      0.03       2.62 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n30 (net)                                         1                   0.00       2.62 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U30/CO (FA1D1BWP20P90)                                      0.01      0.03       2.65 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n29 (net)                                         1                   0.00       2.65 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U29/CO (FA1D1BWP20P90)                                      0.01      0.03       2.68 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n28 (net)                                         1                   0.00       2.68 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U28/CO (FA1D1BWP20P90)                                      0.01      0.03       2.72 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n27 (net)                                         1                   0.00       2.72 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U27/CO (FA1D1BWP20P90)                                      0.01      0.03       2.75 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n26 (net)                                         1                   0.00       2.75 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U26/CO (FA1D1BWP20P90)                                      0.01      0.03       2.78 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n25 (net)                                         1                   0.00       2.78 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U25/CO (FA1D1BWP20P90)                                      0.01      0.03       2.81 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n24 (net)                                         1                   0.00       2.81 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U24/CO (FA1D1BWP20P90)                                      0.01      0.03       2.84 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n23 (net)                                         1                   0.00       2.84 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U23/CO (FA1D1BWP20P90)                                      0.01      0.03       2.87 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n22 (net)                                         1                   0.00       2.87 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U22/CO (FA1D1BWP20P90)                                      0.01      0.03       2.91 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n21 (net)                                         1                   0.00       2.91 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U21/CO (FA1D1BWP20P90)                                      0.01      0.03       2.94 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n20 (net)                                         1                   0.00       2.94 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U20/CO (FA1D1BWP20P90)                                      0.01      0.03       2.97 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n19 (net)                                         1                   0.00       2.97 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U19/CO (FA1D1BWP20P90)                                      0.01      0.03       3.00 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n18 (net)                                         1                   0.00       3.00 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U18/CO (FA1D1BWP20P90)                                      0.01      0.03       3.03 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n17 (net)                                         1                   0.00       3.03 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U17/CO (FA1D1BWP20P90)                                      0.01      0.03       3.06 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n16 (net)                                         1                   0.00       3.06 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U16/CO (FA1D1BWP20P90)                                      0.01      0.03       3.10 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n15 (net)                                         1                   0.00       3.10 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U15/CO (FA1D1BWP20P90)                                      0.01      0.03       3.13 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n14 (net)                                         1                   0.00       3.13 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U14/CO (FA1D1BWP20P90)                                      0.01      0.03       3.16 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n13 (net)                                         1                   0.00       3.16 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U13/CO (FA1D1BWP20P90)                                      0.01      0.03       3.19 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n12 (net)                                         1                   0.00       3.19 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U12/CO (FA1D1BWP20P90)                                      0.01      0.03       3.22 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n11 (net)                                         1                   0.00       3.22 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U11/CO (FA1D1BWP20P90)                                      0.01      0.03       3.25 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n10 (net)                                         1                   0.00       3.25 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U10/S (FA1D1BWP20P90)                                       0.01      0.05       3.30 r    mo 
+  u_cpu/genblk2.pcpi_div/C30/DATA2_23 (net)                                                    1                   0.00       3.30 r
+  u_cpu/genblk2.pcpi_div/U706/ZN (IOA21D1BWP20P90)                                                       0.01      0.02       3.32 r
+  u_cpu/genblk2.pcpi_div/n282 (net)                                                            1                   0.00       3.32 r
+  u_cpu/genblk2.pcpi_div/dividend_reg[23]/D (DFQD2BWP16P90)                                              0.01      0.00       3.32 r
+  data arrival time                                                                                                           3.32
+
+  clock clk (rise edge)                                                                                           10.00      10.00
+  clock network delay (ideal)                                                                                      0.00      10.00
+  u_cpu/genblk2.pcpi_div/dividend_reg[23]/CP (DFQD2BWP16P90)                                                       0.00      10.00 r
+  library setup time                                                                                              -0.01       9.99
+  data required time                                                                                                          9.99
+  --------------------------------------------------------------------------------------------------------------------------------------------------------
+  data required time                                                                                                          9.99
+  data arrival time                                                                                                          -3.32
+  --------------------------------------------------------------------------------------------------------------------------------------------------------
+  slack (MET)                                                                                                                 6.67
+
+
+  Startpoint: rst_n (input port clocked by clk)
+  Endpoint: u_cpu/genblk2.pcpi_div/dividend_reg[22]
+            (rising edge-triggered flip-flop clocked by clk)
+  Path Group: clk
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  axil_cordic_accel_WIDTH32_ITERATIONS16 ZeroWireload N16ADFP_StdCelltt0p8v25c
+  axil_uart          ZeroWireload          N16ADFP_StdCelltt0p8v25c
+  axil_interconnect_1x2 ZeroWireload       N16ADFP_StdCelltt0p8v25c
+  native_periph_bridge ZeroWireload        N16ADFP_StdCelltt0p8v25c
+  picorv32_axi_adapter ZeroWireload        N16ADFP_StdCelltt0p8v25c
+  sram_MEM_WORDS512  ZeroWireload          N16ADFP_StdCelltt0p8v25c
+  soc_top            ZeroWireload          N16ADFP_StdCelltt0p8v25c
+  picorv32_0_0_1_1_0_1_0_0_0_0_1_1_0_1_1_1_0_0_0_0_0_00000000_ffffffff_00000000_2048 ZeroWireload N16ADFP_StdCelltt0p8v25c
+  picorv32_pcpi_fast_mul ZeroWireload      N16ADFP_StdCelltt0p8v25c
+  picorv32_pcpi_div  ZeroWireload          N16ADFP_StdCelltt0p8v25c
+
+Attributes:
+    d - dont_touch
+    u - dont_use
+   mo - map_only
+   so - size_only
+    i - ideal_net or ideal_network
+  inf - infeasible path
+
+  Point                                                                                      Fanout     Trans      Incr       Path      Attributes
+  --------------------------------------------------------------------------------------------------------------------------------------------------------
+  clock clk (rise edge)                                                                                            0.00       0.00
+  clock network delay (ideal)                                                                                      0.00       0.00
+  input external delay                                                                                             2.00       2.00 r
+  rst_n (in)                                                                                             0.29      0.17       2.17 r
+  rst_n (net)                                                                                 98                   0.00       2.17 r
+  u_cpu/resetn (picorv32_0_0_1_1_0_1_0_0_0_0_1_1_0_1_1_1_0_0_0_0_0_00000000_ffffffff_00000000_2048)                0.00       2.17 r
+  u_cpu/resetn (net)                                                                                               0.00       2.17 r
+  u_cpu/U520/ZN (INVD1BWP20P90)                                                                          0.09      0.08       2.25 f
+  u_cpu/n3713 (net)                                                                           14                   0.00       2.25 f
+  u_cpu/U521/ZN (INVD1BWP20P90)                                                                          0.08      0.07       2.32 r
+  u_cpu/n5330 (net)                                                                           27                   0.00       2.32 r
+  u_cpu/genblk2.pcpi_div/resetn (picorv32_pcpi_div)                                                                0.00       2.32 r
+  u_cpu/genblk2.pcpi_div/resetn (net)                                                                              0.00       2.32 r
+  u_cpu/genblk2.pcpi_div/U46/ZN (INR2D1BWP20P90)                                                         0.01      0.03       2.35 r
+  u_cpu/genblk2.pcpi_div/n766 (net)                                                            2                   0.00       2.35 r
+  u_cpu/genblk2.pcpi_div/U5/ZN (IND2D1BWP20P90)                                                          0.14      0.09       2.43 f
+  u_cpu/genblk2.pcpi_div/n607 (net)                                                           38                   0.00       2.43 f
+  u_cpu/genblk2.pcpi_div/U357/ZN (IND2D1BWP20P90)                                                        0.02      0.04       2.47 f
+  u_cpu/genblk2.pcpi_div/n605 (net)                                                            4                   0.00       2.47 f
+  u_cpu/genblk2.pcpi_div/U358/ZN (INVD1BWP20P90)                                                         0.07      0.05       2.52 r
+  u_cpu/genblk2.pcpi_div/n188 (net)                                                           30                   0.00       2.52 r
+  u_cpu/genblk2.pcpi_div/U360/ZN (AOI21D1BWP20P90)                                                       0.03      0.03       2.55 f
+  u_cpu/genblk2.pcpi_div/n733 (net)                                                            1                   0.00       2.55 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U32/CO (FA1D1BWP20P90)                                      0.01      0.04       2.59 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n31 (net)                                         1                   0.00       2.59 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U31/CO (FA1D1BWP20P90)                                      0.01      0.03       2.62 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n30 (net)                                         1                   0.00       2.62 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U30/CO (FA1D1BWP20P90)                                      0.01      0.03       2.65 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n29 (net)                                         1                   0.00       2.65 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U29/CO (FA1D1BWP20P90)                                      0.01      0.03       2.68 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n28 (net)                                         1                   0.00       2.68 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U28/CO (FA1D1BWP20P90)                                      0.01      0.03       2.72 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n27 (net)                                         1                   0.00       2.72 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U27/CO (FA1D1BWP20P90)                                      0.01      0.03       2.75 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n26 (net)                                         1                   0.00       2.75 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U26/CO (FA1D1BWP20P90)                                      0.01      0.03       2.78 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n25 (net)                                         1                   0.00       2.78 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U25/CO (FA1D1BWP20P90)                                      0.01      0.03       2.81 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n24 (net)                                         1                   0.00       2.81 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U24/CO (FA1D1BWP20P90)                                      0.01      0.03       2.84 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n23 (net)                                         1                   0.00       2.84 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U23/CO (FA1D1BWP20P90)                                      0.01      0.03       2.87 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n22 (net)                                         1                   0.00       2.87 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U22/CO (FA1D1BWP20P90)                                      0.01      0.03       2.91 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n21 (net)                                         1                   0.00       2.91 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U21/CO (FA1D1BWP20P90)                                      0.01      0.03       2.94 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n20 (net)                                         1                   0.00       2.94 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U20/CO (FA1D1BWP20P90)                                      0.01      0.03       2.97 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n19 (net)                                         1                   0.00       2.97 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U19/CO (FA1D1BWP20P90)                                      0.01      0.03       3.00 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n18 (net)                                         1                   0.00       3.00 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U18/CO (FA1D1BWP20P90)                                      0.01      0.03       3.03 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n17 (net)                                         1                   0.00       3.03 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U17/CO (FA1D1BWP20P90)                                      0.01      0.03       3.06 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n16 (net)                                         1                   0.00       3.06 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U16/CO (FA1D1BWP20P90)                                      0.01      0.03       3.10 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n15 (net)                                         1                   0.00       3.10 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U15/CO (FA1D1BWP20P90)                                      0.01      0.03       3.13 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n14 (net)                                         1                   0.00       3.13 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U14/CO (FA1D1BWP20P90)                                      0.01      0.03       3.16 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n13 (net)                                         1                   0.00       3.16 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U13/CO (FA1D1BWP20P90)                                      0.01      0.03       3.19 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n12 (net)                                         1                   0.00       3.19 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U12/CO (FA1D1BWP20P90)                                      0.01      0.03       3.22 f    mo 
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/n11 (net)                                         1                   0.00       3.22 f
+  u_cpu/genblk2.pcpi_div/DP_OP_54J4_125_2116/U11/S (FA1D1BWP20P90)                                       0.01      0.05       3.27 r    mo 
+  u_cpu/genblk2.pcpi_div/C30/DATA2_22 (net)                                                    1                   0.00       3.27 r
+  u_cpu/genblk2.pcpi_div/U708/ZN (IOA21D1BWP20P90)                                                       0.01      0.02       3.29 r
+  u_cpu/genblk2.pcpi_div/n283 (net)                                                            1                   0.00       3.29 r
+  u_cpu/genblk2.pcpi_div/dividend_reg[22]/D (DFQD2BWP16P90)                                              0.01      0.00       3.29 r
+  data arrival time                                                                                                           3.29
+
+  clock clk (rise edge)                                                                                           10.00      10.00
+  clock network delay (ideal)                                                                                      0.00      10.00
+  u_cpu/genblk2.pcpi_div/dividend_reg[22]/CP (DFQD2BWP16P90)                                                       0.00      10.00 r
+  library setup time                                                                                              -0.01       9.99
+  data required time                                                                                                          9.99
+  --------------------------------------------------------------------------------------------------------------------------------------------------------
+  data required time                                                                                                          9.99
+  data arrival time                                                                                                          -3.29
+  --------------------------------------------------------------------------------------------------------------------------------------------------------
+  slack (MET)                                                                                                                 6.70
+
+
+1

@@ -3349,3 +3349,526 @@ LVS completed. CORRECT.
 This final Calibre LVS result also classifies the earlier Innovus
 `verifyConnectivity -type special` VDD/VPP markers: under the reference
 Calibre LVS source/layout alias flow, they do not appear as a real LVS mismatch.
+
+### 3.5 PrimeTime `check_timing` Warning Root Cause
+
+After the r23 milestone was committed, the remaining PrimeTime warnings were
+separated from the clean setup/hold/DRC/LVS evidence:
+
+```text
+sta/currentrtl_20260422_r23_nofill_from_r22/primetime_funcmode_holdunc0/check_timing_verbose.rpt
+Warning: There are 2 ports with parasitics but with no driving cell.
+Warning: There are 68 endpoints which are not constrained for maximum delay.
+Warning: There are 68 register clock pins with no clock.
+```
+
+The 68 endpoint/no-clock warnings all point to inferred latch cells in the
+PicoRV32 memory access data formatting logic:
+
+```text
+u_cpu/mem_la_wdata_reg_[0..31]/D and /E
+u_cpu/mem_la_wstrb_reg_[0..3]/D and /E
+u_cpu/mem_rdata_word_reg_[0..31]/D and /E
+```
+
+The post-route netlist implements these as `LHQD1BWP16P90` latch cells with
+common enable net `n5441`. Tracing `n5441` shows it is generated from the
+`mem_wordsize` decode. The RTL source is:
+
+```text
+third_party/picorv32/picorv32.v
+```
+
+Root cause: the combinational `case (mem_wordsize)` block assigned
+`mem_la_wdata`, `mem_la_wstrb`, and `mem_rdata_word` only for
+`mem_wordsize == 0`, `1`, and `2`. Since `mem_wordsize` is two bits wide, the
+uncovered value `3` caused synthesis to preserve the previous value with
+transparent latches. PrimeTime then correctly reported those latch enable pins
+as no-clock/unconstrained.
+
+Source fix applied in the PicoRV32 RTL:
+
+- remove the `full_case` assumption from this block
+- make `2'd1` and `2'd2` the halfword/byte cases
+- use `default` for word behavior, covering both `2'd0` and the previously
+  uncovered `2'd3`
+
+The smaller two-port warning is from the PrimeTime script excluding `clk` and
+`rst_n` from the input-drive assignment while reading SPEF parasitics. The r23
+PrimeTime script now explicitly applies the same input driver model to
+`clk/rst_n` before applying it to the remaining non-clock/non-reset inputs:
+
+```text
+tcl_scripts/pt_sta_currentrtl_drvfix_20260422_r23_nofill_funcmode_holdunc0.tcl
+set_driving_cell -lib_cell INVD1BWP16P90 [get_ports {clk rst_n}]
+```
+
+Required proof step: rerun synthesis and the downstream PD/STA path from the
+RTL fix. The existing r23 signoff reports remain valid for the pre-fix netlist;
+the latch/no-clock warnings can only disappear from PrimeTime after the fixed
+RTL is remapped and a new post-route netlist is analyzed.
+
+First proof run:
+
+```text
+SOC_MAP_OUT_DIR=/home/fy2243/soc_design/mapped_currentrtl_latchfix_20260422_r1
+SOC_DC_WORK_DIR=/home/fy2243/soc_design/WORK_currentrtl_latchfix_20260422_r1
+dc_shell -f syn_complete_with_tech.tcl
+
+logs/dc_currentrtl_latchfix_20260422_r1.log
+mapped_currentrtl_latchfix_20260422_r1/soc_top.v
+```
+
+Result:
+
+```text
+Presto compilation completed successfully.
+SRAM macro preservation checks: PASS
+Synthesis Complete with Tech Files!
+```
+
+The fixed mapped netlist has no `LHQD*` latch cells and no old
+`mem_la_wdata_reg_*`, `mem_la_wstrb_reg_*`, or `mem_rdata_word_reg_*` latch
+instances.
+
+A PrimeTime mapped-netlist `check_timing` smoke run was then made at:
+
+```text
+sta/currentrtl_latchfix_20260422_r1/mapped_check_timing/check_timing_verbose.rpt
+```
+
+Result:
+
+```text
+check_timing succeeded.
+```
+
+This proves the warning class is fixed at RTL/synthesis. The mapped netlist
+still shows small pre-layout SRAM hold violations, which is expected before
+placement, CTS, routing, extraction, and the physical hold ECO path used for
+r23.
+
+Because `third_party/picorv32` is a standalone dependency checkout, the RTL fix
+is also captured as a project patch:
+
+```text
+patches/picorv32_mem_wordsize_no_latch.patch
+setup.sh applies this patch after checking out the pinned PicoRV32 commit.
+```
+
+### 3.6 Latch-Fix Full-Flow Rerun Status
+
+After the RTL latch fix, a fresh implementation rerun was started from the
+fixed mapped netlist:
+
+```text
+SOC_MAP_OUT_DIR=/home/fy2243/soc_design/mapped_currentrtl_latchfix_20260422_r1
+SOC_PNR_OUT_DIR=/home/fy2243/soc_design/pd/latchfix_20260422_r1
+innovus -no_gui -overwrite -files tcl_scripts/complete_flow.tcl
+```
+
+The first post-route checkpoint had 6 Innovus DRC markers. A cleanup pass
+restored that route checkpoint, refreshed PG, and ran `ecoRoute -fix_drc`:
+
+```text
+tcl_scripts/latchfix_route_cleanup_20260422_r1.tcl
+pd/latchfix_20260422_r1_cleanup/route_cleaned.enc.dat
+```
+
+Innovus cleanup result:
+
+```text
+pd/latchfix_20260422_r1_cleanup/innovus_verify_drc_final.rpt      0 DRC
+pd/latchfix_20260422_r1_cleanup/innovus_conn_regular_final.rpt    clean
+pd/latchfix_20260422_r1_cleanup/innovus_antenna_final.rpt         0 violations
+pd/latchfix_20260422_r1_cleanup/innovus_conn_special_final.rpt    VDD/VSS special-connectivity markers remain
+```
+
+Calibre was then rerun through the project wrapper:
+
+```text
+FINAL_ENC=/home/fy2243/soc_design/pd/latchfix_20260422_r1_cleanup/route_cleaned.enc.dat
+DATE_TAG=latchfix_r1_routeclean_20260422
+RUN_DRC=1 RUN_LVS=1 ./run_calibre_signoff.sh
+```
+
+Result:
+
+```text
+signoff/calibre_latchfix_r1_routeclean_20260422/07_lvs/output/lvs.rep
+LVS completed. CORRECT.
+
+signoff/calibre_latchfix_r1_routeclean_20260422/05_drc/output/DRC.rep
+Calibre DRC is not clean.
+```
+
+The raw Calibre DRC rerun is not equivalent to the final r23 signoff-clean
+layout path. It shows both the known local post-merge rules from the r23 debug
+trail and a much larger FEOL-rule class that was not present in the r23 raw
+Calibre DRC report. Representative nonzero rules:
+
+```text
+NW.S.1.T, NW.A.1.T, NW.W.*, FIN.BOUND.S.1.T, OD2.S.5.T,
+CCPC.*, PO.*, CPO.*, VTS_*, PP.*, NP.*, M0_OD.*, CMD.*,
+M1.S.1.T, VIA3.R.10, M4.S.25, AP.DN.1.T
+```
+
+Therefore the latch-fix rerun is currently:
+
+```text
+Innovus DRC/connectivity/antenna: clean except expected special-connectivity class
+Calibre LVS: clean
+Calibre DRC: not clean
+PrimeTime final signoff: not rerun as final proof from this latch-fix checkpoint yet
+```
+
+### 3.7 Latch-Fix Postfill DRC And Hold Closure
+
+The first latch-fix route-clean checkpoint was not enough for Calibre DRC
+because it did not carry the final filler/Calibre cleanup state. A postfill
+closure pass was run from the clean route database:
+
+```text
+tcl_scripts/latchfix_postroute_filler_closure_20260422_r2.tcl
+pd/latchfix_20260422_r2_postfill/postfill_cleaned.enc.dat
+```
+
+The raw r2 Calibre DRC reduced to the same local rule family seen in the
+reference debug trail:
+
+```text
+M1.S.1.T     SRAM-edge boundary-cell M1 geometry near SRAM M1
+AP.DN.1.T    missing/insufficient AP marker coverage
+VIA3.R.10    two-cut VIA3 master interaction in a few local nets
+M4.S.25      local M4 spacing marker coupled to one VIA3 master case
+```
+
+The fix was not an Innovus routing ECO. It was the same signoff-OASIS cleanup
+style used by the reference clean run:
+
+```text
+edit_r23_boundary_ap_only.cmd
+  - clone BOUNDARY_LEFTBWP16P90 into a cut version
+  - flatten/swap only the boundary refs crossing the SRAM right edge
+  - add AP marker rectangles
+
+edit_latchfix_boundary_ap_via3_onecut.cmd
+  - clone selected VIA3 masters into one-cut keep-left/keep-right variants
+  - replace only the failing VIA3 refs
+
+edit_latchfix_boundary_ap_via3onecut_cts2swap.cmd
+  - swap the residual CTS_2 VIA3 ref to the matching keep-left overlap master
+```
+
+That produced a clean r2 Calibre DRC/LVS proof:
+
+```text
+signoff/calibre_latchfix_r2_postfill_20260422/05_drc/output/DRC_boundary_ap_via3onecut_cts2swap.rep
+TOTAL RESULTS GENERATED = 0 (0)
+
+signoff/calibre_latchfix_r2_postfill_20260422/07_lvs/output/lvs_boundary_ap_via3onecut_cts2swap_supplyalias_global_notopports.rep
+LVS completed. CORRECT.
+```
+
+PrimeTime on r2 exposed the real remaining signoff blocker: SRAM-input hold.
+The first hold ECO attempt, `latchfix_postfill_sram_hold_eco_20260422_r3.tcl`,
+used `ecoAddRepeater -relativeDistToSink` on multi-sink SRAM nets and inserted
+no useful delay. The successful r4 pass targeted the SRAM macro input terms
+directly:
+
+```text
+tcl_scripts/latchfix_postfill_sram_hold_eco_20260422_r4.tcl
+pd/latchfix_20260422_r4_sram_hold/postfill_sram_hold_r4.enc.dat
+```
+
+r4 inserted 73 `DEL075D1BWP20P90` delay cells on SRAM `D[31:0]`,
+`A[8:0]`, and `BWEB[31:0]`. Innovus DRC/connectivity/antenna were clean, but
+PrimeTime still had one small hold miss on `u_sram/u_sram_macro/WEB`:
+
+```text
+sta/currentrtl_latchfix_20260422_r4_sram_hold/primetime_funcmode_holdunc0/summary.txt
+hold_wns=-0.000364
+hold_violating_paths=1
+```
+
+The final r5 ECO inserted one more `DEL075D1BWP20P90` delay cell at the SRAM
+`WEB` term:
+
+```text
+tcl_scripts/latchfix_postfill_sram_hold_eco_20260422_r5_web.tcl
+pd/latchfix_20260422_r5_web_hold/postfill_web_hold_r5.enc.dat
+```
+
+Innovus r5 verification:
+
+```text
+pd/latchfix_20260422_r5_web_hold/innovus_verify_drc_final.rpt      0 DRC
+pd/latchfix_20260422_r5_web_hold/innovus_conn_regular_final.rpt    clean
+pd/latchfix_20260422_r5_web_hold/innovus_antenna_final.rpt         0 violations
+pd/latchfix_20260422_r5_web_hold/innovus_conn_special_final.rpt    expected VDD/VSS special-connectivity class remains
+```
+
+The r5 Calibre wrapper raw DRC again showed only the known local cleanup family:
+
+```text
+signoff/calibre_latchfix_r5_web_hold_20260422/05_drc/output/DRC.rep
+M1.S.1.T=77, VIA3.R.10=5, M4.S.25=1, AP.DN.1.T=1
+```
+
+The r2-proven cleanup scripts were copied into the r5 Calibre workspace and run
+in the same order:
+
+```text
+cd signoff/calibre_latchfix_r5_web_hold_20260422/04_dummyMerge
+calibredrv -64 ./scr/edit_r23_boundary_ap_only.cmd
+calibredrv -64 ./scr/edit_latchfix_boundary_ap_via3_onecut.cmd
+calibredrv -64 ./scr/edit_latchfix_boundary_ap_via3onecut_cts2swap.cmd
+
+cd ../05_drc
+calibre -drc -hier -64 -turbo 8 -hyper ./scr/runset.boundary_ap_via3onecut_cts2swap.cmd
+```
+
+r5 Calibre DRC is clean:
+
+```text
+signoff/calibre_latchfix_r5_web_hold_20260422/05_drc/output/DRC_boundary_ap_via3onecut_cts2swap.rep
+TOTAL RESULTS GENERATED = 0 (0)
+```
+
+PrimeTime was rerun after the r5 DRC proof using the r5 Innovus netlist and
+SPEF:
+
+```text
+tcl_scripts/pt_sta_currentrtl_latchfix_20260422_r5_web_hold_funcmode_holdunc0.tcl
+sta/currentrtl_latchfix_20260422_r5_web_hold/primetime_funcmode_holdunc0/summary.txt
+```
+
+Result:
+
+```text
+setup_wns=7.333536
+setup_tns=0.0
+setup_violating_paths=0
+hold_wns=0.008797
+hold_tns=0.0
+hold_violating_paths=0
+```
+
+PrimeTime still emits the environment diagnostic `PT-063` because the Library
+Compiler executable path is not set, but the design links, parasitics are read,
+and setup/hold timing are clean.
+
+### 3.8 Final Calibre LVS Signoff Proof
+
+After r5 Calibre DRC and PrimeTime were clean, the final LVS comparison was
+rerun on the same DRC-clean layout stream:
+
+```text
+signoff/calibre_latchfix_r5_web_hold_20260422/04_dummyMerge/output/soc_top.dmmerge_boundary_ap_via3onecut_cts2swap.oas.gz
+```
+
+The LVS flow used the r5 extracted layout SPICE, regenerated the source-side LVS
+SPICE from the r5 netlist/DEF/source collateral, applied the same supply-alias
+normalization used in the earlier clean compare, and removed top-level layout
+port wrappers before compare:
+
+```text
+signoff/calibre_latchfix_r5_web_hold_20260422/07_lvs/output/soc_top.boundary_ap_via3onecut_cts2swap.layspi
+signoff/calibre_latchfix_r5_web_hold_20260422/07_lvs/source_fix/soc_top_lvs.spi
+signoff/calibre_latchfix_r5_web_hold_20260422/07_lvs/output/soc_top.boundary_ap_via3onecut_cts2swap.supplyalias.global.notopports.layspi
+signoff/calibre_latchfix_r5_web_hold_20260422/07_lvs/scr/runset.compare.boundary_ap_via3onecut_cts2swap_supplyalias_global_notopports.cmd
+```
+
+Final LVS result:
+
+```text
+signoff/calibre_latchfix_r5_web_hold_20260422/07_lvs/log/runset.boundary_ap_via3onecut_cts2swap_supplyalias_global_notopports.log
+LVS completed. CORRECT.
+```
+
+The final signoff evidence for this checkpoint is therefore:
+
+```text
+Calibre DRC:
+signoff/calibre_latchfix_r5_web_hold_20260422/05_drc/output/DRC_boundary_ap_via3onecut_cts2swap.rep
+TOTAL RESULTS GENERATED = 0 (0)
+
+Calibre LVS:
+signoff/calibre_latchfix_r5_web_hold_20260422/07_lvs/output/lvs_boundary_ap_via3onecut_cts2swap_supplyalias_global_notopports.rep
+LVS completed. CORRECT.
+
+PrimeTime:
+sta/currentrtl_latchfix_20260422_r5_web_hold/primetime_funcmode_holdunc0/summary.txt
+setup_violating_paths=0
+hold_violating_paths=0
+```
+
+Conclusion: `pd/latchfix_20260422_r5_web_hold/postfill_web_hold_r5.enc.dat`
+is the clean signoff-ready checkpoint for this walkthrough flow.
+
+### 3.9 Debug Review Map
+
+This section is the quick index for later review: what failed, how the root
+cause was found, what was changed, and what proved the fix.
+
+Calibre `M1.S.1.T` SRAM-edge DRC:
+
+```text
+Symptom:
+  77 M1.S.1.T markers near x ~= 105 um, along the right edge of the SRAM.
+
+How it was found:
+  Calibre DRC_RES coordinates were mapped back into Innovus.
+  dbQuery around the marker area showed u_sram/u_sram_macro plus many
+  BOUNDARY_LEFTBWP16P90 endcap refs.
+  The SRAM bbox ended at x=105.065 um, while boundary/endcap refs began just
+  to the right, e.g. EC_209 bbox {105.12 84.576 105.48 85.152}.
+
+Root cause:
+  The stdcell boundary/endcap M1 geometry was too close to SRAM M1 geometry
+  after the real SRAM GDS was merged for Calibre. Innovus abstract views did
+  not report this as a normal route DRC.
+
+Fix approach:
+  Reference-style post-OASIS cleanup: clone the boundary-cell master, remove
+  the offending M1 polygon from the clone, and swap only the SRAM-edge
+  boundary refs to the cut version. Do not cut the SRAM and do not move the
+  macro.
+
+Proof:
+  M1.S.1.T went from 77 to 0.
+```
+
+Calibre `AP.DN.1.T` marker:
+
+```text
+Symptom:
+  One AP.DN.1.T marker covering the full die.
+
+How it was found:
+  The DRC_RES marker bbox was (0.000,0.000)-(338.850,338.496), so it was not
+  a local spacing conflict.
+
+Root cause:
+  Missing/insufficient AP marker treatment in the merged signoff OASIS.
+
+Fix approach:
+  Add the same AP layer marker rectangles used by the reference-clean signoff
+  cleanup.
+
+Proof:
+  AP.DN.1.T went from 1 to 0.
+```
+
+Calibre `VIA3.R.10` and coupled `M4.*` DRC:
+
+```text
+Symptom:
+  Local VIA3/M4 markers remained after the SRAM-edge and AP fixes.
+
+How it was found:
+  Calibre marker coordinates were extracted from DRC_RES and matched to nearby
+  OASIS via refs. The failing refs were specific generated VIA3 masters on a
+  few local signal nets, not missing logical connections.
+
+Root cause:
+  A few via-array/cut geometries had local enclosure or spacing interactions
+  with neighboring M4 shapes in the merged signoff layout.
+
+Fix approach:
+  Keep connectivity intact. Clone only the offending VIA3 masters and replace
+  failing refs with one-cut/adjusted variants, then apply the small CTS_2 swap
+  used by the proven r2 cleanup. Avoid the earlier via-deletion branch because
+  it can make DRC clean while breaking LVS.
+
+Proof:
+  Final r5 DRC-clean OASIS:
+  signoff/calibre_latchfix_r5_web_hold_20260422/04_dummyMerge/output/soc_top.dmmerge_boundary_ap_via3onecut_cts2swap.oas.gz
+
+  Final Calibre DRC:
+  signoff/calibre_latchfix_r5_web_hold_20260422/05_drc/output/DRC_boundary_ap_via3onecut_cts2swap.rep
+  TOTAL RESULTS GENERATED = 0 (0)
+```
+
+Calibre LVS source/layout compare:
+
+```text
+Symptom:
+  Early LVS attempts either stopped at "Source could not be read" or needed
+  supply/top-port normalization before compare.
+
+How it was found:
+  The LVS log stopped before real comparison when source parsing failed.
+  Later extracted layout SPICE showed VDD/VSS as top-level layout ports while
+  the reference LVS convention treats supplies as globals.
+
+Root cause:
+  LVS was sensitive to source SPICE preparation, SRAM/standard-cell model
+  inclusion, supply aliasing, and whether VDD/VSS appeared as top ports or
+  globals.
+
+Fix approach:
+  Use the project/reference LVS source-prep flow:
+  - regenerate source-side LVS SPICE from exported netlist/DEF/source collateral
+  - include SRAM and stdcell model handling
+  - apply supply alias normalization
+  - compare with VDD/VSS as globals, not top-level ports
+
+Proof:
+  signoff/calibre_latchfix_r5_web_hold_20260422/07_lvs/output/lvs_boundary_ap_via3onecut_cts2swap_supplyalias_global_notopports.rep
+  LVS completed. CORRECT.
+```
+
+PrimeTime latch/no-clock warning:
+
+```text
+Symptom:
+  PrimeTime check_timing reported latch-style endpoints/no-clock pins under
+  PicoRV32 memory data formatting logic.
+
+How it was found:
+  check_timing_verbose pointed to LHQD1BWP16P90 latch instances under
+  mem_la_wdata, mem_la_wstrb, and mem_rdata_word. Tracing the enable showed
+  it came from mem_wordsize decode logic in third_party/picorv32/picorv32.v.
+
+Root cause:
+  A combinational case on two-bit mem_wordsize covered only values 0, 1, and
+  2. The uncovered value 3 caused synthesis to infer transparent latches.
+
+Fix approach:
+  Patch PicoRV32 RTL so the case has a real default behavior and no latch is
+  inferred. Capture this as:
+  patches/picorv32_mem_wordsize_no_latch.patch
+
+Proof:
+  The fixed mapped netlist has no LHQD latch cells for that logic, and the
+  mapped-netlist PrimeTime check_timing smoke run succeeds.
+```
+
+PrimeTime SRAM-input hold closure:
+
+```text
+Symptom:
+  After DRC/LVS cleanup, PrimeTime still showed real hold violations on short
+  paths into the SRAM macro.
+
+How it was found:
+  PrimeTime min-delay reports repeatedly identified SRAM input pins as the
+  dominant failing endpoints. r4 reduced the tail to one small miss on WEB.
+
+Root cause:
+  Very short CPU-to-SRAM and local SRAM-control paths had too little minimum
+  delay after post-route extraction.
+
+Fix approach:
+  Use localized post-route hold ECOs, not global reroute:
+  - insert DEL075D1BWP20P90 delay cells at SRAM D/A/BWEB inputs in r4
+  - insert one final DEL075D1BWP20P90 delay cell at WEB in r5
+  - rerun Innovus verification, Calibre DRC, LVS, and PrimeTime
+
+Proof:
+  sta/currentrtl_latchfix_20260422_r5_web_hold/primetime_funcmode_holdunc0/summary.txt
+  setup_violating_paths=0
+  hold_violating_paths=0
+  hold_wns=0.008797
+```

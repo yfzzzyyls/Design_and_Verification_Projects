@@ -1,0 +1,17 @@
+PrimeTime functional-mode STA summary
+design=soc_top
+source_checkpoint=/home/fy2243/soc_design/pd/latchfix_20260422_r5_web_hold/postfill_web_hold_r5.enc.dat
+netlist=/home/fy2243/soc_design/sta/currentrtl_latchfix_20260422_r5_web_hold/innovus/soc_top_postroute_latchfix_r5_web_hold.v
+spef=/home/fy2243/soc_design/sta/currentrtl_latchfix_20260422_r5_web_hold/innovus/soc_top_postroute_latchfix_r5_web_hold.spef
+cppr_enabled=true
+rst_n_case_analysis=1
+input_drive_for_clock_reset=INVD1BWP16P90
+input_drive_for_non_clock_non_reset=INVD1BWP16P90
+setup_clock_uncertainty=0.100
+hold_clock_uncertainty=0.000
+setup_wns=7.333536
+setup_tns=0.0
+setup_violating_paths=0
+hold_wns=0.008797
+hold_tns=0.0
+hold_violating_paths=0

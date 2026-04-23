@@ -1,0 +1,37 @@
+Read in 2 MB                                                                                  Collecting data...                                                         
+Analyzing data...
+Sorting data...
+
+
+-------------------------------------------------------------------------
+-----                  LAYOUT FILE OBJECT SUMMARY                   -----
+-------------------------------------------------------------------------
+
+Type                         Count
+----------------------------------
+LAYER                          117
+CELL                           344
+PLACEMENT                  694,698
+ARRAY                       50,102
+RECTANGLE                   39,750
+POLYGON                        389
+PATH                       233,403
+TEXT                         9,054
+PROPERTY                   489,595
+
+
+-------------------------------------------------------------------------
+-----                     LOAD LAYOUT SUMMARY                       -----
+-------------------------------------------------------------------------
+
+OASIS FILE READ FROM '/home/fy2243/soc_design/signoff/calibre_latchfix_r5_web_hold_20260422/04_dummyMerge/./output/soc_top.dmmerge_boundary_ap_via3onecut.oas.gz'
+
+DATABASE PRECISION:  1000
+
+MAXIMUM HIERARCHY DEPTH:  3
+
+LAYOUT FILE SIZE =            3612 K  =            3 M
+LAYOUT MEMORY    =           21776 K  =           21 M
+LAYOUT READ TIME = 1 sec REAL.  TOTAL TIME = 1 sec REAL.
+
+Writing compressed file: "./output/soc_top.dmmerge_boundary_ap_via3onecut_cts2swap.oas.gz"

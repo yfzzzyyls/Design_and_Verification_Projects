@@ -26,8 +26,25 @@ clone_repo() {
     git -C "${dest}" checkout "${commit}"
 }
 
+apply_patch_if_needed() {
+    local name="$1"
+    local patch="$2"
+    local dest="${THIRD_PARTY_DIR}/${name}"
+
+    if git -C "${dest}" apply --check "${patch}"; then
+        echo "[+] Applying $(basename "${patch}") to ${name}..."
+        git -C "${dest}" apply "${patch}"
+    elif git -C "${dest}" apply --reverse --check "${patch}"; then
+        echo "[=] $(basename "${patch}") already applied to ${name}."
+    else
+        echo "[!] ${patch} does not apply cleanly to ${name}."
+        exit 1
+    fi
+}
+
 PICORV32_COMMIT="87c89acc18994c8cf9a2311e871818e87d304568"
 
 clone_repo "picorv32" "https://github.com/YosysHQ/picorv32.git" "${PICORV32_COMMIT}"
+apply_patch_if_needed "picorv32" "${REPO_ROOT}/patches/picorv32_mem_wordsize_no_latch.patch"
 
 echo "[✓] Third-party dependencies are ready in ${THIRD_PARTY_DIR}"

@@ -1,0 +1,41 @@
+diff --git a/picorv32.v b/picorv32.v
+index cc45fa9..3bc59f4 100644
+--- a/picorv32.v
++++ b/picorv32.v
+@@ -399,14 +399,8 @@ module picorv32 #(
+ 	end
+ 
+ 	always @* begin
+-		(* full_case *)
+ 		case (mem_wordsize)
+-			0: begin
+-				mem_la_wdata = reg_op2;
+-				mem_la_wstrb = 4'b1111;
+-				mem_rdata_word = mem_rdata;
+-			end
+-			1: begin
++			2'd1: begin
+ 				mem_la_wdata = {2{reg_op2[15:0]}};
+ 				mem_la_wstrb = reg_op1[1] ? 4'b1100 : 4'b0011;
+ 				case (reg_op1[1])
+@@ -414,7 +408,7 @@ module picorv32 #(
+ 					1'b1: mem_rdata_word = {16'b0, mem_rdata[31:16]};
+ 				endcase
+ 			end
+-			2: begin
++			2'd2: begin
+ 				mem_la_wdata = {4{reg_op2[7:0]}};
+ 				mem_la_wstrb = 4'b0001 << reg_op1[1:0];
+ 				case (reg_op1[1:0])
+@@ -424,6 +418,11 @@ module picorv32 #(
+ 					2'b11: mem_rdata_word = {24'b0, mem_rdata[31:24]};
+ 				endcase
+ 			end
++			default: begin
++				mem_la_wdata = reg_op2;
++				mem_la_wstrb = 4'b1111;
++				mem_rdata_word = mem_rdata;
++			end
+ 		endcase
+ 	end
+ 

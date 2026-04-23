@@ -1,0 +1,57 @@
+ 
+****************************************
+Report : area
+Design : soc_top
+Version: W-2024.09-SP5-5
+Date   : Wed Apr 22 18:55:40 2026
+****************************************
+
+Library(s) Used:
+
+    N16ADFP_StdCelltt0p8v25c (File: /ip/tsmc/tsmc16adfp/source/DAFP0203001_2_X/Executable_Package/Collaterals/IP/stdcell/N16ADFP_StdCell/NLDM/N16ADFP_StdCelltt0p8v25c.db)
+    N16ADFP_SRAM_tt0p8v0p8v25c (File: /ip/tsmc/tsmc16adfp/source/DAFP0203001_2_X/Executable_Package/Collaterals/IP/sram/N16ADFP_SRAM/NLDM/N16ADFP_SRAM_tt0p8v0p8v25c_100a.db)
+
+Number of ports:                         2784
+Number of nets:                         24836
+Number of cells:                        19838
+Number of combinational cells:          14717
+Number of sequential cells:              5107
+Number of macros/black boxes:               1
+Number of buf/inv:                       1174
+Number of references:                       7
+
+Combinational area:               6940.754104
+Buf/Inv area:                      186.935048
+Noncombinational area:            5455.849120
+Macro/Black Box area:             4541.375000
+Net Interconnect area:      undefined  (Wire load has zero net area)
+
+Total cell area:                 16937.978224
+Total area:                 undefined
+
+Hierarchical area distribution
+------------------------------
+
+                                  Global cell area             Local cell area
+                                  -------------------  ------------------------------- 
+Hierarchical cell                 Absolute    Percent  Combi-     Noncombi-  Black-
+                                  Total       Total    national   national   boxes      Design
+--------------------------------  ----------  -------  ---------  ---------  ---------  ----------------------------------------------------------------------------------
+soc_top                           16937.9782    100.0     0.0000     0.0000     0.0000  soc_top
+u_axil_xbar                          26.0237      0.2    23.7427     2.2810     0.0000  axil_interconnect_1x2
+u_cordic_accel                     7472.2178     44.1   153.1354   225.8150     0.0000  axil_cordic_accel_WIDTH32_ITERATIONS16
+u_cordic_accel/u_cordic_ctrl       7093.2674     41.9    44.4269    78.6931     0.0000  cordic_accel_ctrl_WIDTH32_ITERATIONS16
+u_cordic_accel/u_cordic_ctrl/u_core_atan2  3591.5790    21.2 1911.6519 1679.9271    0.0000 cordic_core_atan2_WIDTH32_ITERATIONS16
+u_cordic_accel/u_cordic_ctrl/u_core_sincos  3378.5684    19.9 1747.6820 1630.8865    0.0000 cordic_core_sincos_WIDTH32_ITERATIONS16
+u_cpu                              4580.3233     27.0  1625.3914  1351.1578     0.0000  picorv32_0_0_1_1_0_1_0_0_0_0_1_1_0_1_1_1_0_0_0_0_0_00000000_ffffffff_00000000_2048
+u_cpu/genblk1.pcpi_mul             1137.1623      6.7  1013.0573   124.1050     0.0000  picorv32_pcpi_fast_mul
+u_cpu/genblk2.pcpi_div              466.6119      2.8   279.9878   186.6240     0.0000  picorv32_pcpi_div
+u_mem_router                         18.9734      0.1    18.9734     0.0000     0.0000  mem_router_native_00000800_10000000_00002000
+u_periph_bridge                       8.8128      0.1     0.0000     0.0000     0.0000  native_periph_bridge
+u_periph_bridge/u_axi_adapter         8.8128      0.1     5.0803     3.7325     0.0000  picorv32_axi_adapter
+u_sram                             4556.2531     26.9    12.5971     2.2810  4541.3750  sram_MEM_WORDS512
+u_uart                              275.3741      1.6   105.0278   170.3462     0.0000  axil_uart
+--------------------------------  ----------  -------  ---------  ---------  ---------  ----------------------------------------------------------------------------------
+Total                                                  6940.7541  5455.8491  4541.3750
+
+1

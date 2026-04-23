@@ -27,6 +27,10 @@ source /home/fy2243/soc_design/pd/innovus_axi_uartcordic_currentrtl_20260416_r1/
 set_clock_uncertainty -setup 0.100 [get_clocks {clk}]
 set_clock_uncertainty -hold  0.000 [get_clocks {clk}]
 set_case_analysis 1 [get_ports rst_n]
+set clock_reset_ports [get_ports {clk rst_n}]
+if {[sizeof_collection $clock_reset_ports] > 0} {
+    set_driving_cell -lib_cell INVD1BWP16P90 $clock_reset_ports
+}
 set in_ports [remove_from_collection [all_inputs] [get_ports {clk rst_n}]]
 if {[sizeof_collection $in_ports] > 0} {
     set_driving_cell -lib_cell INVD1BWP16P90 $in_ports
@@ -72,6 +76,7 @@ puts $fp "netlist=[file join $in_dir $netlist]"
 puts $fp "spef=[file join $in_dir $spef]"
 puts $fp "cppr_enabled=true"
 puts $fp "rst_n_case_analysis=1"
+puts $fp "input_drive_for_clock_reset=INVD1BWP16P90"
 puts $fp "input_drive_for_non_clock_non_reset=INVD1BWP16P90"
 puts $fp "setup_clock_uncertainty=0.100"
 puts $fp "hold_clock_uncertainty=0.000"
