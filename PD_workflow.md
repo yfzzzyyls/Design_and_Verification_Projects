@@ -3649,14 +3649,26 @@ Result:
 setup_wns=7.333536
 setup_tns=0.0
 setup_violating_paths=0
+setup_clock_uncertainty=0.100
 hold_wns=0.008797
 hold_tns=0.0
 hold_violating_paths=0
+hold_clock_uncertainty=0.000
 ```
 
 PrimeTime still emits the environment diagnostic `PT-063` because the Library
 Compiler executable path is not set, but the design links, parasitics are read,
 and setup/hold timing are clean.
+
+Important hold-margin qualification:
+
+- The final PrimeTime proof is the `funcmode_holdunc0` run.
+- Setup kept `0.100 ns` clock uncertainty.
+- Hold used `0.000 ns` explicit clock uncertainty.
+- The final hold WNS is only `+0.008797 ns`, about `+8.8 ps`.
+- Therefore this is clean under the saved functional-mode post-route setup, but
+  it is not a strongly guardbanded hold closure. Adding even `0.01 ns` explicit
+  hold uncertainty could make the reported hold WNS negative again.
 
 ### 3.8 Final Calibre LVS Signoff Proof
 
@@ -3699,12 +3711,16 @@ LVS completed. CORRECT.
 
 PrimeTime:
 sta/currentrtl_latchfix_20260422_r5_web_hold/primetime_funcmode_holdunc0/summary.txt
+setup_clock_uncertainty=0.100
+hold_clock_uncertainty=0.000
 setup_violating_paths=0
 hold_violating_paths=0
+hold_wns=0.008797
 ```
 
 Conclusion: `pd/latchfix_20260422_r5_web_hold/postfill_web_hold_r5.enc.dat`
-is the clean signoff-ready checkpoint for this walkthrough flow.
+is the clean signoff-ready checkpoint for this walkthrough flow under the saved
+functional-mode, zero-explicit-hold-uncertainty PrimeTime setup.
 
 ### 3.9 Debug Review Map
 
