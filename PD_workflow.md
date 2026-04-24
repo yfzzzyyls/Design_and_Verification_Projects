@@ -3888,3 +3888,268 @@ Proof:
   hold_violating_paths=0
   hold_wns=0.008797
 ```
+
+## 5. Timing Debug Study Notes
+
+This section captures the conceptual timing-debug discussion from the final
+currentRTL closure work, so the reasoning can be revisited without rereading
+all raw reports.
+
+### 5.1 Hold Violation Interpretation
+
+Representative failing path:
+
+```text
+u_cpu/mem_wdata_reg_27_/Q
+-> u_cpu/mem_wdata[27]
+-> u_sram/u_sram_macro/D[27]
+```
+
+For a hold check, the launch flop has already launched new data. The violation
+means the endpoint sees that new data too early. In this project, the SRAM
+input had to keep the old value stable for its hold window, but the CPU-to-SRAM
+path had almost no logic delay, so the new data arrived too soon.
+
+Report-reading rule:
+
+```text
+Startpoint = launch cell/pin, usually the source flop Q
+Endpoint   = capture cell/pin, here the SRAM macro input D/A/BWEB/WEB
+No logic   = report shows Q -> net -> endpoint, with no intermediate std-cell pins
+```
+
+Primary fix used here:
+
+```tcl
+ecoAddRepeater \
+  -term u_sram/u_sram_macro/D[27] \
+  -cell DEL075D1BWP20P90 \
+  -name PT_HOLD_D27 \
+  -newNetName PT_HOLD_D27_net
+```
+
+The delay cell is buffer-like and non-inverting, but characterized for adding
+controlled data-path delay. It is inserted on the data path, not between a flop
+`D` and `Q` internally.
+
+After insertion, the required physical/timing loop is:
+
+```text
+legalize/refine placement
+ecoRoute changed nets
+fix local DRC if needed
+extractRC
+rerun setup and hold STA
+rerun physical verification for final signoff
+```
+
+`ecoRoute` is used instead of a full reroute because this is a post-route ECO.
+Only the changed/new nets should be disturbed.
+
+### 5.2 Hold Uncertainty and Final Margin
+
+Hold uncertainty is explicit timing margin for effects such as jitter, skew
+uncertainty, and guardband. It makes hold harder by moving the required stable
+window outward.
+
+The final clean hold proof used:
+
+```text
+setup_clock_uncertainty = 0.100 ns
+hold_clock_uncertainty  = 0.000 ns
+final hold WNS          = +0.008797 ns
+```
+
+Therefore the final hold result is clean under the saved functional-mode
+zero-explicit-hold-uncertainty setup, but it is not a strongly guardbanded hold
+closure. Adding even `0.01 ns` explicit hold uncertainty could make the hold WNS
+negative again.
+
+### 5.3 Techniques Actually Applied
+
+The final project mainly used two real timing-optimization techniques:
+
+```text
+1. Delay/buffer insertion
+2. Gate resizing / driver upsizing
+```
+
+Delay/buffer insertion was used for too-fast hold paths:
+
+```text
+ecoAddRepeater -> add DEL075/DEL025 delay cells on selected data endpoints
+```
+
+Gate resizing was used for electrical design-rule timing cleanup, especially
+max capacitance and max transition:
+
+```tcl
+set size_swaps {
+    {u_cpu/U200 INVD4BWP20P90}
+    {u_cpu/U87 INR2D2BWP20P90}
+    {u_cpu/genblk2_pcpi_div/U783 NR2D2BWP20P90}
+}
+ecoChangeCell -inst $inst -cell $cell
+```
+
+Each line is `{instance_name new_cell_master}`. It does not replace one
+instance with another instance. It changes the selected instance to a stronger
+standard-cell master. The `D2` and `D4` suffixes generally indicate stronger
+drive strength than `D1`.
+
+Automatic DRV repair was also run:
+
+```tcl
+setOptMode -fixDrc true
+optDesign -postRoute -drv
+```
+
+This is a tool-driven post-route pass that repairs timing design-rule
+violations such as max capacitance and max transition. Internally, the tool may
+upsize cells, insert buffers, or make local placement/routing changes.
+
+### 5.4 Max Capacitance and Max Transition
+
+Max capacitance is a timing design-rule violation, not a setup/hold slack
+violation. The allowed limit comes from the standard-cell library. The actual
+load comes from extracted wire capacitance plus sink pin capacitance.
+
+```text
+actual load = routed wire capacitance + input pin capacitance of sinks
+violation   = actual load > library max capacitance for the driver output pin
+```
+
+Why it matters:
+
+```text
+large cap -> slow edge -> larger delay -> possible setup/noise/modeling risk
+```
+
+Typical fixes:
+
+```text
+upsize the driver
+insert a buffer to split the load
+clone/split high fanout
+shorten or improve routing
+```
+
+In this project, the accepted cleanup used targeted gate resizing plus
+post-route DRV repair.
+
+### 5.5 Techniques Discussed but Not Used for Final Closure
+
+Pin swapping:
+
+```text
+Equivalent gate inputs can have different timing arcs.
+Move the critical signal to the faster equivalent input to improve setup.
+For hold, moving a too-fast signal to a slower pin can help, but this is less
+common and more delicate.
+```
+
+Cloning:
+
+```text
+Duplicate a driver or register and split its fanout.
+This reduces each clone's local load and wire length, improving setup, max cap,
+and max transition.
+For registers, the cloned state must be replicated correctly.
+Cloning can make paths faster, so hold must be rechecked.
+```
+
+Useful skew:
+
+```text
+Delay capture clock:
+  setup improves
+  hold worsens
+
+Delay launch clock:
+  setup worsens
+  hold improves
+```
+
+Useful skew is usually controlled during CTS or clock optimization, not by
+manually adding random buffers to the clock tree. It was discussed as a lecture
+technique but was not used for this final hold closure.
+
+Other lecture techniques not used for final signoff closure:
+
+```text
+Vt swapping
+retiming
+major physical resynthesis
+```
+
+### 5.6 PrimeTime Latch/No-Clock Warning
+
+PrimeTime reported:
+
+```text
+68 endpoints unconstrained for maximum delay
+68 register clock pins with no clock
+```
+
+These were not the same as the SRAM hold violations. They came from
+unintentional inferred latches in PicoRV32 memory data-formatting logic.
+
+Bug pattern:
+
+```verilog
+always @* begin
+    (* full_case *)
+    case (mem_wordsize)
+        0: begin
+            mem_la_wdata = reg_op2;
+            mem_la_wstrb = 4'b1111;
+            mem_rdata_word = mem_rdata;
+        end
+        1: begin
+            ...
+        end
+        2: begin
+            ...
+        end
+    endcase
+end
+```
+
+`mem_wordsize` is two bits, so it can be `0`, `1`, `2`, or `3`. The old code did
+not assign the outputs for value `3`. In a combinational `always @*` block,
+unassigned outputs imply "keep the old value." Keeping old value without a
+clock edge infers a level-sensitive latch, not a flop.
+
+Fixed style:
+
+```verilog
+always @* begin
+    case (mem_wordsize)
+        2'd1: begin
+            ...
+        end
+        2'd2: begin
+            ...
+        end
+        default: begin
+            mem_la_wdata = reg_op2;
+            mem_la_wstrb = 4'b1111;
+            mem_rdata_word = mem_rdata;
+        end
+    endcase
+end
+```
+
+The `default` assigns real combinational values. It does not preserve old
+state, so no latch is needed. If a constant were assigned, synthesis would
+implement that as constant tie logic plus muxing, not as a software-style
+immediate generator.
+
+Why PrimeTime warned:
+
+```text
+inferred latch cells had D pins and E enable pins
+the E pins were driven by decode logic, not the real clock tree
+the SDC defined clk, not those latch enables as clocks
+PrimeTime therefore reported no-clock/unconstrained latch-style endpoints
+```
